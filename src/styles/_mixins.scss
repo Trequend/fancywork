@@ -1,0 +1,11 @@
+@import "./breakpoints";
+
+@mixin media-max-width($target-breakpoint) {
+  @each $breakpoint, $width in $breakpoints {
+    @if $breakpoint == $target-breakpoint {
+      @media screen and (max-width: $width) {
+        @content;
+      }
+    }
+  }
+}
