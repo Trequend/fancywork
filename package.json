@@ -52,7 +52,8 @@
         }
       ],
       "react/react-in-jsx-scope": "off",
-      "no-console": "off"
+      "no-console": "off",
+      "import/prefer-default-export": "off"
     }
   },
   "prettier": {
@@ -111,6 +112,7 @@
     "@types/react-dom": "^17.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
     "sass": "^1.38.2",
     "stylelint-scss": "^3.20.1",
@@ -132,6 +134,7 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
+    "@types/react-router-dom": "^5.1.8",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
     "cz-customizable": "^6.3.0",
