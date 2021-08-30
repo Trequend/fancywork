@@ -1,0 +1,18 @@
+:root {
+  --primary: #038ede;
+  --secondary: #5b5b5b;
+  --xs: '0';
+  --sm: '576px';
+  --md: '768px';
+  --lg: '992px';
+  --xl: '1200px';
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('../fonts/Rubik/Rubik-Black.ttf') format("truetype");
+}
+
+html {
+  font-family: 'Rubik', sans-serif;
+}

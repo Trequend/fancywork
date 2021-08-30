@@ -32,9 +32,14 @@
     ],
     "overrides": [
       {
-        "files": ["*.ts", "*.tsx"],
+        "files": [
+          "*.ts",
+          "*.tsx"
+        ],
         "parserOptions": {
-          "project": ["./tsconfig.json"]
+          "project": [
+            "./tsconfig.json"
+          ]
         }
       }
     ],
@@ -59,7 +64,10 @@
     "tabWidth": 2
   },
   "stylelint": {
-    "extends": "stylelint-config-standard"
+    "extends": "stylelint-config-standard",
+    "ignoreFiles": [
+      "./src/fonts/**"
+    ]
   },
   "config": {
     "commitizen": {
