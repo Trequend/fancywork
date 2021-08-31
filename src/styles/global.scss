@@ -9,6 +9,23 @@
 
 html {
   font-family: 'Rubik', sans-serif;
+  color: $text-color;
+}
+
+a {
+  color: $primary-color;
+
+  &:hover {
+    color: lighten($color: $primary-color, $amount: 10);
+  }
+
+  &:visited {
+    color: $secondary-color;
+
+    &:hover {
+      color: darken($color: $secondary-color, $amount: 10);
+    }
+  }
 }
 
 #root {
