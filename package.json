@@ -21,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src --ext .js,.jsx,.ts,.tsx && stylelint src",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx && stylelint src/**/*.scss",
     "commitlint": "commitlint"
   },
   "eslintConfig": {
@@ -72,10 +72,7 @@
     "rules": {
       "at-rule-no-unknown": null,
       "scss/at-rule-no-unknown": true
-    },
-    "ignoreFiles": [
-      "./src/fonts/**"
-    ]
+    }
   },
   "config": {
     "commitizen": {
