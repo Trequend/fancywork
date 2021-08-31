@@ -1,5 +1,377 @@
 @import "../../styles/variables";
 
 .root {
-  color: $primary-color;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 15px;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  shape-rendering: crispEdges;
+}
+
+.main {
+  flex: 1 0 auto;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid {
+  display: block;
+  position: relative;
+  width: 1000px;
+  height: 500px;
+  color: white;
+  user-select: none;
+}
+
+.footer {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 15px 15px;
+  padding-top: 10px;
+}
+
+@mixin card-backround($url) {
+  $color: #505050;
+
+  background: url($url) $color no-repeat center/cover;
+  background-blend-mode: overlay;
+
+  @media screen and (min-width: 500px) {
+    background-size: 100%;
+    transition: background-size 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-size: 105%;
+      background-color: darken($color: $color, $amount: 5);
+    }
+  }
+}
+
+.text {
+  position: relative;
+  color: white;
+
+  &::after {
+    transition: transform 0.2s ease-in-out;
+    transform: scaleX(0);
+    position: absolute;
+    content: '';
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    height: 1px;
+  }
+}
+
+.block {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+
+  &:hover {
+    & .text::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.blockContinueWork {
+  @extend .block;
+
+  @include card-backround("./assets/continueWork.jpg");
+
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+}
+
+.blockSettings {
+  @extend .block;
+
+  @include card-backround("./assets/settings.jpg");
+
+  top: 200px;
+  left: 0;
+  height: 300px;
+  width: 200px;
+}
+
+.blockMyWorks {
+  @extend .block;
+
+  @include card-backround("./assets/myWorks.jpg");
+
+  left: 200px;
+  top: 0;
+  height: 260px;
+  width: 400px;
+}
+
+.blockMySchemes {
+  @extend .block;
+
+  @include card-backround("./assets/mySchemes.jpg");
+
+  left: 600px;
+  top: 0;
+  height: 260px;
+  width: 400px;
+}
+
+.blockCreateScheme {
+  @extend .block;
+
+  @include card-backround("./assets/createScheme.jpg");
+
+  left: 200px;
+  top: 260px;
+  height: 240px;
+  width: 800px;
+}
+
+@media screen and (max-width: 1060px) {
+  .grid {
+    width: 700px;
+    height: 740px;
+  }
+
+  .blockContinueWork {
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+  }
+
+  .blockSettings {
+    top: 200px;
+    left: 0;
+    height: 300px;
+    width: 200px;
+  }
+
+  .blockMyWorks {
+    left: 200px;
+    top: 0;
+    height: 250px;
+    width: 500px;
+  }
+
+  .blockMySchemes {
+    left: 200px;
+    top: 250px;
+    height: 250px;
+    width: 500px;
+  }
+
+  .blockCreateScheme {
+    left: 0;
+    top: 500px;
+    height: 240px;
+    width: 700px;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .grid {
+    width: 600px;
+  }
+
+  .blockMyWorks {
+    width: 400px;
+  }
+
+  .blockMySchemes {
+    width: 400px;
+  }
+
+  .blockCreateScheme {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .grid {
+    width: 500px;
+    height: 640px;
+  }
+
+  .blockSettings {
+    top: 200px;
+    left: 0;
+    height: 200px;
+    width: 200px;
+  }
+
+  .blockMyWorks {
+    width: 300px;
+    height: 200px;
+  }
+
+  .blockMySchemes {
+    top: 200px;
+    width: 300px;
+    height: 200px;
+  }
+
+  .blockCreateScheme {
+    top: 400px;
+    width: 500px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .grid {
+    width: 400px;
+    height: 920px;
+  }
+
+  .blockContinueWork {
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+  }
+
+  .blockSettings {
+    top: 0;
+    left: 200px;
+    height: 200px;
+    width: 200px;
+  }
+
+  .blockCreateScheme {
+    top: 200px;
+    width: 400px;
+    height: 240px;
+  }
+
+  .blockMyWorks {
+    top: 440px;
+    left: 0;
+    width: 400px;
+    height: 240px;
+  }
+
+  .blockMySchemes {
+    top: 680px;
+    left: 0;
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .grid {
+    width: 100%;
+  }
+
+  .blockContinueWork {
+    top: 0;
+    left: 0;
+    width: 50%;
+  }
+
+  .blockSettings {
+    top: 0;
+    left: 50%;
+    width: 50%;
+  }
+
+  .blockCreateScheme {
+    width: 100%;
+  }
+
+  .blockMyWorks {
+    width: 100%;
+  }
+
+  .blockMySchemes {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .grid {
+    height: 720px;
+  }
+
+  .blockContinueWork {
+    height: 150px;
+  }
+
+  .blockSettings {
+    height: 150px;
+  }
+
+  .blockCreateScheme {
+    top: 150px;
+    height: 190px;
+  }
+
+  .blockMyWorks {
+    top: 340px;
+    height: 190px;
+  }
+
+  .blockMySchemes {
+    top: 530px;
+    height: 190px;
+  }
+}
+
+@media screen and (max-width: 280px) {
+  .grid {
+    height: 800px;
+  }
+
+  .blockContinueWork {
+    width: 100%;
+    height: 160px;
+  }
+
+  .blockSettings {
+    left: 0;
+    top: 160px;
+    width: 100%;
+    height: 160px;
+  }
+
+  .blockCreateScheme {
+    top: 320px;
+    height: 160px;
+  }
+
+  .blockMyWorks {
+    top: 480px;
+    height: 160px;
+  }
+
+  .blockMySchemes {
+    top: 640px;
+    height: 160px;
+  }
 }
