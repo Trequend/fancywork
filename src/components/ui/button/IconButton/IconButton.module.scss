@@ -1,0 +1,25 @@
+@import "../../../../styles/variables";
+
+@mixin button($color) {
+  padding: 12px;
+  border-radius: 9999%;
+  background-color: $primary-color;
+  font-size: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: darken($color: $primary-color, $amount: 5);
+  }
+}
+
+.primary {
+  @include button($primary-color);
+}
+
+.secondary {
+  @include button($secondary-color);
+}

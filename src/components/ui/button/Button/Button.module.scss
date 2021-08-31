@@ -1,0 +1,19 @@
+@import "../../../../styles/variables";
+
+@mixin button($color) {
+  padding: 10px 20px;
+  background-color: $color;
+  color: white;
+
+  &:hover {
+    background-color: darken($color: $color, $amount: 10);
+  }
+}
+
+.primary {
+  @include button($primary-color);
+}
+
+.secondary {
+  @include button($secondary-color);
+}

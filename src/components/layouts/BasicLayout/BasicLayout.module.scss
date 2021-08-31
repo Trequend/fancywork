@@ -1,0 +1,64 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+$header-height: 60px;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 15px;
+  height: $header-height;
+  box-shadow: 0 0 10px 1px rgb(200, 200, 200);
+}
+
+.headerLookup {
+  display: flex;
+  align-items: center;
+}
+
+.headerTitle {
+  margin-left: 20px;
+}
+
+.headerBackButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerHomeButton,
+.headerBackButtonIcon {
+  width: 2em;
+  height: 2em;
+}
+
+.actionButton {
+  @include media-max-width(sm) {
+    display: none;
+  }
+}
+
+.main {
+  flex: 1 0 auto;
+}
+
+.balloon {
+  position: fixed;
+  box-shadow: 0 0 10px 1px rgb(200, 200, 200);
+  bottom: 20px;
+  right: 20px;
+
+  @include media-min-width(sm) {
+    display: none !important;
+  }
+}

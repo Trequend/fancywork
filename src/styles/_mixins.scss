@@ -9,3 +9,13 @@
     }
   }
 }
+
+@mixin media-min-width($target-breakpoint) {
+  @each $breakpoint, $width in $breakpoints {
+    @if $breakpoint == $target-breakpoint {
+      @media screen and (min-width: $width + 1) {
+        @content;
+      }
+    }
+  }
+}

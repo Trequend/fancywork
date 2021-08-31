@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styles from './Home.module.scss';
-import logo from './assets/logo.svg';
+import logo from '../../assets/logo.svg';
 
 const Home: FC = () => {
   return (
