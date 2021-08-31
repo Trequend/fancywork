@@ -55,7 +55,7 @@
   background: url($url) $color no-repeat center/cover;
   background-blend-mode: overlay;
 
-  @media screen and (min-width: 500px) {
+  @media screen and (min-width: 500px) and (hover: hover) {
     background-size: 100%;
     transition: background-size 0.2s ease-in-out, background-color 0.2s ease-in-out;
 
@@ -92,9 +92,11 @@
   text-transform: uppercase;
   letter-spacing: 5px;
 
-  &:hover {
-    & .text::after {
-      transform: scaleX(1);
+  @media (hover: hover) {
+    &:hover {
+      & .text::after {
+        transform: scaleX(1);
+      }
     }
   }
 }
