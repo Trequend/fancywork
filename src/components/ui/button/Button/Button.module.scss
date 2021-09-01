@@ -4,6 +4,7 @@
   padding: 10px 20px;
   background-color: $color;
   color: white;
+  transition: background-color 0.2s ease-in-out;
 
   &:hover {
     background-color: darken($color: $color, $amount: 10);
