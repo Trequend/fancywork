@@ -51,10 +51,10 @@
 }
 
 @mixin card-backround($url) {
-  $color: #505050;
+  $color: #c2c2c2;
 
   background: url($url) $color no-repeat center/cover;
-  background-blend-mode: overlay;
+  background-blend-mode: multiply;
 
   @media screen and (min-width: 500px) and (hover: hover) {
     background-size: 100%;
