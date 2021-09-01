@@ -11,8 +11,10 @@
   color: white;
   transition: background-color 0.2s ease-in-out;
 
-  &:hover {
-    background-color: darken($color: $primary-color, $amount: 5);
+  @media (hover: hover) {
+    &:hover {
+      background-color: darken($color: $primary-color, $amount: 5);
+    }
   }
 }
 
