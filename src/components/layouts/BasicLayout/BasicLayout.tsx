@@ -50,7 +50,11 @@ const BasicLayout: FC<Props> = ({ buttonVariant, title, action, children }) => {
       </header>
       <main className={styles.main}>{children}</main>
       {action ? (
-        <IconButton Icon={action.Icon} className={styles.balloon} />
+        <IconButton
+          Icon={action.Icon}
+          className={styles.balloon}
+          onClick={action.invoke}
+        />
       ) : null}
     </div>
   );
