@@ -1,7 +1,7 @@
 import Dragger from 'antd/lib/upload/Dragger';
 import { FC } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
-import { BasicLayout } from '../../../components/layouts';
+import { BasicLayout } from 'src/components/layouts';
 
 type Props = {
   onChoose: (image: File) => void;

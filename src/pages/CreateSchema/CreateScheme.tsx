@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
-import { AppPage } from '../../types/AppPage';
+import { AppPage } from 'src/types';
 import ChooseImage from './ChooseImage/ChooseImage';
 import {
   CHOOSE_IMAGE_PATHNAME,

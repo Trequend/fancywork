@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styles from './Home.module.scss';
-import logo from '../../assets/logo.svg';
-import { AppPage } from '../../types/AppPage';
+import logo from 'src/assets/logo.svg';
+import { AppPage } from 'src/types';
 import { CREATE_SCHEMA_PATHNAME } from '../CreateSchema/constants';
 import { HOME_PATHNAME } from './constants';
 

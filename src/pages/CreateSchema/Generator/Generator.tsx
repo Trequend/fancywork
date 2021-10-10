@@ -1,7 +1,7 @@
 import { Col, Row, Form, Select, Input, Button } from 'antd';
 import { FC } from 'react';
-import { BasicLayout } from '../../../components/layouts';
-import { PreviewFileImage } from '../../../components/ui/image';
+import { BasicLayout } from 'src/components/layouts';
+import { PreviewFileImage } from 'src/components/ui/image';
 import styles from './Generator.module.scss';
 
 type Props = {

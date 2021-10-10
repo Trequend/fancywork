@@ -18,14 +18,18 @@ module.exports = {
     { value: 'test', name: 'test:     Adding missing tests' },
     {
       value: 'chore',
-      name:
-        'chore:    Changes to the build process or auxiliary tools\n            and libraries such as documentation generation',
+      name: 'chore:    Changes to the build process or auxiliary tools\n            and libraries such as documentation generation',
     },
     { value: 'revert', name: 'revert:   Revert to a commit' },
     { value: 'WIP', name: 'WIP:      Work in progress' },
   ],
 
-  scopes: [{ name: 'pwa' }, { name: 'utils' }, { name: 'git' }, { name: 'frontend' }],
+  scopes: [
+    { name: 'pwa' },
+    { name: 'utils' },
+    { name: 'git' },
+    { name: 'frontend' },
+  ],
 
   allowTicketNumber: false,
   isTicketNumberRequired: false,
@@ -39,7 +43,8 @@ module.exports = {
     subject: 'Write a SHORT, IMPERATIVE tense description of the change:\n',
     body: 'Provide a LONGER description of the change (optional). Use "|" to break new line:\n',
     breaking: 'List any BREAKING CHANGES (optional):\n',
-    footer: 'List any ISSUES CLOSED by this change (optional). E.g.: #31, #34:\n',
+    footer:
+      'List any ISSUES CLOSED by this change (optional). E.g.: #31, #34:\n',
     confirmCommit: 'Are you sure you want to proceed with the commit above?',
   },
 

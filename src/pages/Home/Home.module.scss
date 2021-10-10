@@ -1,4 +1,4 @@
-@import "src/styles/variables";
+@import 'src/styles/variables';
 
 .root {
   display: flex;
@@ -58,7 +58,9 @@
 
   @media screen and (min-width: 500px) and (hover: hover) {
     background-size: 100%;
-    transition: background-size 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    transition:
+      background-size 0.2s ease-in-out,
+      background-color 0.2s ease-in-out;
 
     &:hover {
       background-size: 105%;
@@ -105,7 +107,7 @@
 .blockContinueWork {
   @extend .block;
 
-  @include card-backround("./assets/continueWork.jpg");
+  @include card-backround('./assets/continueWork.jpg');
 
   top: 0;
   left: 0;
@@ -116,7 +118,7 @@
 .blockSettings {
   @extend .block;
 
-  @include card-backround("./assets/settings.jpg");
+  @include card-backround('./assets/settings.jpg');
 
   top: 200px;
   left: 0;
@@ -127,7 +129,7 @@
 .blockMyWorks {
   @extend .block;
 
-  @include card-backround("./assets/myWorks.jpg");
+  @include card-backround('./assets/myWorks.jpg');
 
   left: 200px;
   top: 0;
@@ -138,7 +140,7 @@
 .blockMySchemas {
   @extend .block;
 
-  @include card-backround("./assets/mySchemas.jpg");
+  @include card-backround('./assets/mySchemas.jpg');
 
   left: 600px;
   top: 0;
@@ -149,7 +151,7 @@
 .blockCreateSchema {
   @extend .block;
 
-  @include card-backround("./assets/createSchema.jpg");
+  @include card-backround('./assets/createSchema.jpg');
 
   left: 200px;
   top: 260px;

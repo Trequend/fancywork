@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { CreateScheme, Home } from './pages';
-import { AppPage } from './types/AppPage';
+import { AppPage } from './types';
 import './styles/global.scss';
 import 'antd/dist/antd.css';
 

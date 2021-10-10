@@ -1,4 +1,4 @@
-@import "./breakpoints";
+@import './breakpoints';
 
 @mixin media-max-width($target-breakpoint) {
   @each $breakpoint, $width in $breakpoints {
