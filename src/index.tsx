@@ -1,17 +1,25 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import App from './App';
+import { CreateScheme, Home } from './pages';
+import { AppPage } from './types/AppPage';
 import './styles/global.scss';
+import 'antd/dist/antd.css';
+
+const pages: Array<AppPage> = [Home, CreateScheme];
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
+  <BrowserRouter>
+    {pages.map((page) => (
+      <Route
+        key={page.pathname}
+        path={page.pathname}
+        exact={page.isExactPathname}
+        component={page}
+      />
+    ))}
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

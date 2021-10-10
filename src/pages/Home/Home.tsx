@@ -1,8 +1,11 @@
-import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './Home.module.scss';
 import logo from '../../assets/logo.svg';
+import { AppPage } from '../../types/AppPage';
+import { CREATE_SCHEMA_PATHNAME } from '../CreateSchema/constants';
+import { HOME_PATHNAME } from './constants';
 
-const Home: FC = () => {
+const Home: AppPage = () => {
   return (
     <div className={styles.root}>
       <header className={styles.header}>
@@ -20,12 +23,14 @@ const Home: FC = () => {
           <div className={styles.blockMyWorks}>
             <div className={styles.text}>My works</div>
           </div>
-          <div className={styles.blockMySchemes}>
-            <div className={styles.text}>My schemes</div>
+          <div className={styles.blockMySchemas}>
+            <div className={styles.text}>My schemas</div>
           </div>
-          <div className={styles.blockCreateScheme}>
-            <div className={styles.text}>Create scheme</div>
-          </div>
+          <Link to={CREATE_SCHEMA_PATHNAME}>
+            <div className={styles.blockCreateSchema}>
+              <div className={styles.text}>Create schema</div>
+            </div>
+          </Link>
         </div>
       </main>
       <footer className={styles.footer}>
@@ -43,5 +48,8 @@ const Home: FC = () => {
     </div>
   );
 };
+
+Home.pathname = HOME_PATHNAME;
+Home.isExactPathname = true;
 
 export default Home;

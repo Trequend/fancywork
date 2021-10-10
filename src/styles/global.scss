@@ -2,16 +2,6 @@
 @import "./breakpoints";
 @import "./variables";
 
-@font-face {
-  font-family: 'Rubik';
-  src: url('../fonts/Rubik/Rubik-Regular.ttf') format("truetype");
-}
-
-html {
-  font-family: 'Rubik', sans-serif;
-  color: $text-color;
-}
-
 a {
   color: $primary-color;
 

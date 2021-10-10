@@ -1,0 +1,53 @@
+@import 'src/styles/mixins';
+
+.root {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  margin: 0 auto;
+}
+
+.row {
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  width: 400px;
+  max-width: 100%;
+  margin: 0 auto !important;
+
+  @include media-max-width(md) {
+    width: 100%;
+    margin-top: 10px !important;
+  }
+}
+
+.formHeader {
+  font-size: 24px;
+}
+
+.submitButton {
+  width: 100%;
+}
+
+.label {
+  display: block;
+
+  & > * {
+    width: 100%;
+  }
+}
+
+.button {
+  width: 100%;
+}

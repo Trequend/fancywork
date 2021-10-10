@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@import "src/styles/variables";
 
 .root {
   display: flex;
@@ -135,10 +135,10 @@
   width: 400px;
 }
 
-.blockMySchemes {
+.blockMySchemas {
   @extend .block;
 
-  @include card-backround("./assets/mySchemes.jpg");
+  @include card-backround("./assets/mySchemas.jpg");
 
   left: 600px;
   top: 0;
@@ -146,10 +146,10 @@
   width: 400px;
 }
 
-.blockCreateScheme {
+.blockCreateSchema {
   @extend .block;
 
-  @include card-backround("./assets/createScheme.jpg");
+  @include card-backround("./assets/createSchema.jpg");
 
   left: 200px;
   top: 260px;
@@ -184,14 +184,14 @@
     width: 500px;
   }
 
-  .blockMySchemes {
+  .blockMySchemas {
     left: 200px;
     top: 250px;
     height: 250px;
     width: 500px;
   }
 
-  .blockCreateScheme {
+  .blockCreateSchema {
     left: 0;
     top: 500px;
     height: 240px;
@@ -208,11 +208,11 @@
     width: 400px;
   }
 
-  .blockMySchemes {
+  .blockMySchemas {
     width: 400px;
   }
 
-  .blockCreateScheme {
+  .blockCreateSchema {
     width: 600px;
   }
 }
@@ -235,13 +235,13 @@
     height: 200px;
   }
 
-  .blockMySchemes {
+  .blockMySchemas {
     top: 200px;
     width: 300px;
     height: 200px;
   }
 
-  .blockCreateScheme {
+  .blockCreateSchema {
     top: 400px;
     width: 500px;
   }
@@ -267,7 +267,7 @@
     width: 200px;
   }
 
-  .blockCreateScheme {
+  .blockCreateSchema {
     top: 200px;
     width: 400px;
     height: 240px;
@@ -280,7 +280,7 @@
     height: 240px;
   }
 
-  .blockMySchemes {
+  .blockMySchemas {
     top: 680px;
     left: 0;
     width: 400px;
@@ -304,7 +304,7 @@
     width: 50%;
   }
 
-  .blockCreateScheme {
+  .blockCreateSchema {
     width: 100%;
   }
 
@@ -312,7 +312,7 @@
     width: 100%;
   }
 
-  .blockMySchemes {
+  .blockMySchemas {
     width: 100%;
   }
 }
@@ -330,7 +330,7 @@
     height: 150px;
   }
 
-  .blockCreateScheme {
+  .blockCreateSchema {
     top: 150px;
     height: 190px;
   }
@@ -340,7 +340,7 @@
     height: 190px;
   }
 
-  .blockMySchemes {
+  .blockMySchemas {
     top: 530px;
     height: 190px;
   }
@@ -363,7 +363,7 @@
     height: 160px;
   }
 
-  .blockCreateScheme {
+  .blockCreateSchema {
     top: 320px;
     height: 160px;
   }
@@ -373,7 +373,7 @@
     height: 160px;
   }
 
-  .blockMySchemes {
+  .blockMySchemas {
     top: 640px;
     height: 160px;
   }

@@ -55,7 +55,29 @@
       "no-console": "off",
       "import/prefer-default-export": "off",
       "react/jsx-props-no-spreading": "off",
-      "react/prop-types": "off"
+      "react/prop-types": "off",
+      "jsx-a11y/label-has-associated-control": [
+        "error",
+        {
+          "required": {
+            "some": [
+              "nesting",
+              "id"
+            ]
+          }
+        }
+      ],
+      "jsx-a11y/label-has-for": [
+        "error",
+        {
+          "required": {
+            "some": [
+              "nesting",
+              "id"
+            ]
+          }
+        }
+      ]
     }
   },
   "prettier": {
@@ -102,6 +124,7 @@
     ]
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -109,12 +132,14 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "antd": "^4.16.13",
     "classnames": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
+    "react-transition-group": "^4.4.2",
     "sass": "^1.38.2",
     "stylelint-scss": "^3.20.1",
     "typescript": "4.3.5",
@@ -136,6 +161,7 @@
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
     "@types/react-router-dom": "^5.1.8",
+    "@types/react-transition-group": "^4.4.2",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
     "cz-customizable": "^6.3.0",
