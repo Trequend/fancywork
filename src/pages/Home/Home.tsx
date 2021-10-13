@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import styles from './Home.module.scss';
-import logo from 'src/assets/logo.svg';
 import { AppPage } from 'src/types';
 import { CREATE_SCHEMA_PATHNAME } from '../CreateSchema/constants';
 import { HOME_PATHNAME } from './constants';
+import styles from './Home.module.scss';
+import logo from 'src/assets/logo.svg';
 
-const Home: AppPage = () => {
+export const Home: AppPage = () => {
   return (
     <div className={styles.root}>
       <header className={styles.header}>
@@ -51,5 +51,3 @@ const Home: AppPage = () => {
 
 Home.pathname = HOME_PATHNAME;
 Home.isExactPathname = true;
-
-export default Home;

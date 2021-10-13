@@ -8,7 +8,7 @@ interface Props {
   subTitle?: string;
 }
 
-const BasicLayout: FC<Props> = ({ title, subTitle, children }) => {
+export const BasicLayout: FC<Props> = ({ title, subTitle, children }) => {
   const history = useHistory();
 
   return (
@@ -23,7 +23,3 @@ const BasicLayout: FC<Props> = ({ title, subTitle, children }) => {
     </div>
   );
 };
-
-BasicLayout.defaultProps = {} as Partial<Props>;
-
-export default BasicLayout;

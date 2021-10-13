@@ -19,8 +19,5 @@ export const PreviewFileImage: FC<Props> = ({ image, imageProps }) => {
     };
   }, [image]);
 
-  /* eslint-disable-next-line */
   return <Image {...imageProps} src={src} />;
 };
-
-PreviewFileImage.defaultProps = {} as Partial<Props>;

@@ -7,7 +7,7 @@ type Props = {
   onChoose: (image: File) => void;
 };
 
-const ChooseImage: FC<Props> = ({ onChoose }) => {
+export const ChooseImage: FC<Props> = ({ onChoose }) => {
   return (
     <BasicLayout title="Choose image">
       <Dragger
@@ -28,5 +28,3 @@ const ChooseImage: FC<Props> = ({ onChoose }) => {
     </BasicLayout>
   );
 };
-
-export default ChooseImage;

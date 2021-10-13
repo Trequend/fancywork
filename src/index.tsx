@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
+import { reportWebVitals } from './reportWebVitals';
 import { CreateScheme, Home } from './pages';
 import { AppPage } from './types';
 import './styles/global.scss';

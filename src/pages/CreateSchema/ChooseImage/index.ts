@@ -1,1 +1,1 @@
-export { default } from './ChooseImage';
+export { ChooseImage } from './ChooseImage';

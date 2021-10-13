@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import { AppPage } from 'src/types';
-import ChooseImage from './ChooseImage/ChooseImage';
+import { ChooseImage } from './ChooseImage/ChooseImage';
 import {
   CHOOSE_IMAGE_PATHNAME,
   CREATE_SCHEMA_PATHNAME,
@@ -9,7 +9,7 @@ import {
 } from './constants';
 import { Generator } from './Generator';
 
-const CreateScheme: AppPage = () => {
+export const CreateScheme: AppPage = () => {
   const history = useHistory();
   const [sourceImage, setSourceImage] = useState<File>();
 
@@ -36,5 +36,3 @@ const CreateScheme: AppPage = () => {
 
 CreateScheme.pathname = CREATE_SCHEMA_PATHNAME;
 CreateScheme.isExactPathname = false;
-
-export default CreateScheme;
