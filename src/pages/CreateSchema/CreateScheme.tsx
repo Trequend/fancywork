@@ -7,7 +7,7 @@ import {
   CREATE_SCHEMA_PATHNAME,
   GENERATOR_PATHNAME,
 } from './constants';
-import Generator from './Generator';
+import { Generator } from './Generator';
 
 const CreateScheme: AppPage = () => {
   const history = useHistory();

@@ -6,7 +6,7 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding: 10px 15px;
+  padding: 30px 15px;
   margin: 0 auto;
 }
 
@@ -28,26 +28,6 @@
 
   @include media-max-width(md) {
     width: 100%;
-    margin-top: 10px !important;
+    margin-top: 20px !important;
   }
-}
-
-.formHeader {
-  font-size: 24px;
-}
-
-.submitButton {
-  width: 100%;
-}
-
-.label {
-  display: block;
-
-  & > * {
-    width: 100%;
-  }
-}
-
-.button {
-  width: 100%;
 }

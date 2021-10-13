@@ -52,7 +52,15 @@
     ],
     "rules": {
       "at-rule-no-unknown": null,
-      "scss/at-rule-no-unknown": true
+      "scss/at-rule-no-unknown": true,
+      "selector-pseudo-class-no-unknown": [
+        true,
+        {
+          "ignorePseudoClasses": [
+            "global"
+          ]
+        }
+      ]
     }
   },
   "config": {
@@ -102,6 +110,7 @@
     "sass": "^1.38.2",
     "stylelint-scss": "^3.20.1",
     "typescript": "4.3.5",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.0.1",
     "workbox-background-sync": "^5.1.4",
     "workbox-broadcast-update": "^5.1.4",
@@ -121,10 +130,12 @@
     "@commitlint/config-conventional": "^13.1.0",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-transition-group": "^4.4.2",
+    "@types/uuid": "^8.3.1",
     "cz-customizable": "^6.3.0",
     "husky": "^7.0.2",
     "prettier": "2.3.2",
     "stylelint": "^13.13.1",
-    "stylelint-config-standard": "^22.0.0"
+    "stylelint-config-standard": "^22.0.0",
+    "worker-plugin": "^5.0.1"
   }
 }
