@@ -7,7 +7,7 @@ import { PaletteReduceAlgorithm } from '../classes/palette-reducers/PaletteReduc
 
 export type CreateImagePaletteOptions = {
   palette: Palette;
-  colorsCount?: number;
+  maxColorsCount?: number;
   reduceAlgorithm?: PaletteReduceAlgorithm;
 };
 
@@ -15,7 +15,7 @@ export function createImagePalette(
   imageData: ImageData,
   options: CreateImagePaletteOptions
 ): KMeansPalette {
-  const { palette, colorsCount, reduceAlgorithm } = options;
+  const { palette, maxColorsCount, reduceAlgorithm } = options;
   const imagePalette = new KMeansPalette(palette);
   forEachPixel(imageData, (red, green, blue, alpha) => {
     if (alpha !== 0) {
@@ -24,11 +24,9 @@ export function createImagePalette(
     }
   });
 
-  if (colorsCount) {
-    const reducer = new PaletteReducerFactory().createReducer(
-      reduceAlgorithm || 'nearest'
-    );
-    imagePalette.reduce(colorsCount, reducer);
+  if (maxColorsCount && reduceAlgorithm) {
+    const reducer = new PaletteReducerFactory().createReducer(reduceAlgorithm);
+    imagePalette.reduce(maxColorsCount, reducer);
   } else {
     imagePalette.reduce();
   }

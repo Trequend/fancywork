@@ -1,33 +1,39 @@
 import { RGBColor } from '../classes/RGBColor';
 import { CreateImagePaletteOptions } from './createImagePalette';
 import { executeInCanvasContext } from './executeInCanvasContext';
-import { getImageData } from './getImageData';
 import { Palette, Schema, SchemaGrid, SchemaMetadata } from '../types';
 import { createSchemaGrid } from './createSchemaGrid';
 import { v4 as uuidv4 } from 'uuid';
+import { processImageInCanvas } from './processImageInCanvas';
 
 export type GenerateSchemaOptions = {
   name: string;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
   stitchCount: number;
 } & CreateImagePaletteOptions;
 
 export async function createSchema(
-  imageUrl: string,
+  imageURL: string,
   options: GenerateSchemaOptions
 ): Promise<Schema> {
-  const imageData =
-    options.width && options.height
-      ? await getImageData(imageUrl, options.width, options.height)
-      : await getImageData(imageUrl);
+  const imageData = await processImageInCanvas(
+    (context, width, height) => {
+      return context.getImageData(0, 0, width, height);
+    },
+    {
+      imageURL,
+      width: options.width,
+      height: options.height,
+    }
+  );
 
   const { grid, palette } = await createSchemaGrid({
     imageData,
     options,
   });
 
-  const metadata = createSchemaMetadata(imageData, {
+  const metadata = await createSchemaMetadata(imageData, {
     name: options.name,
     grid,
     palette,
@@ -50,13 +56,11 @@ type CreateSchemaMetadataOptions = {
   palette: Palette;
 };
 
-function createSchemaMetadata(
+async function createSchemaMetadata(
   imageData: ImageData,
   options: CreateSchemaMetadataOptions
-): SchemaMetadata {
-  const sourceImageDataURL = getSourceImageDataURL(imageData);
-
-  const schemaImageDataURL = getSchemaImageDataURL(
+): Promise<SchemaMetadata> {
+  const schemaImageDataURL = await getSchemaImageDataURL(
     imageData.width,
     imageData.height,
     options.grid,
@@ -68,27 +72,17 @@ function createSchemaMetadata(
     width: imageData.width,
     height: imageData.height,
     paletteName: options.palette.name,
-    sourceImageDataURL,
     schemaImageDataURL,
   };
 }
 
-function getSourceImageDataURL(imageData: ImageData): string {
-  return executeInCanvasContext((context) => {
-    context.canvas.width = imageData.width;
-    context.canvas.height = imageData.height;
-    context.putImageData(imageData, 0, 0);
-    return context.canvas.toDataURL();
-  });
-}
-
-function getSchemaImageDataURL(
+async function getSchemaImageDataURL(
   width: number,
   height: number,
   grid: SchemaGrid,
   palette: Palette
-): string {
-  return executeInCanvasContext((context) => {
+): Promise<string> {
+  const dataURL = executeInCanvasContext((context) => {
     const data = new Uint8ClampedArray(grid.length * 4);
     const colors = palette.colors.map(({ hexColor }) =>
       RGBColor.fromHex(hexColor)
@@ -113,4 +107,17 @@ function getSchemaImageDataURL(
     context.putImageData(imageData, 0, 0);
     return context.canvas.toDataURL();
   });
+
+  const CELL_SIZE = 5;
+  return await processImageInCanvas(
+    (context) => {
+      return context.canvas.toDataURL();
+    },
+    {
+      imageURL: dataURL,
+      width: width * CELL_SIZE,
+      height: height * CELL_SIZE,
+      imageSmoothingEnabled: false,
+    }
+  );
 }

@@ -1,1 +1,0 @@
-export { GeneratorForm } from './GeneratorForm';

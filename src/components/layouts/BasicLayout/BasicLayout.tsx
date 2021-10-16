@@ -1,23 +1,17 @@
 import { FC } from 'react';
-import { PageHeader } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { Button, PageHeader, PageHeaderProps } from 'antd';
 import styles from './BasicLayout.module.scss';
+import { CloseOutlined } from '@ant-design/icons';
 
-interface Props {
-  title: string;
-  subTitle?: string;
-}
+type Props = Omit<PageHeaderProps, 'className' | 'extra'>;
 
-export const BasicLayout: FC<Props> = ({ title, subTitle, children }) => {
-  const history = useHistory();
-
+export const BasicLayout: FC<Props> = ({ children, ...rest }) => {
   return (
     <div className={styles.root}>
       <PageHeader
+        {...rest}
         className={styles.header}
-        title={title}
-        subTitle={subTitle}
-        onBack={() => history.goBack()}
+        extra={<Button type="text" shape="circle" icon={<CloseOutlined />} />}
       />
       <main className={styles.main}>{children}</main>
     </div>

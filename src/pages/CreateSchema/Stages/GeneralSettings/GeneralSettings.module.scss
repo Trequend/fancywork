@@ -7,6 +7,7 @@
   align-items: center;
   justify-content: center;
   padding: 30px 15px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -30,4 +31,9 @@
     width: 100%;
     margin-top: 20px !important;
   }
+}
+
+.inputNumber,
+.button {
+  width: 100% !important;
 }

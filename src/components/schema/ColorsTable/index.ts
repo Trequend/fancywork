@@ -1,0 +1,1 @@
+export { ColorsTable } from './ColorsTable';

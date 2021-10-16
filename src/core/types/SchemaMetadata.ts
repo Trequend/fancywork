@@ -3,6 +3,5 @@ export type SchemaMetadata = {
   width: number;
   height: number;
   paletteName: string;
-  sourceImageDataURL: string;
   schemaImageDataURL: string;
 };
