@@ -12,12 +12,7 @@ const pages: Array<AppPage> = [Home, CreateScheme];
 ReactDOM.render(
   <BrowserRouter>
     {pages.map((page) => (
-      <Route
-        key={page.pathname}
-        path={page.pathname}
-        exact={page.isExactPathname}
-        component={page}
-      />
+      <Route exact key={page.pathname} path={page.pathname} component={page} />
     ))}
   </BrowserRouter>,
   document.getElementById('root')

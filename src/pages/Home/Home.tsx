@@ -50,4 +50,3 @@ export const Home: AppPage = () => {
 };
 
 Home.pathname = HOME_PATHNAME;
-Home.isExactPathname = true;

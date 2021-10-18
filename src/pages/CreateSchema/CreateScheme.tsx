@@ -183,4 +183,3 @@ export const CreateScheme: AppPage = () => {
 };
 
 CreateScheme.pathname = CREATE_SCHEMA_PATHNAME;
-CreateScheme.isExactPathname = false;

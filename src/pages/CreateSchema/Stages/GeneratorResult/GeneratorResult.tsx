@@ -1,6 +1,7 @@
 import { Col, Row, Image, Button } from 'antd';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { ColorsTable, SchemaInfoTable } from 'src/components/schema';
+import { SchemaViewer } from 'src/core/components';
 import { downloadSchema } from 'src/core/functions/downloadSchema';
 import { Schema } from 'src/core/types';
 import styles from './GeneratorResult.module.scss';
@@ -11,6 +12,21 @@ type Props = {
 };
 
 export const GeneratorResult: FC<Props> = ({ schema }) => {
+  const [previewSchema, setPreviewSchema] = useState(false);
+
+  if (previewSchema) {
+    return (
+      <div className={styles.schema}>
+        <SchemaViewer
+          schema={schema}
+          onBack={() => {
+            setPreviewSchema(false);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.root}>
       <div className={styles.firstBlock}>
@@ -25,7 +41,14 @@ export const GeneratorResult: FC<Props> = ({ schema }) => {
               <Button className={styles.button} type="primary">
                 Save
               </Button>
-              <Button className={styles.button}>View schema</Button>
+              <Button
+                className={styles.button}
+                onClick={() => {
+                  setPreviewSchema(true);
+                }}
+              >
+                View schema
+              </Button>
               <Button
                 className={styles.button}
                 onClick={() => {
