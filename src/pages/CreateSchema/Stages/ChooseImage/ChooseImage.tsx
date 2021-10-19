@@ -1,6 +1,7 @@
 import Dragger from 'antd/lib/upload/Dragger';
 import { FC } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
+import styles from './ChooseImage.module.scss';
 
 type Props = {
   onChoose: (image: File) => void;
@@ -19,7 +20,7 @@ export const ChooseImage: FC<Props> = ({ onChoose }) => {
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>
-      <p className="ant-upload-text">
+      <p className={`${styles.message} ant-upload-text`}>
         Click or drag file to this area to choose image
       </p>
     </Dragger>
