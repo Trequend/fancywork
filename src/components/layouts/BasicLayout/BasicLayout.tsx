@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { PageHeader, PageHeaderProps } from 'antd';
 import styles from './BasicLayout.module.scss';
 
-type Props = Omit<PageHeaderProps, 'className' | 'extra'>;
+type Props = Omit<PageHeaderProps, 'className'>;
 
 export const BasicLayout: FC<Props> = ({ children, ...rest }) => {
   return (

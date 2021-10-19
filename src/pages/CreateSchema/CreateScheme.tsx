@@ -1,6 +1,7 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { message, Spin } from 'antd';
+import { LoadingOutlined, CloseOutlined } from '@ant-design/icons';
+import { message, Spin, Button } from 'antd';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Stages } from 'src/components/contexts';
 import { BasicLayout } from 'src/components/layouts';
 import { convertSchemaSize } from 'src/core/functions/convertSchemaSize';
@@ -22,6 +23,8 @@ import {
 import { SizeSettings, SizeSettingsValues } from './Stages/SizeSettings';
 
 export const CreateScheme: AppPage = () => {
+  const history = useHistory();
+
   const [sourceImage, setSourceImage] = useState<File>();
   const [imageURL, setImageURL] = useState<string>();
   const [image, setImage] = useState<HTMLImageElement>();
@@ -107,7 +110,19 @@ export const CreateScheme: AppPage = () => {
       <Stages
         layout={({ title, onBack, children }) => {
           return (
-            <BasicLayout title={title} onBack={onBack}>
+            <BasicLayout
+              title={title}
+              onBack={onBack}
+              extra={
+                <Button
+                  type="text"
+                  icon={<CloseOutlined />}
+                  onClick={() => {
+                    history.goBack();
+                  }}
+                />
+              }
+            >
               {children}
             </BasicLayout>
           );
