@@ -51,9 +51,7 @@
 }
 
 @mixin card-backround($url) {
-  $color: #c2c2c2;
-
-  background: url($url) $color no-repeat center/cover;
+  background: url($url) no-repeat center/cover;
   background-blend-mode: multiply;
 
   @media screen and (min-width: 500px) and (hover: hover) {
@@ -64,7 +62,7 @@
 
     &:hover {
       background-size: 105%;
-      background-color: darken($color: $color, $amount: 5);
+      background-color: rgb(146, 146, 146);
     }
   }
 }
@@ -72,17 +70,20 @@
 .text {
   position: relative;
   color: white;
+  padding: 10px;
+  z-index: 10;
 
-  &::after {
-    transition: transform 0.2s ease-in-out;
-    transform: scaleX(0);
+  &::before {
     position: absolute;
     content: '';
-    left: 0;
-    bottom: 0;
     width: 100%;
-    background-color: white;
-    height: 1px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 10px;
+    background-color: rgba(41, 41, 41, 0.8);
+    z-index: -1;
+    transition: all 200ms ease-in-out;
   }
 }
 
@@ -96,10 +97,16 @@
   letter-spacing: 5px;
 
   @media (hover: hover) {
-    &:hover {
-      & .text::after {
-        transform: scaleX(1);
+    &:active {
+      & .text::before {
+        background-color: rgb(78, 78, 78);
       }
+    }
+  }
+
+  &:active {
+    & .text::before {
+      background-color: rgb(78, 78, 78);
     }
   }
 }
@@ -107,7 +114,7 @@
 .blockContinueWork {
   @extend .block;
 
-  @include card-backround('./assets/continueWork.jpg');
+  @include card-backround('./assets/continue-work.jpg');
 
   top: 0;
   left: 0;
@@ -129,7 +136,7 @@
 .blockMyWorks {
   @extend .block;
 
-  @include card-backround('./assets/myWorks.jpg');
+  @include card-backround('./assets/my-works.jpg');
 
   left: 200px;
   top: 0;
@@ -140,7 +147,7 @@
 .blockMySchemas {
   @extend .block;
 
-  @include card-backround('./assets/mySchemas.jpg');
+  @include card-backround('./assets/my-schemas.jpg');
 
   left: 600px;
   top: 0;
@@ -151,7 +158,7 @@
 .blockCreateSchema {
   @extend .block;
 
-  @include card-backround('./assets/createSchema.jpg');
+  @include card-backround('./assets/create-schema.jpg');
 
   left: 200px;
   top: 260px;

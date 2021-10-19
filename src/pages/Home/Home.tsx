@@ -14,22 +14,23 @@ export const Home: AppPage = () => {
       </header>
       <main className={styles.main}>
         <div className={styles.grid}>
-          <div className={styles.blockContinueWork}>
+          <a href="/#" className={styles.blockContinueWork}>
             <div className={styles.text}>Continue</div>
-          </div>
-          <div className={styles.blockSettings}>
+          </a>
+          <a href="/#" className={styles.blockSettings}>
             <div className={styles.text}>Settings</div>
-          </div>
-          <div className={styles.blockMyWorks}>
+          </a>
+          <a href="/#" className={styles.blockMyWorks}>
             <div className={styles.text}>My works</div>
-          </div>
-          <div className={styles.blockMySchemas}>
+          </a>
+          <a href="/#" className={styles.blockMySchemas}>
             <div className={styles.text}>My schemas</div>
-          </div>
-          <Link to={CREATE_SCHEMA_PATHNAME}>
-            <div className={styles.blockCreateSchema}>
-              <div className={styles.text}>Create schema</div>
-            </div>
+          </a>
+          <Link
+            to={CREATE_SCHEMA_PATHNAME}
+            className={styles.blockCreateSchema}
+          >
+            <div className={styles.text}>Create schema</div>
           </Link>
         </div>
       </main>
