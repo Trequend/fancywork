@@ -61,6 +61,7 @@ export const CreateScheme: AppPage = () => {
         height: size.height,
         maxColorsCount: paletteSettings.maxColorsCount,
         reduceAlgorithm: paletteSettings.reduceAlgorithm,
+        withDithering: paletteSettings.withDithering,
       });
 
       setSchema(schema);

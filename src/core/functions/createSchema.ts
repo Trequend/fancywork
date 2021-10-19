@@ -11,6 +11,7 @@ export type GenerateSchemaOptions = {
   width: number;
   height: number;
   stitchCount: number;
+  withDithering: boolean;
 } & CreateImagePaletteOptions;
 
 export async function createSchema(
@@ -30,6 +31,7 @@ export async function createSchema(
 
   const { grid, palette } = await createSchemaGrid({
     imageData,
+    withDithering: options.withDithering,
     options,
   });
 

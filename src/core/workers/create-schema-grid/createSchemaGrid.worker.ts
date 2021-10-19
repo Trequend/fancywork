@@ -9,7 +9,11 @@ self.addEventListener('message', ({ data }: { data: WorkerInput }) => {
   self.postMessage(output);
 });
 
-function createSchemaGrid({ imageData, options }: WorkerInput): WorkerOutput {
+function createSchemaGrid({
+  imageData,
+  withDithering,
+  options,
+}: WorkerInput): WorkerOutput {
   const imagePalette = createImagePalette(imageData, options);
-  return createSchemaGridWithPalette(imageData, imagePalette);
+  return createSchemaGridWithPalette(imageData, imagePalette, withDithering);
 }

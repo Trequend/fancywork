@@ -3,6 +3,7 @@ import { Palette, SchemaGrid } from 'src/core/types';
 
 export type WorkerInput = {
   imageData: ImageData;
+  withDithering: boolean;
   options: CreateImagePaletteOptions;
 };
 

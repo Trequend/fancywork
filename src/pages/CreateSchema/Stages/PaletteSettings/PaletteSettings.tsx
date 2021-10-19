@@ -16,6 +16,7 @@ export type PaletteSettingsValues = {
   reduceAlgorithm?: PaletteReduceAlgorithm;
   maxColorsCount?: number;
   unlimitedColors: boolean;
+  withDithering: boolean;
 };
 
 type Props = {
@@ -30,7 +31,11 @@ export const PaletteSettings: FC<Props> = ({
   onSubmit,
 }) => {
   const [unlimitedColors, setUnlimitedColors] = useState<boolean>(
-    initialValues ? initialValues?.unlimitedColors : false
+    initialValues ? initialValues.unlimitedColors : false
+  );
+
+  const [withDithering, setWithDithering] = useState<boolean>(
+    initialValues ? initialValues.withDithering : true
   );
 
   const onFinish = (values: any) => {
@@ -38,6 +43,7 @@ export const PaletteSettings: FC<Props> = ({
       reduceAlgorithm: values.reduceAlgorithm,
       maxColorsCount: values.maxColorsCount,
       unlimitedColors,
+      withDithering,
     };
 
     onSubmit(result);
@@ -95,6 +101,17 @@ export const PaletteSettings: FC<Props> = ({
                 checked={unlimitedColors}
               >
                 Unlimited colors
+              </Checkbox>
+            </div>
+            <div className={styles.checkbox}>
+              <Checkbox
+                onChange={(value) => {
+                  setWithDithering(value.target.checked);
+                }}
+                className={styles.checkbox}
+                checked={withDithering}
+              >
+                Dithering
               </Checkbox>
             </div>
             <Button htmlType="submit" type="primary" className={styles.button}>
