@@ -29,7 +29,9 @@ export const PaletteSettings: FC<Props> = ({
   initialValues,
   onSubmit,
 }) => {
-  const [unlimitedColors, setUnlimitedColors] = useState<boolean>(false);
+  const [unlimitedColors, setUnlimitedColors] = useState<boolean>(
+    initialValues ? initialValues?.unlimitedColors : false
+  );
 
   const onFinish = (values: any) => {
     const result: PaletteSettingsValues = {

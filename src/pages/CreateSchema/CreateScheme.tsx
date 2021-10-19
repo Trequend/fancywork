@@ -73,6 +73,10 @@ export const CreateScheme: AppPage = () => {
       return;
     }
 
+    setGeneralSettings(undefined);
+    setSizeSettings(undefined);
+    setPaletteSettings(undefined);
+
     const url = URL.createObjectURL(sourceImage);
     setImageURL(url);
 
