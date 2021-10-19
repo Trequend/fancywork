@@ -34,6 +34,8 @@
 }
 
 .grid {
+  overflow: hidden;
+  border-radius: 40px 0 40px 0;
   display: block;
   position: relative;
   width: 1000px;
@@ -70,8 +72,10 @@
 .text {
   position: relative;
   color: white;
-  padding: 10px;
+  padding: 15px 20px;
+  width: 100%;
   z-index: 10;
+  transition: all 0.2s ease-in-out;
 
   &::before {
     position: absolute;
@@ -80,8 +84,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    border-radius: 10px;
-    background-color: rgba(41, 41, 41, 0.8);
+    background-color: rgba(50, 50, 50, 0.8);
     z-index: -1;
     transition: all 200ms ease-in-out;
   }
@@ -90,23 +93,20 @@
 .block {
   position: absolute;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 5px;
+  font-size: 1rem;
 
   @media (hover: hover) {
-    &:active {
-      & .text::before {
-        background-color: rgb(78, 78, 78);
-      }
+    &:hover .text {
+      padding: 25px;
     }
   }
 
   &:active {
     & .text::before {
-      background-color: rgb(78, 78, 78);
+      background-color: darken($color: rgba(50, 50, 50, 0.8), $amount: 10);
     }
   }
 }
@@ -116,6 +116,7 @@
 
   @include card-backround('./assets/continue-work.jpg');
 
+  align-items: flex-start;
   top: 0;
   left: 0;
   width: 200px;
@@ -138,6 +139,7 @@
 
   @include card-backround('./assets/my-works.jpg');
 
+  align-items: flex-start;
   left: 200px;
   top: 0;
   height: 260px;
@@ -149,6 +151,7 @@
 
   @include card-backround('./assets/my-schemas.jpg');
 
+  align-items: flex-start;
   left: 600px;
   top: 0;
   height: 260px;
@@ -173,6 +176,7 @@
   }
 
   .blockContinueWork {
+    align-items: flex-start;
     top: 0;
     left: 0;
     width: 200px;
@@ -187,6 +191,7 @@
   }
 
   .blockMyWorks {
+    align-items: flex-start;
     left: 200px;
     top: 0;
     height: 250px;
@@ -194,6 +199,7 @@
   }
 
   .blockMySchemas {
+    align-items: flex-end;
     left: 200px;
     top: 250px;
     height: 250px;
@@ -263,6 +269,7 @@
   }
 
   .blockContinueWork {
+    align-items: flex-end;
     top: 0;
     left: 0;
     width: 200px;
@@ -283,6 +290,7 @@
   }
 
   .blockMyWorks {
+    align-items: flex-end;
     top: 440px;
     left: 0;
     width: 400px;
@@ -293,12 +301,14 @@
     top: 680px;
     left: 0;
     width: 400px;
+    height: 240px;
   }
 }
 
 @media screen and (max-width: 500px) {
   .grid {
     width: 100%;
+    border-radius: 0;
   }
 
   .blockContinueWork {
@@ -329,6 +339,7 @@
 @media screen and (max-width: 400px) {
   .grid {
     height: 720px;
+    border-radius: 0;
   }
 
   .blockContinueWork {
@@ -358,6 +369,7 @@
 @media screen and (max-width: 280px) {
   .grid {
     height: 800px;
+    border-radius: 0;
   }
 
   .blockContinueWork {
