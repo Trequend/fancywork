@@ -1,7 +1,10 @@
 import { Col, Row, Image, Button } from 'antd';
 import { FC, useState } from 'react';
-import { ColorsTable, SchemaInfoTable } from 'src/components/schema';
-import { SchemaViewer } from 'src/core/components';
+import {
+  ColorsTable,
+  SchemaInfoTable,
+  SchemaViewer,
+} from 'src/components/schema';
 import { downloadSchema } from 'src/core/functions/downloadSchema';
 import { Schema } from 'src/core/types';
 import styles from './GeneratorResult.module.scss';
