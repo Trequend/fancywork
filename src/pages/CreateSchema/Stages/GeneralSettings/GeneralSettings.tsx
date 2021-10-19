@@ -42,7 +42,7 @@ export const GeneralSettings: FC<Props> = ({
 
   return (
     <div className={styles.root}>
-      <Row gutter={24} className={styles.row}>
+      <Row gutter={{ xs: 0, md: 24 }} className={styles.row}>
         <Col span={24} md={12}>
           <div className={styles.image}>
             <Image src={imageURL} />
