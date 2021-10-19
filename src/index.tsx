@@ -6,15 +6,23 @@ import { CreateScheme, Home } from './pages';
 import { AppPage } from './types';
 import './styles/global.scss';
 import 'antd/dist/antd.css';
+import { AppStorageProvider } from './storage/AppStorageContext';
 
 const pages: Array<AppPage> = [Home, CreateScheme];
 
 ReactDOM.render(
-  <BrowserRouter>
-    {pages.map((page) => (
-      <Route exact key={page.pathname} path={page.pathname} component={page} />
-    ))}
-  </BrowserRouter>,
+  <AppStorageProvider>
+    <BrowserRouter>
+      {pages.map((page) => (
+        <Route
+          exact
+          key={page.pathname}
+          path={page.pathname}
+          component={page}
+        />
+      ))}
+    </BrowserRouter>
+  </AppStorageProvider>,
   document.getElementById('root')
 );
 

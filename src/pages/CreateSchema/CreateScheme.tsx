@@ -7,7 +7,9 @@ import { BasicLayout } from 'src/components/layouts';
 import { convertSchemaSize } from 'src/core/functions/convertSchemaSize';
 import { createSchema } from 'src/core/functions/createSchema';
 import { Schema } from 'src/core/types';
+import { useAppStorage } from 'src/storage/AppStorageContext';
 import { AppPage } from 'src/types';
+import { HOME_PATHNAME } from '../Home/constants';
 import { CREATE_SCHEMA_PATHNAME } from './constants';
 import styles from './CreateSchema.module.scss';
 import { ChooseImage } from './Stages/ChooseImage';
@@ -24,6 +26,8 @@ import { SizeSettings, SizeSettingsValues } from './Stages/SizeSettings';
 
 export const CreateScheme: AppPage = () => {
   const history = useHistory();
+
+  const appStorage = useAppStorage();
 
   const [sourceImage, setSourceImage] = useState<File>();
   const [imageURL, setImageURL] = useState<string>();
@@ -66,7 +70,11 @@ export const CreateScheme: AppPage = () => {
 
       setSchema(schema);
     } catch (error) {
-      message.error((error as any).toString());
+      if (error instanceof Error) {
+        message.error(error.message);
+      } else {
+        message.error('Error');
+      }
     } finally {
       setLoading(false);
     }
@@ -98,6 +106,24 @@ export const CreateScheme: AppPage = () => {
     };
   }, [sourceImage]);
 
+  const onFinish = async () => {
+    if (schema) {
+      setLoading(true);
+      try {
+        await appStorage.addSchema(schema);
+        history.push(HOME_PATHNAME);
+      } catch (error) {
+        if (error instanceof Error) {
+          message.error(error.message);
+        } else {
+          message.error('Error');
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   return (
     <div
       className={styles.root}
@@ -110,7 +136,7 @@ export const CreateScheme: AppPage = () => {
       ) : null}
       <Stages
         onFinish={() => {
-          console.log('Finish');
+          onFinish();
         }}
         layout={({ title, onBack, children }) => {
           return (
