@@ -7,10 +7,6 @@ type LayoutProps = {
 
 type Layout = FC<LayoutProps>;
 
-type StagesProps = {
-  layout: Layout;
-};
-
 type ContextType = {
   completeStage: () => void;
   goBack?: () => void;
@@ -45,11 +41,16 @@ function Stage({ children, title }: StageProps) {
   );
 }
 
+type StagesProps = {
+  layout: Layout;
+  onFinish?: () => void;
+};
+
 type StagesType = {
   Stage: typeof Stage;
 } & FC<StagesProps>;
 
-export const Stages: StagesType = ({ children, layout }) => {
+export const Stages: StagesType = ({ children, layout, onFinish }) => {
   const [stageIndex, setStageIndex] = useState(0);
 
   const childrenArray = React.Children.toArray(children);
@@ -69,10 +70,12 @@ export const Stages: StagesType = ({ children, layout }) => {
 
   const completeStage = useCallback(() => {
     const length = childrenArray.length;
-    setStageIndex((index) => {
-      return index === length - 1 ? index : index + 1;
-    });
-  }, [childrenArray.length]);
+    if (stageIndex === length - 1) {
+      onFinish && onFinish();
+    } else {
+      setStageIndex(stageIndex + 1);
+    }
+  }, [stageIndex, onFinish, childrenArray.length]);
 
   return (
     <StagesContext.Provider

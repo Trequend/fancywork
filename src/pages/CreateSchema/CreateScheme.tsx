@@ -108,6 +108,9 @@ export const CreateScheme: AppPage = () => {
         </div>
       ) : null}
       <Stages
+        onFinish={() => {
+          console.log('Finish');
+        }}
         layout={({ title, onBack, children }) => {
           return (
             <BasicLayout
@@ -193,7 +196,14 @@ export const CreateScheme: AppPage = () => {
         </Stages.Stage>
         <Stages.Stage title="Result">
           {(completeStage) =>
-            schema ? <GeneratorResult schema={schema} /> : null
+            schema ? (
+              <GeneratorResult
+                schema={schema}
+                onSave={() => {
+                  completeStage();
+                }}
+              />
+            ) : null
           }
         </Stages.Stage>
       </Stages>

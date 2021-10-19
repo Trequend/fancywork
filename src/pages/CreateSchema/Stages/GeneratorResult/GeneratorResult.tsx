@@ -11,10 +11,10 @@ import styles from './GeneratorResult.module.scss';
 
 type Props = {
   schema: Schema;
-  onDelete?: () => void;
+  onSave?: () => void;
 };
 
-export const GeneratorResult: FC<Props> = ({ schema }) => {
+export const GeneratorResult: FC<Props> = ({ schema, onSave }) => {
   const [previewSchema, setPreviewSchema] = useState(false);
 
   if (previewSchema) {
@@ -41,7 +41,13 @@ export const GeneratorResult: FC<Props> = ({ schema }) => {
           </Col>
           <Col span={24} md={12}>
             <div className={styles.info}>
-              <Button className={styles.button} type="primary">
+              <Button
+                className={styles.button}
+                type="primary"
+                onClick={() => {
+                  onSave && onSave();
+                }}
+              >
                 Save
               </Button>
               <Button
