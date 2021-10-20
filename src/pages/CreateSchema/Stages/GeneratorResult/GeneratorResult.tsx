@@ -56,7 +56,7 @@ export const GeneratorResult: FC<Props> = ({ schema, onSave }) => {
                   setPreviewSchema(true);
                 }}
               >
-                View schema
+                View Schema
               </Button>
               <Button
                 className={styles.button}

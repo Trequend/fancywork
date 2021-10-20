@@ -21,7 +21,7 @@ export function useStorePagination(pageSize: number) {
         try {
           const total = await appStorage.getSchemasCount();
           if (page > 1 && previousPage * pageSize >= total) {
-            page = Math.floor(total / pageSize) + 1;
+            page = Math.ceil(total / pageSize);
             previousPage = page - 1;
           }
 
@@ -58,6 +58,9 @@ export function useStorePagination(pageSize: number) {
     page: pageNumber,
     data,
     error,
+    refresh: () => {
+      setPage(pageNumber);
+    },
     setPage,
   };
 }

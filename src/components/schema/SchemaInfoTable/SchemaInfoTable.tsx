@@ -1,5 +1,5 @@
 import { ColumnType } from 'antd/lib/table';
-import { Table, TableProps } from 'antd';
+import { Table, TableProps, Typography } from 'antd';
 import { FC } from 'react';
 import { Schema } from 'src/core/types';
 
@@ -12,10 +12,16 @@ export const SchemaInfoTable: FC<Props> = ({ schema, ...rest }) => {
     {
       title: 'Property',
       dataIndex: 'property',
+      render: (value) => {
+        return <Typography.Text ellipsis>{value}</Typography.Text>;
+      },
     },
     {
       title: 'Value',
       dataIndex: 'value',
+      render: (value) => {
+        return <Typography.Text ellipsis>{value}</Typography.Text>;
+      },
     },
   ];
 

@@ -7,6 +7,16 @@
 
 .card {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  & :global(.ant-card-body) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 }
 
 .pagination {
@@ -32,4 +42,30 @@
       object-fit: cover;
     }
   }
+}
+
+.table {
+  margin: 24px 0;
+}
+
+.cardButton {
+  width: 100%;
+
+  & + .cardButton {
+    margin-top: 15px !important;
+  }
+}
+
+.cardButtons {
+  margin-top: auto;
+}
+
+.schema {
+  background: white;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
 }

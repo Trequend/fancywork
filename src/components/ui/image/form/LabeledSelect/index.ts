@@ -1,1 +1,0 @@
-export { LabeledSelect } from './LabeledSelect';

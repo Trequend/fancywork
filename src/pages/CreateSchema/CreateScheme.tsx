@@ -1,9 +1,10 @@
-import { LoadingOutlined, CloseOutlined } from '@ant-design/icons';
-import { message, Spin, Button } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { message, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Stages } from 'src/components/contexts';
 import { BasicLayout } from 'src/components/layouts';
+import { FullscreenSpin } from 'src/components/ui/FullscreenSpin';
 import { convertSchemaSize } from 'src/core/functions/convertSchemaSize';
 import { createSchema } from 'src/core/functions/createSchema';
 import { Schema } from 'src/core/types';
@@ -11,7 +12,6 @@ import { useAppStorage } from 'src/storage/AppStorageContext';
 import { AppPage } from 'src/types';
 import { SCHEMAS_PATHNAME } from '../Schemas/constants';
 import { CREATE_SCHEMA_PATHNAME } from './constants';
-import styles from './CreateSchema.module.scss';
 import { ChooseImage } from './Stages/ChooseImage';
 import {
   GeneralSettings,
@@ -26,7 +26,6 @@ import { SizeSettings, SizeSettingsValues } from './Stages/SizeSettings';
 
 export const CreateScheme: AppPage = () => {
   const history = useHistory();
-
   const appStorage = useAppStorage();
 
   const [sourceImage, setSourceImage] = useState<File>();
@@ -42,14 +41,28 @@ export const CreateScheme: AppPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [schema, setSchema] = useState<Schema>();
 
+  const executeTask = async (task: () => Promise<void>) => {
+    setLoading(true);
+    try {
+      await task();
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message);
+      } else {
+        message.error('Error');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const generateSchema = async (
     imageURL: string,
     generalSettings: GeneralSettingsValues,
     sizeSettings: SizeSettingsValues,
     paletteSettings: PaletteSettingsValues
   ) => {
-    setLoading(true);
-    try {
+    await executeTask(async () => {
       const size = convertSchemaSize(
         sizeSettings.width,
         sizeSettings.height,
@@ -69,14 +82,15 @@ export const CreateScheme: AppPage = () => {
       });
 
       setSchema(schema);
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message);
-      } else {
-        message.error('Error');
-      }
-    } finally {
-      setLoading(false);
+    });
+  };
+
+  const onFinish = async () => {
+    if (schema) {
+      await executeTask(async () => {
+        await appStorage.addSchema(schema);
+        history.replace(SCHEMAS_PATHNAME);
+      });
     }
   };
 
@@ -106,34 +120,9 @@ export const CreateScheme: AppPage = () => {
     };
   }, [sourceImage]);
 
-  const onFinish = async () => {
-    if (schema) {
-      setLoading(true);
-      try {
-        await appStorage.addSchema(schema);
-        history.push(SCHEMAS_PATHNAME);
-      } catch (error) {
-        if (error instanceof Error) {
-          message.error(error.message);
-        } else {
-          message.error('Error');
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
   return (
-    <div
-      className={styles.root}
-      style={loading ? { overflow: 'hidden' } : undefined}
-    >
-      {loading ? (
-        <div className={styles.blur}>
-          <Spin indicator={<LoadingOutlined className={styles.icon} />} />
-        </div>
-      ) : null}
+    <>
+      <FullscreenSpin loading={loading} delay={500} />
       <Stages
         onFinish={() => {
           onFinish();
@@ -241,7 +230,7 @@ export const CreateScheme: AppPage = () => {
           }
         </Stages.Stage>
       </Stages>
-    </div>
+    </>
   );
 };
 

@@ -16,6 +16,10 @@ export class AppStorage {
     await this.database.put(SCHEMAS_STORE, schema);
   }
 
+  public async deleteSchema(id: string) {
+    await this.database.delete(SCHEMAS_STORE, id);
+  }
+
   public async getSchemasCount() {
     return await this.database.count(SCHEMAS_STORE);
   }

@@ -4,9 +4,9 @@ import styles from './BasicLayout.module.scss';
 
 type Props = Omit<PageHeaderProps, 'className'>;
 
-export const BasicLayout: FC<Props> = ({ children, ...rest }) => {
+export const BasicLayout: FC<Props> = ({ style, children, ...rest }) => {
   return (
-    <div className={styles.root}>
+    <div className={styles.root} style={style}>
       <PageHeader {...rest} className={styles.header} />
       <main className={styles.main}>{children}</main>
     </div>
