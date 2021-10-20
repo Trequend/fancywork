@@ -1,33 +1,51 @@
-import { Schema } from 'src/core/types';
+import { Schema, Work } from 'src/core/types';
 import { openDB, IDBPDatabase } from 'idb';
 
 const DB_NAME = 'fancywork';
 
 const SCHEMAS_STORE = 'schemas';
+const WORKS_STORE = 'works';
+
+export type StoreMap = {
+  [SCHEMAS_STORE]: Schema;
+  [WORKS_STORE]: Work;
+};
+
+export type AppStore = keyof StoreMap;
+
+const STORES: Array<AppStore> = [SCHEMAS_STORE, WORKS_STORE];
 
 export class AppStorage {
   private constructor(private readonly database: IDBPDatabase) {}
 
-  public async addSchema(schema: Schema) {
-    await this.database.add(SCHEMAS_STORE, schema);
+  public async add<K extends AppStore>(storeName: K, value: StoreMap[K]) {
+    await this.database.add(storeName, value);
   }
 
-  public async saveSchema(schema: Schema) {
-    await this.database.put(SCHEMAS_STORE, schema);
+  public async save<K extends AppStore>(storeName: K, value: StoreMap[K]) {
+    await this.database.put(storeName, value);
   }
 
-  public async deleteSchema(id: string) {
-    await this.database.delete(SCHEMAS_STORE, id);
+  public async delete<K extends AppStore>(storeName: K, id: string) {
+    await this.database.delete(storeName, id);
   }
 
-  public async getSchemasCount() {
-    return await this.database.count(SCHEMAS_STORE);
+  public async getCount<K extends AppStore>(storeName: K) {
+    return await this.database.count(storeName);
   }
 
-  public async getSchemas(count: number, start?: number) {
-    const transaction = this.database.transaction(SCHEMAS_STORE, 'readonly');
+  public async get<K extends AppStore>(storeName: K, id: string) {
+    return await this.database.get(storeName, id);
+  }
+
+  public async getRange<K extends AppStore>(
+    storeName: K,
+    count: number,
+    start?: number
+  ) {
+    const transaction = this.database.transaction(storeName, 'readonly');
     let cursor = await transaction.store.openCursor();
-    const result: Array<Schema> = [];
+    const result: Array<StoreMap[K]> = [];
 
     if (cursor && start && start > 0) {
       cursor = await cursor.advance(start);
@@ -49,10 +67,14 @@ export class AppStorage {
   public static async open() {
     const database = await openDB(DB_NAME, 1, {
       upgrade(database) {
-        database.createObjectStore(SCHEMAS_STORE, {
-          keyPath: 'id',
-          autoIncrement: false,
-        });
+        const register = (storeName: AppStore) => {
+          database.createObjectStore(storeName, {
+            keyPath: 'id',
+            autoIncrement: false,
+          });
+        };
+
+        STORES.forEach((storeName) => register(storeName));
       },
     });
 

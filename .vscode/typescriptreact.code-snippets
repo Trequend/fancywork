@@ -1,0 +1,30 @@
+{
+  "Functional component": {
+    "prefix": "fc",
+    "scope": "typescriptreact",
+    "body": [
+      "import { FC } from 'react';",
+      "",
+      "export const $1: FC = () => {",
+      "  $0",
+      "};",
+      ""
+    ]
+  },
+  "Functional component with props": {
+    "prefix": "fcp",
+    "scope": "typescriptreact",
+    "body": [
+      "import { FC } from 'react';",
+      "",
+      "type Props = {",
+      "  $0",
+      "};",
+      "",
+      "export const $1: FC<Props> = ({  }) => {",
+      "  ",
+      "};",
+      ""
+    ]
+  }
+}

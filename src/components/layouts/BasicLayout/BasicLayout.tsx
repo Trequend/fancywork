@@ -2,9 +2,13 @@ import { FC } from 'react';
 import { PageHeader, PageHeaderProps } from 'antd';
 import styles from './BasicLayout.module.scss';
 
-type Props = Omit<PageHeaderProps, 'className'>;
+export type BasicLayoutProps = Omit<PageHeaderProps, 'className'>;
 
-export const BasicLayout: FC<Props> = ({ style, children, ...rest }) => {
+export const BasicLayout: FC<BasicLayoutProps> = ({
+  style,
+  children,
+  ...rest
+}) => {
   return (
     <div className={styles.root} style={style}>
       <PageHeader {...rest} className={styles.header} />

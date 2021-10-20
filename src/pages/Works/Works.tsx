@@ -1,66 +1,50 @@
 import { StorePaginationLayout } from 'src/components/layouts';
 import { AppPage } from 'src/types';
-import { SCHEMAS_PATHNAME } from './constants';
-import { Button, Card, Col, Row, Image, Popconfirm, message } from 'antd';
-import styles from './Schemas.module.scss';
+import { WORKS_PATHNAME } from './constants';
+import { Button, Card, Col, Row, Image, Popconfirm } from 'antd';
 import {
   DeleteOutlined,
   EyeOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { SchemaInfoTable, SchemaViewer } from 'src/components/schema';
-import { useState } from 'react';
-import { Schema } from 'src/core/types';
+import { SchemaInfoTable } from 'src/components/schema';
 import { useAppStorage } from 'src/storage/AppStorageContext';
 import { useStorePagination } from 'src/storage/useStorePagination';
-import { createWork } from 'src/core/functions/createWork';
+import styles from './Works.module.scss';
 
 const PAGE_SIZE = 4;
 
-export const Schemas: AppPage = () => {
+export const Works: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
-  const storePagination = useStorePagination('schemas', PAGE_SIZE);
-
-  const [schema, setSchema] = useState<Schema>();
-
-  if (schema) {
-    return (
-      <div className={styles.schema}>
-        <SchemaViewer
-          schema={schema}
-          onBack={() => {
-            setSchema(undefined);
-          }}
-        />
-      </div>
-    );
-  }
+  const storePagination = useStorePagination('works', PAGE_SIZE);
 
   return (
     <StorePaginationLayout
-      title="My schemas"
+      title="My works"
       onBack={() => {
         history.goBack();
       }}
       storePagination={storePagination}
     >
       <Row gutter={[24, 24]}>
-        {storePagination.data.map((schema) => {
+        {storePagination.data.map((work) => {
+          const { schema } = work;
+
           return (
-            <Col span={24} md={12} key={schema.id}>
+            <Col span={24} md={12} key={work.id}>
               <Card
                 className={styles.card}
                 actions={[
                   <SettingOutlined key="edit" />,
                   <Popconfirm
-                    title="Delete schema"
+                    title="Delete work"
                     key="delete"
                     okType="danger"
                     onConfirm={async () => {
-                      await appStorage.delete('schemas', schema.id);
+                      await appStorage.delete('works', work.id);
                       storePagination.refresh();
                     }}
                   >
@@ -89,24 +73,8 @@ export const Schemas: AppPage = () => {
                   scroll={{ x: true }}
                 />
                 <div className={styles.cardButtons}>
-                  <Button
-                    type="primary"
-                    className={styles.cardButton}
-                    onClick={async () => {
-                      const work = createWork(schema);
-                      await appStorage.add('works', work);
-                      message.success('Work created');
-                    }}
-                  >
-                    To Embroider
-                  </Button>
-                  <Button
-                    className={styles.cardButton}
-                    onClick={() => {
-                      setSchema(schema);
-                    }}
-                  >
-                    View Schema
+                  <Button type="primary" className={styles.cardButton}>
+                    Continue
                   </Button>
                 </div>
               </Card>
@@ -118,4 +86,4 @@ export const Schemas: AppPage = () => {
   );
 };
 
-Schemas.pathname = SCHEMAS_PATHNAME;
+Works.pathname = WORKS_PATHNAME;

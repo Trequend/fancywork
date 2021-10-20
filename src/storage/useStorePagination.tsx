@@ -1,13 +1,27 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Schema } from 'src/core/types';
+import { AppStore, StoreMap } from './AppStorage';
 import { useAppStorage } from './AppStorageContext';
 
-export function useStorePagination(pageSize: number) {
+export type StorePagination<K extends AppStore> = {
+  loading: boolean;
+  total?: number;
+  page: number;
+  pageSize: number;
+  error?: string;
+  data: Array<StoreMap[K]>;
+  setPage: (page: number) => void;
+  refresh: () => void;
+};
+
+export function useStorePagination<K extends AppStore>(
+  storeName: K,
+  pageSize: number
+): StorePagination<K> {
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
   const [error, setError] = useState<string>();
-  const [data, setData] = useState<Schema[]>([]);
+  const [data, setData] = useState<Array<StoreMap[K]>>([]);
 
   const appStorage = useAppStorage();
 
@@ -19,16 +33,18 @@ export function useStorePagination(pageSize: number) {
       const action = async () => {
         setLoading(true);
         try {
-          const total = await appStorage.getSchemasCount();
+          const total = await appStorage.getCount(storeName);
           if (page > 1 && previousPage * pageSize >= total) {
             page = Math.ceil(total / pageSize);
             previousPage = page - 1;
           }
 
-          const data = await appStorage.getSchemas(
+          const data = await appStorage.getRange(
+            storeName,
             pageSize,
             previousPage * pageSize
           );
+
           setData(data);
           setTotal(total);
           setPageNumber(page);
@@ -45,7 +61,7 @@ export function useStorePagination(pageSize: number) {
 
       action();
     },
-    [appStorage, pageSize]
+    [storeName, appStorage, pageSize]
   );
 
   useEffect(() => {
@@ -56,6 +72,7 @@ export function useStorePagination(pageSize: number) {
     loading,
     total,
     page: pageNumber,
+    pageSize,
     data,
     error,
     refresh: () => {

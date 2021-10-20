@@ -5,6 +5,7 @@ import { HOME_PATHNAME } from './constants';
 import styles from './Home.module.scss';
 import logo from 'src/assets/logo.svg';
 import { SCHEMAS_PATHNAME } from '../Schemas/constants';
+import { WORKS_PATHNAME } from '../Works/constants';
 
 export const Home: AppPage = () => {
   return (
@@ -26,7 +27,7 @@ export const Home: AppPage = () => {
           >
             Continue
           </Link>
-          <Link to="/#" title="My works" className={styles.button}>
+          <Link to={WORKS_PATHNAME} title="My works" className={styles.button}>
             My works
           </Link>
           <Link

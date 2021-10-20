@@ -88,7 +88,7 @@ export const CreateScheme: AppPage = () => {
   const onFinish = async () => {
     if (schema) {
       await executeTask(async () => {
-        await appStorage.addSchema(schema);
+        await appStorage.add('schemas', schema);
         history.replace(SCHEMAS_PATHNAME);
       });
     }
