@@ -10,28 +10,41 @@ export const Home: AppPage = () => {
   return (
     <div className={styles.root}>
       <header className={styles.header}>
-        <img src={logo} className={styles.logo} alt="logo" />
+        <img src={logo} className={styles.logo} alt="Logo" />
         Fancywork
       </header>
       <main className={styles.main}>
-        <div className={styles.grid}>
-          <a href="/#" className={styles.blockContinueWork}>
-            <div className={styles.text}>Continue</div>
-          </a>
-          <a href="/#" className={styles.blockSettings}>
-            <div className={styles.text}>Settings</div>
-          </a>
-          <a href="/#" className={styles.blockMyWorks}>
-            <div className={styles.text}>My works</div>
-          </a>
-          <Link to={SCHEMAS_PATHNAME} className={styles.blockMySchemas}>
-            <div className={styles.text}>My schemas</div>
+        <div className={styles.buttons}>
+          <Link
+            to="/#"
+            onClick={(event) => {
+              event.preventDefault();
+            }}
+            title="Continue"
+            aria-disabled="true"
+            className={`${styles.button} ${styles.disabled}`}
+          >
+            Continue
+          </Link>
+          <Link to="/#" title="My works" className={styles.button}>
+            My works
+          </Link>
+          <Link
+            to={SCHEMAS_PATHNAME}
+            title="My schemas"
+            className={styles.button}
+          >
+            My schemas
           </Link>
           <Link
             to={CREATE_SCHEMA_PATHNAME}
-            className={styles.blockCreateSchema}
+            title="Create schema"
+            className={styles.button}
           >
-            <div className={styles.text}>Create schema</div>
+            Create schema
+          </Link>
+          <Link to="/#" title="Settings" className={styles.button}>
+            Settings
           </Link>
         </div>
       </main>

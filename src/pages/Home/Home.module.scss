@@ -31,17 +31,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px 15px;
 }
 
-.grid {
-  overflow: hidden;
-  border-radius: 40px 0 40px 0;
-  display: block;
-  position: relative;
-  width: 1000px;
-  height: 500px;
-  color: white;
-  user-select: none;
+.buttons {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  & > * {
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.button {
+  color: $primary-color;
+  text-align: center;
+
+  &:hover {
+    color: lighten($color: $primary-color, $amount: 10);
+  }
+
+  &:visited {
+    color: $primary-color;
+
+    &:hover {
+      color: lighten($color: $primary-color, $amount: 10);
+    }
+  }
+
+  &.disabled {
+    color: gray !important;
+    cursor: not-allowed;
+  }
 }
 
 .footer {
@@ -50,352 +78,4 @@
   padding: 15px 15px;
   padding-top: 10px;
   color: $secondary-text-color;
-}
-
-@mixin card-backround($url) {
-  background: url($url) no-repeat center/cover;
-  background-blend-mode: multiply;
-
-  @media screen and (min-width: 500px) and (hover: hover) {
-    background-size: 100%;
-    transition:
-      background-size 0.2s ease-in-out,
-      background-color 0.2s ease-in-out;
-
-    &:hover {
-      background-size: 105%;
-      background-color: rgb(146, 146, 146);
-    }
-  }
-}
-
-.text {
-  position: relative;
-  color: white;
-  padding: 15px 20px;
-  width: 100%;
-  z-index: 10;
-  transition: all 0.2s ease-in-out;
-
-  &::before {
-    position: absolute;
-    content: '';
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: rgba(50, 50, 50, 0.8);
-    z-index: -1;
-    transition: all 200ms ease-in-out;
-  }
-}
-
-.block {
-  position: absolute;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1rem;
-
-  @media (hover: hover) {
-    &:hover .text {
-      padding: 25px;
-    }
-  }
-
-  &:active {
-    & .text::before {
-      background-color: darken($color: rgba(50, 50, 50, 0.8), $amount: 10);
-    }
-  }
-}
-
-.blockContinueWork {
-  @extend .block;
-
-  @include card-backround('./assets/continue-work.jpg');
-
-  align-items: flex-start;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 200px;
-}
-
-.blockSettings {
-  @extend .block;
-
-  @include card-backround('./assets/settings.jpg');
-
-  top: 200px;
-  left: 0;
-  height: 300px;
-  width: 200px;
-}
-
-.blockMyWorks {
-  @extend .block;
-
-  @include card-backround('./assets/my-works.jpg');
-
-  align-items: flex-start;
-  left: 200px;
-  top: 0;
-  height: 260px;
-  width: 400px;
-}
-
-.blockMySchemas {
-  @extend .block;
-
-  @include card-backround('./assets/my-schemas.jpg');
-
-  align-items: flex-start;
-  left: 600px;
-  top: 0;
-  height: 260px;
-  width: 400px;
-}
-
-.blockCreateSchema {
-  @extend .block;
-
-  @include card-backround('./assets/create-schema.jpg');
-
-  left: 200px;
-  top: 260px;
-  height: 240px;
-  width: 800px;
-}
-
-@media screen and (max-width: 1060px) {
-  .grid {
-    width: 700px;
-    height: 740px;
-  }
-
-  .blockContinueWork {
-    align-items: flex-start;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 200px;
-  }
-
-  .blockSettings {
-    top: 200px;
-    left: 0;
-    height: 300px;
-    width: 200px;
-  }
-
-  .blockMyWorks {
-    align-items: flex-start;
-    left: 200px;
-    top: 0;
-    height: 250px;
-    width: 500px;
-  }
-
-  .blockMySchemas {
-    align-items: flex-end;
-    left: 200px;
-    top: 250px;
-    height: 250px;
-    width: 500px;
-  }
-
-  .blockCreateSchema {
-    left: 0;
-    top: 500px;
-    height: 240px;
-    width: 700px;
-  }
-}
-
-@media screen and (max-width: 760px) {
-  .grid {
-    width: 600px;
-  }
-
-  .blockMyWorks {
-    width: 400px;
-  }
-
-  .blockMySchemas {
-    width: 400px;
-  }
-
-  .blockCreateSchema {
-    width: 600px;
-  }
-}
-
-@media screen and (max-width: 660px) {
-  .grid {
-    width: 500px;
-    height: 640px;
-  }
-
-  .blockSettings {
-    top: 200px;
-    left: 0;
-    height: 200px;
-    width: 200px;
-  }
-
-  .blockMyWorks {
-    width: 300px;
-    height: 200px;
-  }
-
-  .blockMySchemas {
-    top: 200px;
-    width: 300px;
-    height: 200px;
-  }
-
-  .blockCreateSchema {
-    top: 400px;
-    width: 500px;
-  }
-}
-
-@media screen and (max-width: 560px) {
-  .grid {
-    width: 400px;
-    height: 920px;
-  }
-
-  .blockContinueWork {
-    align-items: flex-end;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 200px;
-  }
-
-  .blockSettings {
-    top: 0;
-    left: 200px;
-    height: 200px;
-    width: 200px;
-  }
-
-  .blockCreateSchema {
-    top: 200px;
-    width: 400px;
-    height: 240px;
-  }
-
-  .blockMyWorks {
-    align-items: flex-end;
-    top: 440px;
-    left: 0;
-    width: 400px;
-    height: 240px;
-  }
-
-  .blockMySchemas {
-    top: 680px;
-    left: 0;
-    width: 400px;
-    height: 240px;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .grid {
-    width: 100%;
-    border-radius: 0;
-  }
-
-  .blockContinueWork {
-    top: 0;
-    left: 0;
-    width: 50%;
-  }
-
-  .blockSettings {
-    top: 0;
-    left: 50%;
-    width: 50%;
-  }
-
-  .blockCreateSchema {
-    width: 100%;
-  }
-
-  .blockMyWorks {
-    width: 100%;
-  }
-
-  .blockMySchemas {
-    width: 100%;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .grid {
-    height: 720px;
-    border-radius: 0;
-  }
-
-  .blockContinueWork {
-    height: 150px;
-  }
-
-  .blockSettings {
-    height: 150px;
-  }
-
-  .blockCreateSchema {
-    top: 150px;
-    height: 190px;
-  }
-
-  .blockMyWorks {
-    top: 340px;
-    height: 190px;
-  }
-
-  .blockMySchemas {
-    top: 530px;
-    height: 190px;
-  }
-}
-
-@media screen and (max-width: 280px) {
-  .grid {
-    height: 800px;
-    border-radius: 0;
-  }
-
-  .blockContinueWork {
-    width: 100%;
-    height: 160px;
-  }
-
-  .blockSettings {
-    left: 0;
-    top: 160px;
-    width: 100%;
-    height: 160px;
-  }
-
-  .blockCreateSchema {
-    top: 320px;
-    height: 160px;
-  }
-
-  .blockMyWorks {
-    top: 480px;
-    height: 160px;
-  }
-
-  .blockMySchemas {
-    top: 640px;
-    height: 160px;
-  }
 }
