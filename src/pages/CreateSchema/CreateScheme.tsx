@@ -9,7 +9,7 @@ import { createSchema } from 'src/core/functions/createSchema';
 import { Schema } from 'src/core/types';
 import { useAppStorage } from 'src/storage/AppStorageContext';
 import { AppPage } from 'src/types';
-import { HOME_PATHNAME } from '../Home/constants';
+import { SCHEMAS_PATHNAME } from '../Schemas/constants';
 import { CREATE_SCHEMA_PATHNAME } from './constants';
 import styles from './CreateSchema.module.scss';
 import { ChooseImage } from './Stages/ChooseImage';
@@ -111,7 +111,7 @@ export const CreateScheme: AppPage = () => {
       setLoading(true);
       try {
         await appStorage.addSchema(schema);
-        history.push(HOME_PATHNAME);
+        history.push(SCHEMAS_PATHNAME);
       } catch (error) {
         if (error instanceof Error) {
           message.error(error.message);
@@ -142,15 +142,22 @@ export const CreateScheme: AppPage = () => {
           return (
             <BasicLayout
               title={title}
-              onBack={onBack}
+              onBack={
+                onBack ??
+                (() => {
+                  history.goBack();
+                })
+              }
               extra={
-                <Button
-                  type="text"
-                  icon={<CloseOutlined />}
-                  onClick={() => {
-                    history.goBack();
-                  }}
-                />
+                onBack ? (
+                  <Button
+                    type="text"
+                    icon={<CloseOutlined />}
+                    onClick={() => {
+                      history.goBack();
+                    }}
+                  />
+                ) : null
               }
             >
               {children}
