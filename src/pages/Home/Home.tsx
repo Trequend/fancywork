@@ -4,6 +4,7 @@ import { CREATE_SCHEMA_PATHNAME } from '../CreateSchema/constants';
 import { HOME_PATHNAME } from './constants';
 import styles from './Home.module.scss';
 import logo from 'src/assets/logo.svg';
+import { SCHEMAS_PATHNAME } from '../Schemas/constants';
 
 export const Home: AppPage = () => {
   return (
@@ -23,9 +24,9 @@ export const Home: AppPage = () => {
           <a href="/#" className={styles.blockMyWorks}>
             <div className={styles.text}>My works</div>
           </a>
-          <a href="/#" className={styles.blockMySchemas}>
+          <Link to={SCHEMAS_PATHNAME} className={styles.blockMySchemas}>
             <div className={styles.text}>My schemas</div>
-          </a>
+          </Link>
           <Link
             to={CREATE_SCHEMA_PATHNAME}
             className={styles.blockCreateSchema}

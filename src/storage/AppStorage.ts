@@ -16,6 +16,29 @@ export class AppStorage {
     await this.database.put(SCHEMAS_STORE, schema);
   }
 
+  public async getSchemasCount() {
+    return await this.database.count(SCHEMAS_STORE);
+  }
+
+  public async getSchemas(count: number, start?: number) {
+    const transaction = this.database.transaction(SCHEMAS_STORE, 'readonly');
+    let cursor = await transaction.store.openCursor();
+    console.log('Cursor', cursor);
+    const result: Array<Schema> = [];
+
+    if (cursor && start && start > 0) {
+      cursor = await cursor.advance(start);
+    }
+
+    while (cursor && count > 0) {
+      result.push(cursor.value);
+      cursor = await cursor.continue();
+      count--;
+    }
+
+    return result;
+  }
+
   private close() {
     this.database.close();
   }
