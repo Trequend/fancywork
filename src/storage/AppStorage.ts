@@ -23,7 +23,6 @@ export class AppStorage {
   public async getSchemas(count: number, start?: number) {
     const transaction = this.database.transaction(SCHEMAS_STORE, 'readonly');
     let cursor = await transaction.store.openCursor();
-    console.log('Cursor', cursor);
     const result: Array<Schema> = [];
 
     if (cursor && start && start > 0) {
