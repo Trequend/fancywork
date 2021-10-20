@@ -32,10 +32,9 @@ export const Schemas: AppPage = () => {
           <Row gutter={[24, 24]}>
             {data.map((schema) => {
               return (
-                <Col span={24} md={12}>
+                <Col span={24} md={12} key={schema.id}>
                   <Card
                     className={styles.card}
-                    key={schema.id}
                     actions={[
                       <SettingOutlined key="edit" />,
                       <DeleteOutlined key="delete" />,
