@@ -27,7 +27,7 @@ export const SchemaInfoTable: FC<Props> = ({ schema, ...rest }) => {
 
   const data = [
     {
-      property: 'Name',
+      property: 'Schema name',
       value: schema.metadata.name,
     },
     {

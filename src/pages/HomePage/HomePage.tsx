@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { AppPage } from 'src/types';
-import { CREATE_SCHEMA_PATHNAME } from '../CreateSchema/constants';
+import { CREATE_SCHEMA_PATHNAME } from '../CreateSchemaPage/constants';
 import { HOME_PATHNAME } from './constants';
-import styles from './Home.module.scss';
+import styles from './HomePage.module.scss';
 import logo from 'src/assets/logo.svg';
-import { SCHEMAS_PATHNAME } from '../Schemas/constants';
-import { WORKS_PATHNAME } from '../Works/constants';
+import { SCHEMAS_PATHNAME } from '../SchemasPage/constants';
+import { WORKS_PATHNAME } from '../WorksPage/constants';
 
-export const Home: AppPage = () => {
+export const HomePage: AppPage = () => {
   return (
     <div className={styles.root}>
       <header className={styles.header}>
@@ -65,4 +65,4 @@ export const Home: AppPage = () => {
   );
 };
 
-Home.pathname = HOME_PATHNAME;
+HomePage.pathname = HOME_PATHNAME;

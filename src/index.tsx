@@ -2,13 +2,25 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { reportWebVitals } from './reportWebVitals';
-import { CreateScheme, Home, Schemas, Works } from './pages';
+import {
+  CreateSchemePage,
+  HomePage,
+  SchemasPage,
+  WorkPage,
+  WorksPage,
+} from './pages';
 import { AppPage } from './types';
 import './styles/global.scss';
 import 'antd/dist/antd.css';
 import { AppStorageProvider } from './storage/AppStorageContext';
 
-const pages: Array<AppPage> = [Home, CreateScheme, Schemas, Works];
+const pages: Array<AppPage> = [
+  HomePage,
+  CreateSchemePage,
+  SchemasPage,
+  WorksPage,
+  WorkPage,
+];
 
 ReactDOM.render(
   <AppStorageProvider>

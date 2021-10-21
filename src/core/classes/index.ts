@@ -7,3 +7,6 @@ export { Chunk } from './Chunk';
 export { SchemaViewProvider } from './SchemaViewProvider';
 export { SchemaCanvas } from './SchemaCanvas';
 export { QuantizationError } from './QuantizationError';
+export { WorkCanvas } from './WorkCanvas';
+export { WorkViewProvider } from './WorkViewProvider';
+export { EventEmitter } from './EventEmitter';

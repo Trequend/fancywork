@@ -60,8 +60,8 @@ export class SchemaViewProvider {
   }
 
   public getCell(i: number, j: number) {
-    const width = this.schema.width;
-    const colorIndex = this.schema.grid[j * width + i];
+    const cellIndex = this.getCellIndex(i, j);
+    const colorIndex = this.schema.grid[cellIndex];
     if (colorIndex === undefined) {
       return undefined;
     } else {
@@ -70,6 +70,11 @@ export class SchemaViewProvider {
         ...this.colorMap[colorIndex],
       };
     }
+  }
+
+  protected getCellIndex(i: number, j: number) {
+    const { width } = this.schema;
+    return j * width + i;
   }
 
   private static generateSymbol(index: number) {

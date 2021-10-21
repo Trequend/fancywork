@@ -1,4 +1,5 @@
-export { Home } from './Home';
-export { CreateScheme } from './CreateSchema';
-export { Schemas } from './Schemas';
-export { Works } from './Works';
+export { HomePage } from './HomePage';
+export { CreateSchemePage } from './CreateSchemaPage';
+export { SchemasPage } from './SchemasPage';
+export { WorksPage } from './WorksPage';
+export { WorkPage } from './WorkPage';

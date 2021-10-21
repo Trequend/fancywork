@@ -10,25 +10,16 @@ type Props = {
 };
 
 export const SchemaViewer: FC<Props> = ({ schema, onBack }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (canvasRef.current === null) {
-      throw new Error('No canvas');
-    }
-
-    if (scrollAreaRef.current === null) {
-      throw new Error('No scroll area');
+    if (rootRef.current === null) {
+      throw new Error('No root');
     }
 
     const provider = new SchemaViewProvider(schema);
 
-    const schemaCanvas = new SchemaCanvas(
-      provider,
-      canvasRef.current,
-      scrollAreaRef.current
-    );
+    const schemaCanvas = new SchemaCanvas(provider, rootRef.current);
 
     return () => {
       schemaCanvas.destroy();
@@ -36,16 +27,9 @@ export const SchemaViewer: FC<Props> = ({ schema, onBack }) => {
   }, [schema]);
 
   return (
-    <div className={styles.root}>
-      <BasicLayout
-        title={schema.metadata.name}
-        subTitle="view only"
-        onBack={onBack}
-      >
-        <div className={styles.area}>
-          <canvas ref={canvasRef} className={styles.canvas} />
-          <div ref={scrollAreaRef} className={styles.scrollArea} />
-        </div>
+    <div className={styles.wrapper}>
+      <BasicLayout title={schema.metadata.name} onBack={onBack}>
+        <div className={styles.root} ref={rootRef} />
       </BasicLayout>
     </div>
   );

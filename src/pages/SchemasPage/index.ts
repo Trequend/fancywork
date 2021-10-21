@@ -1,0 +1,1 @@
+export { SchemasPage } from './SchemasPage';

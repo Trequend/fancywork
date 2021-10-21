@@ -10,7 +10,7 @@ import { createSchema } from 'src/core/functions/createSchema';
 import { Schema } from 'src/core/types';
 import { useAppStorage } from 'src/storage/AppStorageContext';
 import { AppPage } from 'src/types';
-import { SCHEMAS_PATHNAME } from '../Schemas/constants';
+import { SCHEMAS_PATHNAME } from '../SchemasPage/constants';
 import { CREATE_SCHEMA_PATHNAME } from './constants';
 import { ChooseImage } from './Stages/ChooseImage';
 import {
@@ -24,7 +24,7 @@ import {
 } from './Stages/PaletteSettings';
 import { SizeSettings, SizeSettingsValues } from './Stages/SizeSettings';
 
-export const CreateScheme: AppPage = () => {
+export const CreateSchemePage: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
@@ -237,4 +237,4 @@ export const CreateScheme: AppPage = () => {
   );
 };
 
-CreateScheme.pathname = CREATE_SCHEMA_PATHNAME;
+CreateSchemePage.pathname = CREATE_SCHEMA_PATHNAME;

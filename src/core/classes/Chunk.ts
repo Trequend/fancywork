@@ -1,5 +1,6 @@
 import { Vector2Int } from './Vector2Int';
 import { Vector2 } from './Vector2';
+import { Cell } from '../types';
 
 export class Chunk {
   public readonly cellOffset: Vector2;
@@ -31,6 +32,50 @@ export class Chunk {
       this.cellOffset.x + (this.endCell.x - this.startCell.x + 1) * cellSize;
     this.height =
       this.cellOffset.y + (this.endCell.y - this.startCell.y + 1) * cellSize;
+  }
+
+  public mousePositionToCell(mouseX: number, mouseY: number): Cell | undefined {
+    if (
+      mouseX < 0 ||
+      mouseY < 0 ||
+      mouseX > this.width ||
+      mouseY > this.height
+    ) {
+      return undefined;
+    }
+
+    const cellNumberX = Math.floor(
+      (mouseX + this.cellOffset.x) / this.cellSize
+    );
+    const cellNumberY = Math.floor(
+      (mouseY + this.cellOffset.y) / this.cellSize
+    );
+
+    if (mouseX < this.cellSize && mouseY < this.cellSize) {
+      return {
+        type: 'border',
+        axis: 'origin',
+        number: 0,
+      };
+    } else if (mouseX < this.cellSize) {
+      return {
+        type: 'border',
+        axis: 'y',
+        number: cellNumberY + this.startCell.y - 1,
+      };
+    } else if (mouseY < this.cellSize) {
+      return {
+        type: 'border',
+        axis: 'x',
+        number: cellNumberX + this.startCell.x - 1,
+      };
+    } else {
+      return {
+        type: 'schema',
+        i: cellNumberX + this.startCell.x - 1,
+        j: cellNumberY + this.startCell.y - 1,
+      };
+    }
   }
 
   public forEachCellX(callback: (cellNumberX: number, x: number) => void) {

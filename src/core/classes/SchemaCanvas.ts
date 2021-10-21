@@ -2,20 +2,47 @@ import { Chunk } from './Chunk';
 import { Vector2 } from './Vector2';
 import { Vector2Int } from './Vector2Int';
 import { SchemaViewProvider } from './SchemaViewProvider';
+import { EventEmitter } from './EventEmitter';
+import { BorderCell, SchemaCell } from '../types';
+import { cellsEquals } from '../functions/cellsEquals';
 
-const CELL_SIZE = 30;
+export const CELL_SIZE = 30;
+export const HALF_CELL_SIZE = CELL_SIZE / 2;
 
-export class SchemaCanvas {
-  private readonly context: CanvasRenderingContext2D;
+export type SchemaCanvasEventMap = {
+  schemaCellClick: SchemaCell;
+  borderCellClick: BorderCell;
+  destroy: {};
+  redraw: {};
+};
+
+export class SchemaCanvas<
+  Provider extends SchemaViewProvider = SchemaViewProvider,
+  EventMap extends SchemaCanvasEventMap = SchemaCanvasEventMap
+> extends EventEmitter<EventMap, SchemaCanvas<Provider, EventMap>> {
+  protected readonly context: CanvasRenderingContext2D;
+
+  protected readonly cellsCount;
+
+  private readonly scrollArea: HTMLDivElement;
+
   private drawRequired: boolean = true;
-  private isDestroyed: boolean = false;
-  private readonly cellsCount;
 
-  constructor(
-    private readonly schemaViewProvider: SchemaViewProvider,
-    canvas: HTMLCanvasElement,
-    private readonly scrollArea: HTMLDivElement
-  ) {
+  private _isDestroyed: boolean = false;
+
+  public get isDestroyed() {
+    return this._isDestroyed;
+  }
+
+  constructor(public readonly viewProvider: Provider, root: HTMLDivElement) {
+    super();
+
+    this.cellsCount = new Vector2Int(
+      this.viewProvider.schema.width,
+      this.viewProvider.schema.height
+    );
+
+    const canvas = this.createCanvas();
     const context = canvas.getContext('2d');
     if (context) {
       this.context = context;
@@ -23,23 +50,43 @@ export class SchemaCanvas {
       throw new Error('2d context not supported');
     }
 
-    this.cellsCount = new Vector2Int(
-      this.schemaViewProvider.schema.width,
-      this.schemaViewProvider.schema.height
-    );
+    this.scrollArea = this.createScrollArea();
 
+    root.innerHTML = '';
+    root.appendChild(canvas);
+    root.appendChild(this.scrollArea);
+
+    this.resize();
     this.attach();
   }
 
+  private createCanvas() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    return canvas;
+  }
+
+  private createScrollArea() {
+    const scrollArea = document.createElement('div');
+    scrollArea.style.position = 'absolute';
+    scrollArea.style.width = '100%';
+    scrollArea.style.height = '100%';
+    scrollArea.style.zIndex = '10';
+    scrollArea.style.overflow = 'auto';
+
+    const mock = document.createElement('div');
+    mock.style.width = `${CELL_SIZE * (this.cellsCount.x + 1)}px`;
+    mock.style.height = `${CELL_SIZE * (this.cellsCount.y + 1)}px`;
+
+    scrollArea.appendChild(mock);
+    return scrollArea;
+  }
+
   private attach() {
-    const div = document.createElement('div');
-    div.style.width = `${CELL_SIZE * (this.cellsCount.x + 1)}px`;
-    div.style.height = `${CELL_SIZE * (this.cellsCount.y + 1)}px`;
-    this.scrollArea.innerHTML = '';
-    this.scrollArea.appendChild(div);
-
-    this.resize();
-
+    window.addEventListener('mousedown', this.mouseDown);
+    this.scrollArea.addEventListener('click', this.onClick);
     this.scrollArea.addEventListener('scroll', this.onScroll);
     window.addEventListener('resize', this.onResize);
     window.requestAnimationFrame(() => {
@@ -49,6 +96,8 @@ export class SchemaCanvas {
 
   private detach() {
     window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('mousedown', this.mouseDown);
+    this.scrollArea.removeEventListener('click', this.onClick);
     this.scrollArea.removeEventListener('scroll', this.onScroll);
   }
 
@@ -59,6 +108,80 @@ export class SchemaCanvas {
   private onResize = () => {
     this.resize();
   };
+
+  private resize() {
+    const canvas = this.context.canvas;
+    const ratio = Math.ceil(window.devicePixelRatio);
+    canvas.style.width = `${this.scrollArea.clientWidth}px`;
+    canvas.style.height = `${this.scrollArea.clientHeight}px`;
+    canvas.width = this.scrollArea.clientWidth * ratio;
+    canvas.height = this.scrollArea.clientHeight * ratio;
+    this.context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    this.drawRequired = true;
+  }
+
+  private mouseDownPosition?: Vector2;
+
+  private mouseDown = (event: MouseEvent) => {
+    this.mouseDownPosition = this.clientPositionToCanvas(
+      event.clientX,
+      event.clientY
+    );
+  };
+
+  private onClick = (event: MouseEvent) => {
+    if (this.mouseDownPosition === undefined) {
+      return;
+    }
+
+    const chunk = this.computeChunk();
+
+    const clickPosition = this.clientPositionToCanvas(
+      event.clientX,
+      event.clientY
+    );
+
+    const mouseDownCell = chunk.mousePositionToCell(
+      this.mouseDownPosition.x,
+      this.mouseDownPosition.y
+    );
+    const clickCell = chunk.mousePositionToCell(
+      clickPosition.x,
+      clickPosition.y
+    );
+
+    if (mouseDownCell === undefined || clickCell === undefined) {
+      return;
+    }
+
+    if (cellsEquals(mouseDownCell, clickCell)) {
+      switch (clickCell.type) {
+        case 'border':
+          this.emit('borderCellClick', clickCell) ||
+            this.onBorderCellClick(clickCell);
+          break;
+        case 'schema':
+          this.emit('schemaCellClick', clickCell) ||
+            this.onSchemaCellClick(clickCell);
+          break;
+        default:
+          throw new Error('Not implemented');
+      }
+    }
+  };
+
+  private clientPositionToCanvas(x: number, y: number) {
+    const rect = this.scrollArea.getBoundingClientRect();
+    return new Vector2(x - rect.x, y - rect.y);
+  }
+
+  protected onBorderCellClick(_cell: BorderCell) {}
+
+  protected onSchemaCellClick(_cell: SchemaCell) {}
+
+  protected requireRedraw() {
+    this.drawRequired = true;
+  }
 
   private drawLoop() {
     if (this.isDestroyed) {
@@ -75,17 +198,6 @@ export class SchemaCanvas {
     });
   }
 
-  private resize() {
-    const canvas = this.context.canvas;
-    const ratio = Math.ceil(window.devicePixelRatio);
-    canvas.style.width = `${this.scrollArea.clientWidth}px`;
-    canvas.style.height = `${this.scrollArea.clientHeight}px`;
-    canvas.width = this.scrollArea.clientWidth * ratio;
-    canvas.height = this.scrollArea.clientHeight * ratio;
-    this.context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    this.drawRequired = true;
-  }
-
   private draw() {
     const canvas = this.context.canvas;
     this.context.clearRect(0, 0, canvas.width, canvas.height);
@@ -95,27 +207,31 @@ export class SchemaCanvas {
     this.drawCells(chunk);
     this.drawScale(chunk);
     this.drawGrid(chunk);
+
+    this.emit('redraw', {}) || this.onRedraw();
   }
 
-  private drawCells(chunk: Chunk) {
+  protected onRedraw() {}
+
+  protected drawCells(chunk: Chunk) {
     this.context.textAlign = 'center';
     this.context.font = '16px sans-serif';
     this.context.textBaseline = 'middle';
 
-    const halfCellSize = CELL_SIZE / 2;
+    chunk.forEachCell(this.drawCell.bind(this));
+  }
 
-    chunk.forEachCell((i, j, x, y) => {
-      const cell = this.schemaViewProvider.getCell(i, j);
-      if (cell === undefined) {
-        return;
-      }
+  protected drawCell(i: number, j: number, x: number, y: number) {
+    const cell = this.viewProvider.getCell(i, j);
+    if (cell === undefined) {
+      return;
+    }
 
-      this.context.fillStyle = cell.color.hexColor;
-      this.context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+    this.context.fillStyle = cell.color.hexColor;
+    this.context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 
-      this.context.fillStyle = cell.symbolColor;
-      this.context.fillText(cell.symbol, x + halfCellSize, y + halfCellSize);
-    });
+    this.context.fillStyle = cell.symbolColor;
+    this.context.fillText(cell.symbol, x + HALF_CELL_SIZE, y + HALF_CELL_SIZE);
   }
 
   private drawScale(chunk: Chunk) {
@@ -208,7 +324,13 @@ export class SchemaCanvas {
       return;
     }
 
-    this.isDestroyed = true;
+    this._isDestroyed = true;
     this.detach();
+    this.context.canvas.remove();
+    this.scrollArea.remove();
+
+    this.emit('destroy', {}) || this.onDestroy();
   }
+
+  protected onDestroy() {}
 }
