@@ -5,7 +5,7 @@ type LayoutProps = {
   onBack?: () => void;
 };
 
-type Layout = FC<LayoutProps>;
+type Layout = React.ComponentType<LayoutProps>;
 
 type ContextType = {
   completeStage: () => void;
@@ -17,10 +17,18 @@ const StagesContext = React.createContext<ContextType | undefined>(undefined);
 
 type StageProps = {
   title: string;
-  children: (completeStage: () => void) => ReactNode;
+  overrideDefaultLayout?: boolean;
+  children: (
+    completeStage: () => void,
+    extra: { DefaultLayout: React.ComponentType; goBack?: () => void }
+  ) => ReactNode;
 };
 
-function Stage({ children, title }: StageProps) {
+const Stage: FC<StageProps> = ({
+  children,
+  title,
+  overrideDefaultLayout,
+}: StageProps) => {
   return (
     <StagesContext.Consumer>
       {(context) => {
@@ -28,18 +36,30 @@ function Stage({ children, title }: StageProps) {
           throw new Error('No context (Stages)');
         }
 
-        const Layout = context.layout;
-        const { goBack, completeStage } = context;
+        const { goBack, completeStage, layout: Layout } = context;
 
-        return (
-          <Layout title={title} onBack={goBack}>
-            {children(completeStage)}
-          </Layout>
-        );
+        const FilledLayout: FC = ({ children }) => {
+          return (
+            <Layout title={title} onBack={goBack}>
+              {children}
+            </Layout>
+          );
+        };
+
+        const computedChildren = children(completeStage, {
+          DefaultLayout: FilledLayout,
+          goBack,
+        });
+
+        if (overrideDefaultLayout) {
+          return computedChildren;
+        } else {
+          return <FilledLayout>{computedChildren}</FilledLayout>;
+        }
       }}
     </StagesContext.Consumer>
   );
-}
+};
 
 type StagesProps = {
   layout: Layout;

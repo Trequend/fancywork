@@ -36,15 +36,17 @@ export const SchemaViewer: FC<Props> = ({ schema, onBack }) => {
   }, [schema]);
 
   return (
-    <BasicLayout
-      title={schema.metadata.name}
-      subTitle="view only"
-      onBack={onBack}
-    >
-      <div className={styles.root}>
-        <canvas ref={canvasRef} className={styles.canvas} />
-        <div ref={scrollAreaRef} className={styles.scrollArea} />
-      </div>
-    </BasicLayout>
+    <div className={styles.root}>
+      <BasicLayout
+        title={schema.metadata.name}
+        subTitle="view only"
+        onBack={onBack}
+      >
+        <div className={styles.area}>
+          <canvas ref={canvasRef} className={styles.canvas} />
+          <div ref={scrollAreaRef} className={styles.scrollArea} />
+        </div>
+      </BasicLayout>
+    </div>
   );
 };

@@ -28,14 +28,12 @@ export const Schemas: AppPage = () => {
 
   if (schema) {
     return (
-      <div className={styles.schema}>
-        <SchemaViewer
-          schema={schema}
-          onBack={() => {
-            setSchema(undefined);
-          }}
-        />
-      </div>
+      <SchemaViewer
+        schema={schema}
+        onBack={() => {
+          setSchema(undefined);
+        }}
+      />
     );
   }
 

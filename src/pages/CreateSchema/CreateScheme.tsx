@@ -122,7 +122,7 @@ export const CreateScheme: AppPage = () => {
 
   return (
     <>
-      <FullscreenSpin loading={loading} delay={500} />
+      <FullscreenSpin loading={loading} delay={250} />
       <Stages
         onFinish={() => {
           onFinish();
@@ -217,16 +217,19 @@ export const CreateScheme: AppPage = () => {
             ) : null
           }
         </Stages.Stage>
-        <Stages.Stage title="Result">
-          {(completeStage) =>
+        <Stages.Stage title="Result" overrideDefaultLayout>
+          {(completeStage, { DefaultLayout }) =>
             schema ? (
               <GeneratorResult
+                layout={DefaultLayout}
                 schema={schema}
                 onSave={() => {
                   completeStage();
                 }}
               />
-            ) : null
+            ) : (
+              <DefaultLayout />
+            )
           }
         </Stages.Stage>
       </Stages>
