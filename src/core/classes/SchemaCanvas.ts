@@ -199,6 +199,7 @@ export class SchemaCanvas<
   }
 
   private draw() {
+    const time = performance.now();
     const canvas = this.context.canvas;
     this.context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -209,6 +210,8 @@ export class SchemaCanvas<
     this.drawGrid(chunk);
 
     this.emit('redraw', {}) || this.onRedraw();
+    const delta = Math.round(performance.now() - time);
+    this.context.fillText(delta.toString(), HALF_CELL_SIZE, HALF_CELL_SIZE);
   }
 
   protected onRedraw() {}
