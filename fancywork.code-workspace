@@ -1,0 +1,24 @@
+{
+  "folders": [
+    { "name": "root", "path": "." },
+    { "name": "core", "path": "packages/core" },
+    { "name": "frontend", "path": "packages/frontend" },
+    { "name": "storage", "path": "packages/storage" }
+  ],
+  "extensions": {
+    "recommendations": [
+      "editorconfig.editorconfig",
+      "dbaeumer.vscode-eslint",
+      "stylelint.vscode-stylelint",
+      "esbenp.prettier-vscode"
+    ]
+  },
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.fixAll.stylelint": true
+    }
+  }
+}

@@ -28,7 +28,9 @@ module.exports = {
     { name: 'pwa' },
     { name: 'utils' },
     { name: 'git' },
+    { name: 'core' },
     { name: 'frontend' },
+    { name: 'storage' },
   ],
 
   allowTicketNumber: false,
