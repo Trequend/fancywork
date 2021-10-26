@@ -1,3 +1,3 @@
-export { AppStorageProvider, useAppStorage } from './AppStorageContext';
-export { StorePaginationLayout } from './StorePaginationLayout';
-export type { StorePaginationLayoutProps } from './StorePaginationLayout';
+export { AppStorageProvider, useAppStorage } from './app-storage-context';
+export { StorePaginationLayout } from './store-pagination-layout';
+export type { StorePaginationLayoutProps } from './store-pagination-layout';

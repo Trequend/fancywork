@@ -1,0 +1,57 @@
+.card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  & :global(.ant-card-body) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
+
+.image {
+  display: flex;
+  width: 40px;
+  height: 40px;
+
+  & > :global(.ant-image) {
+    width: 100%;
+    height: 100%;
+
+    & > :global(.ant-image-img) {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.table {
+  margin: 24px 0;
+}
+
+.card-button {
+  width: 100%;
+
+  & + .card-button {
+    margin-top: 15px !important;
+  }
+}
+
+.card-buttons {
+  margin-top: auto;
+}
+
+.schema {
+  background: white;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}

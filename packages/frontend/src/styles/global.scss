@@ -1,19 +1,20 @@
-@import './reset';
-@import './breakpoints';
-@import './variables';
+@use "sass:color";
+@import "./reset";
+@import "./breakpoints";
+@import "./variables";
 
 a {
   color: $primary-color;
 
   &:hover {
-    color: lighten($color: $primary-color, $amount: 10);
+    color: color.adjust($color: $primary-color, $lightness: 10%);
   }
 
   &:visited {
-    color: $secondary-color;
+    color: $secondary-color dasdasd;
 
     &:hover {
-      color: darken($color: $secondary-color, $amount: 10);
+      color: color.adjust($color: $secondary-color, $lightness: -10%);
     }
   }
 }

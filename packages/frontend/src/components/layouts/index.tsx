@@ -1,2 +1,2 @@
-export { BasicLayout } from './BasicLayout';
-export type { BasicLayoutProps } from './BasicLayout';
+export { BasicLayout } from './basic-layout';
+export type { BasicLayoutProps } from './basic-layout';

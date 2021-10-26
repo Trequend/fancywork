@@ -1,0 +1,82 @@
+@use "sass:color";
+@import "src/styles/variables";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  shape-rendering: crispEdges;
+}
+
+.main {
+  flex: 1 0 auto;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 15px;
+}
+
+.buttons {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  & > * {
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.button {
+  color: $primary-color;
+  text-align: center;
+
+  &:hover {
+    color: color.adjust($color: $primary-color, $lightness: 10%);
+  }
+
+  &:visited {
+    color: $primary-color;
+
+    &:hover {
+      color: color.adjust($color: $primary-color, $lightness: 10%);
+    }
+  }
+
+  &.disabled {
+    color: gray !important;
+    cursor: not-allowed;
+  }
+}
+
+.footer {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 15px;
+  padding-top: 10px;
+  color: $secondary-text-color;
+}

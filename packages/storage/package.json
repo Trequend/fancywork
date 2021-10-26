@@ -7,6 +7,7 @@
   "scripts": {
     "build": "webpack --stats minimal",
     "lint": "eslint lib --ext .js,.jsx,.ts,.tsx && stylelint lib/**/*.scss && yarn run build",
+    "test:build": "webpack --stats minimal --config webpack.test.config.js",
     "pre-commit": "yarn run lint"
   },
   "eslintConfig": {
@@ -28,22 +29,7 @@
     ]
   },
   "stylelint": {
-    "extends": "stylelint-config-standard",
-    "plugins": [
-      "stylelint-scss"
-    ],
-    "rules": {
-      "at-rule-no-unknown": null,
-      "scss/at-rule-no-unknown": true,
-      "selector-pseudo-class-no-unknown": [
-        true,
-        {
-          "ignorePseudoClasses": [
-            "global"
-          ]
-        }
-      ]
-    }
+    "extends": "stylelint-config-standard-scss"
   },
   "peerDependencies": {
     "antd": "^4.16.13",

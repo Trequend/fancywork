@@ -1,1 +1,0 @@
-export { CreateWorkModal } from './CreateWorkModal';

@@ -1,1 +1,0 @@
-export { SchemaInfoTable } from './SchemaInfoTable';

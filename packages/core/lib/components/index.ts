@@ -1,4 +1,4 @@
-export { ColorsTable } from './ColorsTable';
-export { SchemaInfoTable } from './SchemaInfoTable';
-export { SchemaViewer } from './SchemaViewer';
-export { WorkViewer } from './WorkViewer';
+export { ColorsTable } from './colors-table';
+export { SchemaInfoTable } from './schema-info-table';
+export { SchemaViewer } from './schema-viewer';
+export { WorkViewer } from './work-viewer';

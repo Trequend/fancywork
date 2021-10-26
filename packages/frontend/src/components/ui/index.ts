@@ -1,1 +1,1 @@
-export { FullscreenSpin } from './FullscreenSpin';
+export { FullscreenSpin } from './fullscreen-spin';

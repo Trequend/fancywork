@@ -1,1 +1,0 @@
-export { WorkViewer } from './WorkViewer';
