@@ -6,9 +6,10 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "webpack --stats minimal",
-    "lint": "eslint lib --ext .js,.jsx,.ts,.tsx && stylelint lib/**/*.scss && yarn run build",
+    "test": "run-s test:lint test:build",
+    "test:lint": "eslint lib --ext .js,.jsx,.ts,.tsx && stylelint lib/**/*.scss",
     "test:build": "webpack --stats minimal --config webpack.test.config.js",
-    "pre-commit": "yarn run lint"
+    "pre-commit": "yarn run test"
   },
   "eslintConfig": {
     "extends": [
