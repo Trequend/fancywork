@@ -93,7 +93,7 @@ export class AppStorage {
         };
 
         const schemas = register('schemas');
-        schemas.createIndex('createdAt', ['metadata', 'createdAt'], {
+        schemas.createIndex('createdAt', 'metadata.createdAt', {
           unique: false,
         });
 
