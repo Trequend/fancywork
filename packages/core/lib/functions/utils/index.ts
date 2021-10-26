@@ -1,3 +1,5 @@
+export { convertSize } from './convertSize';
+export type { ConvertSizeOptions } from './convertSize';
 export { cellsEquals } from './cellsEquals';
 export { executeInCanvasContext } from './executeInCanvasContext';
 export { getContrastColor } from './getContrastColor';

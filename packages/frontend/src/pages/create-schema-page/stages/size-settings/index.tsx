@@ -9,7 +9,7 @@ import {
   Image,
 } from 'antd';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { SizeType } from '@fancywork/core';
+import { SizeType, convertSize, MAX_WIDTH, MAX_HEIGHT } from '@fancywork/core';
 import styles from './index.module.scss';
 
 export type SizeSettingsValues = {
@@ -22,6 +22,7 @@ export type SizeSettingsValues = {
 type Props = {
   imageURL: string;
   image: HTMLImageElement;
+  stitchCount: number;
   initialValues?: SizeSettingsValues;
   onSubmit: (values: SizeSettingsValues) => void;
 };
@@ -29,11 +30,12 @@ type Props = {
 export const SizeSettings: FC<Props> = ({
   imageURL,
   image,
+  stitchCount,
   initialValues,
   onSubmit,
 }) => {
   const [form] = Form.useForm();
-  const [sizeType, setSizeType] = useState<string | undefined>(
+  const [sizeType, setSizeType] = useState<SizeType | undefined>(
     initialValues?.sizeType ?? 'stitch'
   );
   const [keepAspectRatio, setKeepAspectRatio] = useState<boolean>(
@@ -41,12 +43,35 @@ export const SizeSettings: FC<Props> = ({
   );
   const aspectRatio = useMemo(() => image.width / image.height, [image]);
 
+  const maxSize: Record<SizeType, ReturnType<typeof convertSize>> = useMemo(
+    () => ({
+      centimeter: convertSize(MAX_WIDTH, MAX_HEIGHT, {
+        from: 'stitch',
+        to: 'centimeter',
+        floor: true,
+        stitchCount,
+      }),
+      inch: convertSize(MAX_WIDTH, MAX_HEIGHT, {
+        from: 'stitch',
+        to: 'inch',
+        floor: true,
+        stitchCount,
+      }),
+      stitch: {
+        width: MAX_WIDTH,
+        height: MAX_HEIGHT,
+      },
+    }),
+    [stitchCount]
+  );
+
   const normalize = useCallback(
     (value: any): string => {
       if (value === '' || value === undefined) {
         return '';
       } else {
         value = Math.abs(value);
+
         if (sizeType === 'stitch') {
           return Math.round(value).toString();
         } else {
@@ -109,7 +134,7 @@ export const SizeSettings: FC<Props> = ({
             >
               <Select
                 onChange={(value) => {
-                  setSizeType(value?.toString());
+                  setSizeType(value?.toString() as SizeType);
                 }}
               >
                 <Select.Option value="stitch">Size in stitches</Select.Option>
@@ -130,7 +155,12 @@ export const SizeSettings: FC<Props> = ({
                 >
                   <InputNumber
                     className={styles.inputNumber}
-                    min={sizeType === 'stitch' ? 1 : 0.001}
+                    min={sizeType === 'stitch' ? 1 : 0.1}
+                    max={
+                      sizeType
+                        ? maxSize[sizeType].width
+                        : Number.POSITIVE_INFINITY
+                    }
                     onChange={(width) => {
                       if (keepAspectRatio) {
                         const height = width ? +width / aspectRatio : undefined;
@@ -150,7 +180,12 @@ export const SizeSettings: FC<Props> = ({
                 >
                   <InputNumber
                     className={styles.inputNumber}
-                    min={sizeType === 'stitch' ? 1 : 0.001}
+                    min={sizeType === 'stitch' ? 1 : 0.1}
+                    max={
+                      sizeType
+                        ? maxSize[sizeType].height
+                        : Number.POSITIVE_INFINITY
+                    }
                     onChange={(height) => {
                       if (keepAspectRatio) {
                         const width = height

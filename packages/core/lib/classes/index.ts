@@ -9,9 +9,7 @@ export {
 } from './palette';
 
 export {
-  CELL_SIZE,
   Chunk,
-  HALF_CELL_SIZE,
   SchemaCanvas,
   SchemaViewProvider,
   WorkCanvas,

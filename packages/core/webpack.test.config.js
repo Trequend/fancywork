@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const tsTransformPaths = require('@zerollup/ts-transform-paths');
 
 module.exports = {
   entry: './lib/index.ts',
@@ -26,6 +27,14 @@ module.exports = {
           loader: 'ts-loader',
           options: {
             compilerOptions: { declarationMap: false },
+            getCustomTransformers: (program) => {
+              const transformer = tsTransformPaths(program);
+
+              return {
+                before: [transformer.before],
+                afterDeclarations: [transformer.afterDeclarations],
+              };
+            },
           },
         },
       },

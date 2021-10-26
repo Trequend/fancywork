@@ -3,7 +3,7 @@ import { message, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BasicLayout, Stages, FullscreenSpin } from 'src/components';
-import { Schema, createSchema, convertSchemaSize } from '@fancywork/core';
+import { Schema, createSchema } from '@fancywork/core';
 import { useAppStorage } from '@fancywork/storage';
 import { AppPage } from 'src/types';
 import {
@@ -58,19 +58,13 @@ export const CreateSchemePage: AppPage = () => {
     paletteSettings: PaletteSettingsValues
   ) => {
     await executeTask(async () => {
-      const size = convertSchemaSize(
-        sizeSettings.width,
-        sizeSettings.height,
-        generalSettings.stitchCount,
-        sizeSettings.sizeType
-      );
-
       const schema = await createSchema(imageURL, {
         name: generalSettings.name,
         palette: generalSettings.palette,
         stitchCount: generalSettings.stitchCount,
-        width: size.width,
-        height: size.height,
+        width: sizeSettings.width,
+        height: sizeSettings.height,
+        sizeType: sizeSettings.sizeType,
         maxColorsCount: paletteSettings.maxColorsCount,
         reduceAlgorithm: paletteSettings.reduceAlgorithm,
         withDithering: paletteSettings.withDithering,
@@ -179,6 +173,7 @@ export const CreateSchemePage: AppPage = () => {
               <SizeSettings
                 imageURL={imageURL}
                 image={image}
+                stitchCount={generalSettings.stitchCount}
                 initialValues={sizeSettings}
                 onSubmit={(result) => {
                   setSizeSettings(result);

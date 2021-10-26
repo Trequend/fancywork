@@ -1,7 +1,5 @@
 export {
-  CELL_SIZE,
   Chunk,
-  HALF_CELL_SIZE,
   RGBColor,
   SchemaCanvas,
   SchemaViewProvider,
@@ -23,11 +21,11 @@ export {
 export {
   createSchema,
   downloadSchema,
-  convertSchemaSize,
+  convertSize,
   cellsEquals,
   createWork,
 } from './functions';
-export type { GenerateSchemaOptions, SizeType } from './functions';
+export type { GenerateSchemaOptions, ConvertSizeOptions } from './functions';
 
 export type {
   BorderCell,
@@ -41,6 +39,9 @@ export type {
   SchemaMetadata,
   Work,
   PaletteReduceAlgorithm,
+  SizeType,
 } from './types';
 
 export { palettes } from './palettes';
+
+export { CELL_SIZE, HALF_CELL_SIZE, MAX_HEIGHT, MAX_WIDTH } from './constants';

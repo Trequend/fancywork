@@ -41,6 +41,7 @@
     "@fancywork/core": "*",
     "@types/react": "^17.0.32",
     "@types/react-dom": "^17.0.10",
+    "@zerollup/ts-transform-paths": "^1.7.18",
     "antd": "^4.16.13",
     "css-loader": "^6.4.0",
     "idb": "^6.1.5",

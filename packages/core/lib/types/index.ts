@@ -7,3 +7,4 @@ export type { SchemaGrid } from './SchemaGrid';
 export type { Work } from './Work';
 export type { BorderCell, SchemaCell, Cell } from './Cell';
 export type { PaletteReduceAlgorithm } from './PaletteReduceAlgorithm';
+export type { SizeType } from './SizeType';

@@ -1,12 +1,8 @@
-export {
-  convertSchemaSize,
-  createSchema,
-  createSchemaGrid,
-  downloadSchema,
-} from './schema';
-export type { GenerateSchemaOptions, SizeType } from './schema';
+export { createSchema, createSchemaGrid, downloadSchema } from './schema';
+export type { GenerateSchemaOptions } from './schema';
 
 export {
+  convertSize,
   cellsEquals,
   executeInCanvasContext,
   getContrastColor,
@@ -14,6 +10,6 @@ export {
   processImageInCanvas,
   forEachPixel,
 } from './utils';
-export type { ProcessImageInCanvasOptions } from './utils';
+export type { ProcessImageInCanvasOptions, ConvertSizeOptions } from './utils';
 
 export { createWork } from './work';

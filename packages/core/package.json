@@ -43,6 +43,7 @@
     "@types/react": "^17.0.32",
     "@types/react-dom": "^17.0.10",
     "@types/uuid": "^8.3.1",
+    "@zerollup/ts-transform-paths": "^1.7.18",
     "antd": "^4.16.13",
     "css-loader": "^6.4.0",
     "mini-css-extract-plugin": "^2.4.3",

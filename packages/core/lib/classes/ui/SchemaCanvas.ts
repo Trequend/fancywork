@@ -3,9 +3,7 @@ import { BorderCell, SchemaCell } from 'lib/types';
 import { cellsEquals } from 'lib/functions';
 import { Chunk } from './Chunk';
 import { SchemaViewProvider } from './SchemaViewProvider';
-
-export const CELL_SIZE = 30;
-export const HALF_CELL_SIZE = CELL_SIZE / 2;
+import { CELL_SIZE, HALF_CELL_SIZE } from 'lib/constants';
 
 export type SchemaCanvasEventMap = {
   schemaCellClick: SchemaCell;

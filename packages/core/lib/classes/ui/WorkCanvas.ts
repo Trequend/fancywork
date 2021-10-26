@@ -1,5 +1,6 @@
+import { CELL_SIZE } from 'lib/constants';
 import { SchemaCell } from 'lib/types';
-import { CELL_SIZE, SchemaCanvas, SchemaCanvasEventMap } from './SchemaCanvas';
+import { SchemaCanvas, SchemaCanvasEventMap } from './SchemaCanvas';
 import { WorkViewProvider } from './WorkViewProvider';
 
 type EventMap = {

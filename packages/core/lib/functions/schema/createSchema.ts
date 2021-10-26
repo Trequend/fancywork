@@ -2,6 +2,7 @@ import { RGBColor } from 'lib/classes';
 import {
   Palette,
   PaletteReduceAlgorithm,
+  SizeType,
   Schema,
   SchemaGrid,
   SchemaMetadata,
@@ -10,6 +11,8 @@ import { executeInCanvasContext, processImageInCanvas } from '../utils';
 import { createSchemaGrid } from './createSchemaGrid';
 import { createImagePalette } from './createImagePalette';
 import { v4 as uuidv4 } from 'uuid';
+import { MAX_HEIGHT, MAX_WIDTH } from 'lib/constants';
+import { convertSize } from '../utils/convertSize';
 
 export type GenerateSchemaOptions = {
   name: string;
@@ -20,20 +23,35 @@ export type GenerateSchemaOptions = {
   palette: Palette;
   maxColorsCount?: number;
   reduceAlgorithm?: PaletteReduceAlgorithm;
+  sizeType: SizeType;
 };
 
 export async function createSchema(
   imageURL: string,
   options: GenerateSchemaOptions
 ): Promise<Schema> {
+  const size = convertSize(options.width, options.height, {
+    stitchCount: options.stitchCount,
+    from: options.sizeType,
+    to: 'stitch',
+  });
+
+  if (size.width < 1 && size.width > MAX_WIDTH) {
+    throw new RangeError(`Schema width must be in range [1; ${MAX_WIDTH}]`);
+  }
+
+  if (size.height < 1 && size.height > MAX_HEIGHT) {
+    throw new RangeError(`Schema height must be in range [1; ${MAX_WIDTH}]`);
+  }
+
   const imageData = await processImageInCanvas(
     (context, width, height) => {
       return context.getImageData(0, 0, width, height);
     },
     {
       imageURL,
-      width: options.width,
-      height: options.height,
+      width: size.width,
+      height: size.height,
     }
   );
 
@@ -124,7 +142,7 @@ async function getSchemaImageDataURL(
     return context.canvas.toDataURL();
   });
 
-  const CELL_SIZE = 5;
+  const CELL_SIZE = width > 500 || height > 500 ? 1 : 5;
   return await processImageInCanvas(
     (context) => {
       return context.canvas.toDataURL();
