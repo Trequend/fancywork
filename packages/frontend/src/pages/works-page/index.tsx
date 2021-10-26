@@ -30,6 +30,7 @@ export const WorksPage: AppPage = () => {
   return (
     <StorePaginationLayout
       title="My works"
+      noDataText="No Works"
       onBack={() => {
         history.goBack();
       }}

@@ -52,6 +52,7 @@ export const SchemasPage: AppPage = () => {
       />
       <StorePaginationLayout
         title="My schemas"
+        noDataText="No Schemas"
         onBack={() => {
           history.goBack();
         }}
