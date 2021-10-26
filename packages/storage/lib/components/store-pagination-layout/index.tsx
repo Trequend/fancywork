@@ -27,9 +27,7 @@ export const StorePaginationLayout: FC<StorePaginationLayoutProps> = ({
       <PageHeader {...props} className={styles.header} />
       <main className={styles.main}>
         <div className={styles.content}>
-          <Spin spinning={loading} delay={500}>
-            {children}
-          </Spin>
+          <Spin spinning={loading}>{children}</Spin>
           <div className={styles.pagination}>
             {total ? (
               <Pagination
