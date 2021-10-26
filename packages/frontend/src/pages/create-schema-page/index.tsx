@@ -111,7 +111,7 @@ export const CreateSchemePage: AppPage = () => {
 
   return (
     <>
-      <FullscreenSpin loading={loading} delay={250} />
+      <FullscreenSpin loading={loading} />
       <Stages
         onFinish={() => {
           onFinish();
