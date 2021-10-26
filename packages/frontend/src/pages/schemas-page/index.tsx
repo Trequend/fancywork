@@ -23,7 +23,10 @@ export const SchemasPage: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
-  const storePagination = useStorePagination('schemas', PAGE_SIZE);
+  const storePagination = useStorePagination('schemas', PAGE_SIZE, {
+    index: 'createdAt',
+    direction: 'prev',
+  });
 
   const [viewerSchema, setViewerSchema] = useState<Schema>();
   const [createWorkSchema, setCreateWorkSchema] = useState<Schema>();

@@ -11,6 +11,8 @@ export function createWork(name: string, schema: Schema): Work {
 
   return {
     id: uuidv4(),
+    createdAt: new Date(),
+    lastActivity: new Date(),
     name,
     schema,
     embroidered,

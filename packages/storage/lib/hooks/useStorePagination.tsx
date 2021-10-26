@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AppStore, StoreMap } from '../AppStorage';
+import { AppStore, StoreMap, GetRangeOptions } from '../AppStorage';
 import { useAppStorage } from '../components';
 
 export type StorePagination<K extends AppStore> = {
@@ -15,7 +15,8 @@ export type StorePagination<K extends AppStore> = {
 
 export function useStorePagination<K extends AppStore>(
   storeName: K,
-  pageSize: number
+  pageSize: number,
+  options: Omit<GetRangeOptions<K>, 'start' | 'count'>
 ): StorePagination<K> {
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState<number>();
@@ -25,6 +26,7 @@ export function useStorePagination<K extends AppStore>(
 
   const appStorage = useAppStorage();
 
+  const { direction, index, query } = options;
   const setPage = useCallback(
     (page: number) => {
       page = page < 1 ? 1 : page;
@@ -39,11 +41,13 @@ export function useStorePagination<K extends AppStore>(
             previousPage = page - 1;
           }
 
-          const data = await appStorage.getRange(
-            storeName,
-            pageSize,
-            previousPage * pageSize
-          );
+          const data = await appStorage.getRange(storeName, {
+            start: previousPage * pageSize,
+            count: pageSize,
+            direction,
+            index,
+            query,
+          });
 
           setData(data);
           setTotal(total);
@@ -61,7 +65,7 @@ export function useStorePagination<K extends AppStore>(
 
       action();
     },
-    [storeName, appStorage, pageSize]
+    [storeName, appStorage, pageSize, direction, index, query]
   );
 
   useEffect(() => {

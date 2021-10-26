@@ -103,6 +103,7 @@ async function createSchemaMetadata(
 
   return {
     name: options.name,
+    createdAt: new Date(),
     width: imageData.width,
     height: imageData.height,
     paletteName: options.palette.name,

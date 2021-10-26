@@ -22,7 +22,10 @@ export const WorksPage: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
-  const storePagination = useStorePagination('works', PAGE_SIZE);
+  const storePagination = useStorePagination('works', PAGE_SIZE, {
+    index: 'lastActivity',
+    direction: 'prev',
+  });
 
   return (
     <StorePaginationLayout

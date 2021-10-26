@@ -11,9 +11,20 @@ export type StoreMap = {
   [WORKS_STORE]: Work;
 };
 
+export type IndexMap = {
+  [SCHEMAS_STORE]: 'createdAt';
+  [WORKS_STORE]: 'createdAt' | 'lastActivity';
+};
+
 export type AppStore = keyof StoreMap;
 
-const STORES: Array<AppStore> = [SCHEMAS_STORE, WORKS_STORE];
+export type GetRangeOptions<K extends AppStore> = {
+  count: number;
+  start?: number;
+  index?: IndexMap[K];
+  query?: IDBKeyRange | IDBValidKey | null;
+  direction?: IDBCursorDirection;
+};
 
 export class AppStorage {
   private constructor(private readonly database: IDBPDatabase) {}
@@ -40,17 +51,24 @@ export class AppStorage {
 
   public async getRange<K extends AppStore>(
     storeName: K,
-    count: number,
-    start?: number
+    options: GetRangeOptions<K>
   ) {
     const transaction = this.database.transaction(storeName, 'readonly');
-    let cursor = await transaction.store.openCursor();
+
+    const { index, query, direction } = options;
+    let cursor =
+      index === undefined
+        ? await transaction.store.openCursor(query, direction)
+        : await transaction.store.index(index).openCursor(query, direction);
+
     const result: Array<StoreMap[K]> = [];
 
+    const { start } = options;
     if (cursor && start && start > 0) {
       cursor = await cursor.advance(start);
     }
 
+    let { count } = options;
     while (cursor && count > 0) {
       result.push(cursor.value);
       cursor = await cursor.continue();
@@ -68,13 +86,20 @@ export class AppStorage {
     const database = await openDB(DB_NAME, 1, {
       upgrade(database) {
         const register = (storeName: AppStore) => {
-          database.createObjectStore(storeName, {
+          return database.createObjectStore(storeName, {
             keyPath: 'id',
             autoIncrement: false,
           });
         };
 
-        STORES.forEach((storeName) => register(storeName));
+        const schemas = register('schemas');
+        schemas.createIndex('createdAt', ['metadata', 'createdAt'], {
+          unique: false,
+        });
+
+        const works = register('works');
+        works.createIndex('createdAt', 'createdAt', { unique: false });
+        works.createIndex('lastActivity', 'lastActivity', { unique: false });
       },
     });
 
