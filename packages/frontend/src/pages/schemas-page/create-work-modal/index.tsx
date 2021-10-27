@@ -25,13 +25,12 @@ export const CreateWorkModal: FC<Props> = ({ schema, onCancel }) => {
           await appStorage.add('works', work);
           history.push(WORKS_PATHNAME);
         } catch (error) {
+          setLoading(false);
           if (error instanceof Error) {
             message.error(error.message);
           } else {
             message.error('Unknown error');
           }
-        } finally {
-          setLoading(false);
         }
       };
 

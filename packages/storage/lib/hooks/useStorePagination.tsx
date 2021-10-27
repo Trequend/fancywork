@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { AppStore, StoreMap, GetRangeOptions } from '../AppStorage';
 import { useAppStorage } from '../components';
 
@@ -18,18 +19,41 @@ export function useStorePagination<K extends AppStore>(
   pageSize: number,
   options: Omit<GetRangeOptions<K>, 'start' | 'count'>
 ): StorePagination<K> {
+  const history = useHistory();
+  const appStorage = useAppStorage();
+
+  const [pageNumber, setPageNumber] = useState(() => {
+    const params = new URLSearchParams(history.location.search);
+    if (params.has('page')) {
+      return Number.parseInt(params.get('page')!, 10);
+    } else {
+      return 1;
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState<number>();
-  const [pageNumber, setPageNumber] = useState(1);
   const [error, setError] = useState<string>();
   const [data, setData] = useState<Array<StoreMap[K]>>([]);
-
-  const appStorage = useAppStorage();
 
   const { direction, index, query } = options;
   const setPage = useCallback(
     (page: number) => {
-      page = page < 1 ? 1 : page;
+      const params = new URLSearchParams(history.location.search);
+      if (page === 1) {
+        params.delete('page');
+      } else {
+        params.set('page', page.toString());
+      }
+
+      history.replace({ search: params.toString() });
+      setPageNumber(page);
+    },
+    [history]
+  );
+
+  const loadData = useCallback(
+    (page: number) => {
+      page = Number.isNaN(page) || page < 1 ? 1 : page;
       let previousPage = page - 1;
 
       const action = async () => {
@@ -38,7 +62,8 @@ export function useStorePagination<K extends AppStore>(
           const total = await appStorage.getCount(storeName);
           if (page > 1 && previousPage * pageSize >= total) {
             page = Math.ceil(total / pageSize);
-            previousPage = page - 1;
+            setPage(page);
+            return;
           }
 
           const data = await appStorage.getRange(storeName, {
@@ -51,7 +76,6 @@ export function useStorePagination<K extends AppStore>(
 
           setData(data);
           setTotal(total);
-          setPageNumber(page);
         } catch (error) {
           if (error instanceof Error) {
             setError(error.message);
@@ -65,12 +89,12 @@ export function useStorePagination<K extends AppStore>(
 
       action();
     },
-    [storeName, appStorage, pageSize, direction, index, query]
+    [setPage, storeName, appStorage, pageSize, direction, index, query]
   );
 
   useEffect(() => {
-    setPage(1);
-  }, [setPage]);
+    loadData(pageNumber);
+  }, [loadData, pageNumber]);
 
   return {
     loading,
@@ -80,7 +104,7 @@ export function useStorePagination<K extends AppStore>(
     data,
     error,
     refresh: () => {
-      setPage(pageNumber);
+      loadData(pageNumber);
     },
     setPage,
   };

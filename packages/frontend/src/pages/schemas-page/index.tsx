@@ -7,12 +7,7 @@ import {
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppPage } from 'src/types';
-import {
-  Schema,
-  SchemaInfoTable,
-  SchemaViewer,
-  DownloadButton,
-} from '@fancywork/core';
+import { Schema, SchemaInfoTable, DownloadButton } from '@fancywork/core';
 import {
   useAppStorage,
   useStorePagination,
@@ -21,6 +16,7 @@ import {
 import { CreateWorkModal } from './create-work-modal';
 import { SCHEMAS_PATHNAME } from './constants';
 import styles from './index.module.scss';
+import { SCHEMA_PATHNAME } from '../schema-page/constants';
 
 const PAGE_SIZE = 4;
 
@@ -32,26 +28,14 @@ export const SchemasPage: AppPage = () => {
     direction: 'prev',
   });
 
-  const [viewerSchema, setViewerSchema] = useState<Schema>();
-  const [createWorkSchema, setCreateWorkSchema] = useState<Schema>();
-
-  if (viewerSchema) {
-    return (
-      <SchemaViewer
-        schema={viewerSchema}
-        onBack={() => {
-          setViewerSchema(undefined);
-        }}
-      />
-    );
-  }
+  const [schema, setSchema] = useState<Schema>();
 
   return (
     <>
       <CreateWorkModal
-        schema={createWorkSchema}
+        schema={schema}
         onCancel={() => {
-          setCreateWorkSchema(undefined);
+          setSchema(undefined);
         }}
       />
       <StorePaginationLayout
@@ -108,7 +92,7 @@ export const SchemasPage: AppPage = () => {
                       type="primary"
                       className={styles.cardButton}
                       onClick={async () => {
-                        setCreateWorkSchema(schema);
+                        setSchema(schema);
                       }}
                     >
                       To Embroider
@@ -116,7 +100,7 @@ export const SchemasPage: AppPage = () => {
                     <Button
                       className={styles.cardButton}
                       onClick={() => {
-                        setViewerSchema(schema);
+                        history.push(`${SCHEMA_PATHNAME}?id=${schema.id}`);
                       }}
                     >
                       View Schema
