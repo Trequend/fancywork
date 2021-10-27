@@ -103,6 +103,7 @@ async function createSchemaMetadata(
 
   return {
     name: options.name,
+    nameWords: options.name.toLowerCase().split(' '),
     createdAt: new Date(),
     width: imageData.width,
     height: imageData.height,

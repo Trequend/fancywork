@@ -5,6 +5,7 @@ export type Work = {
   createdAt: Date;
   lastActivity: Date;
   name: string;
+  nameWords: Array<string>;
   schema: Schema;
   embroidered: Array<boolean | null>;
 };

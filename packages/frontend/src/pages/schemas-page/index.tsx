@@ -21,6 +21,7 @@ import styles from './index.module.scss';
 import { SCHEMA_PATHNAME } from '../schema-page/constants';
 
 const PAGE_SIZE = 4;
+const PARAM_NAME = 'search';
 
 export const SchemasPage: AppPage = () => {
   const history = useHistory();
@@ -30,11 +31,12 @@ export const SchemasPage: AppPage = () => {
 
   const tablePagination = useTablePagination(PAGE_SIZE, (storage) => {
     const params = new URLSearchParams(history.location.search);
-    return params.has('search')
+    const param = params.get(PARAM_NAME);
+    return param
       ? storage
           .table('schemas')
-          .where(SchemaIndex.Name)
-          .startsWithIgnoreCase(params.get('search')!)
+          .where(SchemaIndex.NameWords)
+          .startsWithAnyOf(param.toLowerCase().split(' '))
       : storage.table('schemas').toCollection();
   });
 
@@ -55,7 +57,7 @@ export const SchemasPage: AppPage = () => {
         tablePagination={tablePagination}
         extraContent={
           <Search
-            paramName="search"
+            paramName={PARAM_NAME}
             size="large"
             className={styles.search}
             onSearch={() => {

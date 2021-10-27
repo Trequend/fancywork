@@ -14,6 +14,7 @@ export function createWork(name: string, schema: Schema): Work {
     createdAt: new Date(),
     lastActivity: new Date(),
     name,
+    nameWords: name.toLowerCase().split(' '),
     schema,
     embroidered,
   };

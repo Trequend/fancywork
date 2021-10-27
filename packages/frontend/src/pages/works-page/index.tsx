@@ -19,6 +19,7 @@ import { WORK_PATHNAME } from '../work-page/constants';
 import styles from './index.module.scss';
 
 const PAGE_SIZE = 4;
+const PARAM_NAME = 'search';
 
 export const WorksPage: AppPage = () => {
   const history = useHistory();
@@ -26,11 +27,12 @@ export const WorksPage: AppPage = () => {
 
   const tablePagination = useTablePagination(PAGE_SIZE, (storage) => {
     const params = new URLSearchParams(history.location.search);
-    return params.has('search')
+    const param = params.get(PARAM_NAME);
+    return param
       ? storage
           .table('works')
-          .where(WorkIndex.Name)
-          .startsWithIgnoreCase(params.get('search')!)
+          .where(WorkIndex.NameWords)
+          .startsWithAnyOf(param.toLowerCase().split(' '))
       : storage.table('works').orderBy(WorkIndex.LastActivity);
   });
 
@@ -44,7 +46,7 @@ export const WorksPage: AppPage = () => {
       tablePagination={tablePagination}
       extraContent={
         <Search
-          paramName="search"
+          paramName={PARAM_NAME}
           size="large"
           className={styles.search}
           onSearch={() => {

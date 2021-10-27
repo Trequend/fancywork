@@ -14,12 +14,14 @@ export type TableMap = {
 export enum SchemaIndex {
   Id = 'id',
   Name = 'metadata.name',
+  NameWords = 'metadata.nameWords',
   CreatedAt = 'metadata.createdAt',
 }
 
 export enum WorkIndex {
   Id = 'id',
   Name = 'name',
+  NameWords = 'nameWords',
   CreatedAt = 'createdAt',
   LastActivity = 'lastActivity',
 }
@@ -31,8 +33,8 @@ export class AppStorage {
     const dexie = new Dexie(DB_NAME, { autoOpen: false });
 
     dexie.version(1).stores({
-      [SCHEMAS_TABLE]: '++, &id, metadata.name, metadata.createdAt',
-      [WORKS_TABLE]: '++, &id, name, createdAt, lastActivity',
+      [SCHEMAS_TABLE]: `++, &${SchemaIndex.Id}, ${SchemaIndex.Name}, *${SchemaIndex.NameWords}, ${SchemaIndex.CreatedAt}`,
+      [WORKS_TABLE]: `++, &${WorkIndex.Id}, ${WorkIndex.Name}, *${WorkIndex.NameWords}, ${WorkIndex.CreatedAt}, ${WorkIndex.LastActivity}`,
     });
 
     await dexie.open();
