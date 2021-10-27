@@ -22,7 +22,7 @@ export const CreateWorkModal: FC<Props> = ({ schema, onCancel }) => {
         setLoading(true);
         try {
           const work = createWork(values.name, schema);
-          await appStorage.add('works', work);
+          await appStorage.table('works').add(work);
           history.push(WORKS_PATHNAME);
         } catch (error) {
           setLoading(false);

@@ -1,17 +1,13 @@
-export { AppStorage } from './AppStorage';
-export type {
-  IndexMap,
-  AppStore,
-  GetRangeOptions,
-  StoreMap,
-  Model,
-} from './AppStorage';
+export { AppStorage, SchemaIndex, WorkIndex } from './AppStorage';
+export type { TableMap, AppTable } from './AppStorage';
 
-export { useStoreItem, useStorePagination } from './hooks';
+export { useTableItem, useTablePagination, useSearchParam } from './hooks';
+export type { TablePagination } from './hooks';
 
 export {
   AppStorageProvider,
   useAppStorage,
-  StorePaginationLayout,
+  TablePaginationLayout,
+  Search,
 } from './components';
-export type { StorePaginationLayoutProps } from './components';
+export type { TablePaginationLayoutProps, SearchProps } from './components';

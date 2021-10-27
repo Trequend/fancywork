@@ -3,14 +3,16 @@ import { useHistory } from 'react-router';
 import { SchemaViewer } from '@fancywork/core';
 import { FullscreenSpin } from 'src/components';
 import { useQueryParam } from 'src/hooks';
-import { useStoreItem } from '@fancywork/storage';
+import { useTableItem, SchemaIndex } from '@fancywork/storage';
 import { AppPage } from 'src/types';
 import { SCHEMA_PATHNAME } from './constants';
 
 export const SchemaPage: AppPage = () => {
   const history = useHistory();
   const id = useQueryParam('id');
-  const { item, loading, error } = useStoreItem('schemas', id);
+  const { item, loading, error } = useTableItem((storage) => {
+    return storage.table('schemas').where(SchemaIndex.Id).equals(id);
+  });
 
   if (loading) {
     return <FullscreenSpin />;

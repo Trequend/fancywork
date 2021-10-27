@@ -3,14 +3,16 @@ import { useHistory } from 'react-router';
 import { WorkViewer } from '@fancywork/core';
 import { FullscreenSpin } from 'src/components';
 import { useQueryParam } from 'src/hooks';
-import { useStoreItem } from '@fancywork/storage';
+import { useTableItem, WorkIndex } from '@fancywork/storage';
 import { AppPage } from 'src/types';
 import { WORK_PATHNAME } from './constants';
 
 export const WorkPage: AppPage = () => {
   const history = useHistory();
   const id = useQueryParam('id');
-  const { item, loading, error } = useStoreItem('works', id);
+  const { item, loading, error } = useTableItem((storage) => {
+    return storage.table('works').where(WorkIndex.Id).equals(id);
+  });
 
   if (loading) {
     return <FullscreenSpin />;

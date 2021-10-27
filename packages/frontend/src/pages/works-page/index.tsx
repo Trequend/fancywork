@@ -10,8 +10,10 @@ import { useHistory } from 'react-router-dom';
 import { SchemaInfoTable } from '@fancywork/core';
 import {
   useAppStorage,
-  useStorePagination,
-  StorePaginationLayout,
+  useTablePagination,
+  TablePaginationLayout,
+  WorkIndex,
+  Search,
 } from '@fancywork/storage';
 import { WORK_PATHNAME } from '../work-page/constants';
 import styles from './index.module.scss';
@@ -22,22 +24,37 @@ export const WorksPage: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
-  const storePagination = useStorePagination('works', PAGE_SIZE, {
-    index: 'lastActivity',
-    direction: 'prev',
+  const tablePagination = useTablePagination(PAGE_SIZE, (storage) => {
+    const params = new URLSearchParams(history.location.search);
+    return params.has('search')
+      ? storage
+          .table('works')
+          .where(WorkIndex.Name)
+          .startsWithIgnoreCase(params.get('search')!)
+      : storage.table('works').orderBy(WorkIndex.LastActivity);
   });
 
   return (
-    <StorePaginationLayout
+    <TablePaginationLayout
       title="My works"
       noDataText="No Works"
       onBack={() => {
         history.goBack();
       }}
-      storePagination={storePagination}
+      tablePagination={tablePagination}
+      extraContent={
+        <Search
+          paramName="search"
+          size="large"
+          className={styles.search}
+          onSearch={() => {
+            tablePagination.reset();
+          }}
+        />
+      }
     >
       <Row gutter={[24, 24]}>
-        {storePagination.data.map((work) => {
+        {tablePagination.data.map((work) => {
           const { schema } = work;
 
           return (
@@ -51,8 +68,12 @@ export const WorksPage: AppPage = () => {
                     key="delete"
                     okType="danger"
                     onConfirm={async () => {
-                      await appStorage.delete('works', work._index);
-                      storePagination.refresh();
+                      await appStorage
+                        .table('works')
+                        .where(WorkIndex.Id)
+                        .equals(work.id)
+                        .delete();
+                      tablePagination.refresh();
                     }}
                   >
                     <DeleteOutlined />
@@ -95,7 +116,7 @@ export const WorksPage: AppPage = () => {
           );
         })}
       </Row>
-    </StorePaginationLayout>
+    </TablePaginationLayout>
   );
 };
 

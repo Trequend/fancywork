@@ -10,8 +10,10 @@ import { AppPage } from 'src/types';
 import { Schema, SchemaInfoTable, DownloadButton } from '@fancywork/core';
 import {
   useAppStorage,
-  useStorePagination,
-  StorePaginationLayout,
+  TablePaginationLayout,
+  useTablePagination,
+  Search,
+  SchemaIndex,
 } from '@fancywork/storage';
 import { CreateWorkModal } from './create-work-modal';
 import { SCHEMAS_PATHNAME } from './constants';
@@ -24,11 +26,17 @@ export const SchemasPage: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
-  const storePagination = useStorePagination('schemas', PAGE_SIZE, {
-    direction: 'prev',
-  });
-
   const [schema, setSchema] = useState<Schema>();
+
+  const tablePagination = useTablePagination(PAGE_SIZE, (storage) => {
+    const params = new URLSearchParams(history.location.search);
+    return params.has('search')
+      ? storage
+          .table('schemas')
+          .where(SchemaIndex.Name)
+          .startsWithIgnoreCase(params.get('search')!)
+      : storage.table('schemas').toCollection();
+  });
 
   return (
     <>
@@ -38,16 +46,26 @@ export const SchemasPage: AppPage = () => {
           setSchema(undefined);
         }}
       />
-      <StorePaginationLayout
+      <TablePaginationLayout
         title="My schemas"
         noDataText="No Schemas"
         onBack={() => {
           history.goBack();
         }}
-        storePagination={storePagination}
+        tablePagination={tablePagination}
+        extraContent={
+          <Search
+            paramName="search"
+            size="large"
+            className={styles.search}
+            onSearch={() => {
+              tablePagination.reset();
+            }}
+          />
+        }
       >
         <Row gutter={[24, 24]}>
-          {storePagination.data.map((schema) => {
+          {tablePagination.data.map((schema) => {
             return (
               <Col span={24} md={12} key={schema.id}>
                 <Card
@@ -59,8 +77,12 @@ export const SchemasPage: AppPage = () => {
                       key="delete"
                       okType="danger"
                       onConfirm={async () => {
-                        await appStorage.delete('schemas', schema._index);
-                        storePagination.refresh();
+                        await appStorage
+                          .table('schemas')
+                          .where(SchemaIndex.Id)
+                          .equals(schema.id)
+                          .delete();
+                        tablePagination.refresh();
                       }}
                     >
                       <DeleteOutlined />
@@ -115,7 +137,7 @@ export const SchemasPage: AppPage = () => {
             );
           })}
         </Row>
-      </StorePaginationLayout>
+      </TablePaginationLayout>
     </>
   );
 };

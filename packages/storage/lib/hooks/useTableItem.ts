@@ -1,19 +1,24 @@
-import { useEffect, useState } from 'react';
-import { AppStore, StoreMap } from '../AppStorage';
+import { Collection } from 'dexie';
+import { useEffect, useRef, useState } from 'react';
+import { AppStorage } from '../AppStorage';
 import { useAppStorage } from '../components';
 
-export function useStoreItem<K extends AppStore>(storeName: K, id: string) {
+export function useTableItem<T>(
+  query: (storage: AppStorage) => Collection<T, any>
+) {
   const appStorage = useAppStorage();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
-  const [item, setItem] = useState<StoreMap[K]>();
+  const [item, setItem] = useState<T>();
+
+  const queryRef = useRef(query);
 
   useEffect(() => {
     const action = async () => {
       setLoading(true);
       try {
-        const item = await appStorage.getById(storeName, id);
+        const item = await queryRef.current(appStorage).first();
         setItem(item);
       } catch (error) {
         if (error instanceof Error) {
@@ -27,7 +32,7 @@ export function useStoreItem<K extends AppStore>(storeName: K, id: string) {
     };
 
     action();
-  }, [appStorage, storeName, id]);
+  }, [appStorage]);
 
   return {
     item,
