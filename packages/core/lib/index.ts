@@ -16,7 +16,9 @@ export {
   SchemaInfoTable,
   SchemaViewer,
   WorkViewer,
+  DownloadButton,
 } from './components';
+export type { DownloadButtonProps } from './components';
 
 export {
   createSchema,

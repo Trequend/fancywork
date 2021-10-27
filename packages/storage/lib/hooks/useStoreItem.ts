@@ -13,7 +13,7 @@ export function useStoreItem<K extends AppStore>(storeName: K, id: string) {
     const action = async () => {
       setLoading(true);
       try {
-        const item = await appStorage.get(storeName, id);
+        const item = await appStorage.getById(storeName, id);
         setItem(item);
       } catch (error) {
         if (error instanceof Error) {

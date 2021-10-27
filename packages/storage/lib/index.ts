@@ -4,6 +4,7 @@ export type {
   AppStore,
   GetRangeOptions,
   StoreMap,
+  Model,
 } from './AppStorage';
 
 export { useStoreItem, useStorePagination } from './hooks';

@@ -51,7 +51,7 @@ export const WorksPage: AppPage = () => {
                     key="delete"
                     okType="danger"
                     onConfirm={async () => {
-                      await appStorage.delete('works', work.id);
+                      await appStorage.delete('works', work._index);
                       storePagination.refresh();
                     }}
                   >

@@ -5,7 +5,7 @@ import {
   SchemaInfoTable,
   SchemaViewer,
   Schema,
-  downloadSchema,
+  DownloadButton,
 } from '@fancywork/core';
 import styles from './index.module.scss';
 
@@ -62,14 +62,7 @@ export const GeneratorResult: FC<Props> = ({
                 >
                   View Schema
                 </Button>
-                <Button
-                  className={styles.button}
-                  onClick={() => {
-                    downloadSchema(schema);
-                  }}
-                >
-                  Download
-                </Button>
+                <DownloadButton schema={schema} className={styles.button} />
                 <SchemaInfoTable
                   schema={schema}
                   pagination={false}

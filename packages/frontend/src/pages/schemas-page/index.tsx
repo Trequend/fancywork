@@ -7,7 +7,12 @@ import {
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppPage } from 'src/types';
-import { Schema, SchemaInfoTable, SchemaViewer } from '@fancywork/core';
+import {
+  Schema,
+  SchemaInfoTable,
+  SchemaViewer,
+  DownloadButton,
+} from '@fancywork/core';
 import {
   useAppStorage,
   useStorePagination,
@@ -24,7 +29,6 @@ export const SchemasPage: AppPage = () => {
   const appStorage = useAppStorage();
 
   const storePagination = useStorePagination('schemas', PAGE_SIZE, {
-    index: 'createdAt',
     direction: 'prev',
   });
 
@@ -71,7 +75,7 @@ export const SchemasPage: AppPage = () => {
                       key="delete"
                       okType="danger"
                       onConfirm={async () => {
-                        await appStorage.delete('schemas', schema.id);
+                        await appStorage.delete('schemas', schema._index);
                         storePagination.refresh();
                       }}
                     >
@@ -117,6 +121,10 @@ export const SchemasPage: AppPage = () => {
                     >
                       View Schema
                     </Button>
+                    <DownloadButton
+                      schema={schema}
+                      className={styles.cardButton}
+                    />
                   </div>
                 </Card>
               </Col>
