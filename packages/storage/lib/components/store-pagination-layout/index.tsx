@@ -28,7 +28,7 @@ export const StorePaginationLayout: FC<StorePaginationLayoutProps> = ({
     <div className={styles.root} style={style}>
       <PageHeader {...props} className={styles.header} />
       <main className={styles.main}>
-        {total === undefined || total === 0 ? (
+        {(total === undefined || total === 0) && !loading ? (
           <div className={styles.empty}>
             <Empty description={noDataText} />
           </div>
