@@ -10,11 +10,13 @@ export function createWork(name: string, schema: Schema): Work {
   }
 
   return {
-    id: uuidv4(),
-    createdAt: new Date(),
-    lastActivity: new Date(),
-    name,
-    nameWords: name.toLowerCase().split(' '),
+    metadata: {
+      id: uuidv4(),
+      name,
+      createdAt: new Date(),
+      lastActivity: new Date(),
+      schemaMetadata: schema.metadata,
+    },
     schema,
     embroidered,
   };

@@ -11,12 +11,14 @@ import styles from './index.module.scss';
 
 type Props = {
   schema: Schema;
+  schemaImage: string;
   layout: React.ComponentType<any>;
   onSave?: () => void;
 };
 
 export const GeneratorResult: FC<Props> = ({
   schema,
+  schemaImage,
   layout: Layout,
   onSave,
 }) => {
@@ -40,7 +42,7 @@ export const GeneratorResult: FC<Props> = ({
           <Row gutter={{ xs: 0, md: 24 }} className={styles.row}>
             <Col span={24} md={12}>
               <div className={styles.image}>
-                <Image src={schema.metadata.schemaImageDataURL} />
+                <Image src={schemaImage} />
               </div>
             </Col>
             <Col span={24} md={12}>
@@ -62,9 +64,12 @@ export const GeneratorResult: FC<Props> = ({
                 >
                   View Schema
                 </Button>
-                <DownloadButton schema={schema} className={styles.button} />
+                <DownloadButton
+                  schemaLoader={() => schema}
+                  className={styles.button}
+                />
                 <SchemaInfoTable
-                  schema={schema}
+                  metadata={schema.metadata}
                   pagination={false}
                   scroll={{ x: true }}
                 />

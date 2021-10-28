@@ -4,22 +4,26 @@ import { AppStorage } from '../AppStorage';
 import { useAppStorage } from '../components';
 import { useSearchParam } from './useSearchParam';
 
-export type TablePagination<T> = {
+export type TablePagination<T, A> = {
   loading: boolean;
   total?: number;
   page: number;
   pageSize: number;
   error?: string;
   data: Array<T>;
+  additionalData?: Array<A>;
   setPage: (page: number) => void;
   refresh: () => void;
   reset: () => void;
 };
 
-export function useTablePagination<T>(
+export function useTablePagination<T, A>(
   pageSize: number,
-  query: (appStorage: AppStorage) => Collection<T, any>
-): TablePagination<T> {
+  options: {
+    query: (appStorage: AppStorage) => Collection<T, any>;
+    loadAdditional?: (data: Array<T>) => Promise<Array<A>> | Array<A>;
+  }
+): TablePagination<T, A> {
   const appStorage = useAppStorage();
 
   const [pageNumber, setPageNumber] = useSearchParam<number>('page', {
@@ -37,12 +41,13 @@ export function useTablePagination<T>(
   const [total, setTotal] = useState<number>();
   const [error, setError] = useState<string>();
   const [data, setData] = useState<Array<T>>([]);
+  const [additionalData, setAdditionalData] = useState<Array<A>>([]);
 
-  const queryRef = useRef(query);
+  const optionsRef = useRef(options);
 
   useEffect(() => {
-    queryRef.current = query;
-  }, [query]);
+    optionsRef.current = options;
+  }, [options]);
 
   const loadData = useCallback(
     (page: number) => {
@@ -51,7 +56,9 @@ export function useTablePagination<T>(
       const action = async () => {
         setLoading(true);
         try {
-          const collection = queryRef.current(appStorage);
+          const { query, loadAdditional } = optionsRef.current;
+
+          const collection = query(appStorage);
 
           const total = await collection.count();
           if (page > 1 && previousPage * pageSize >= total) {
@@ -65,7 +72,12 @@ export function useTablePagination<T>(
             .limit(pageSize)
             .toArray();
 
+          const additionalData = loadAdditional
+            ? await loadAdditional(data)
+            : [];
+
           setData(data);
+          setAdditionalData(additionalData);
           setTotal(total);
         } catch (error) {
           if (error instanceof Error) {
@@ -93,6 +105,7 @@ export function useTablePagination<T>(
     page: pageNumber,
     pageSize,
     data,
+    additionalData,
     error,
     refresh: () => {
       loadData(pageNumber);

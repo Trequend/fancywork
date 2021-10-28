@@ -1,29 +1,38 @@
 import { Button, Modal, Form, Input, message } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router';
-import { Schema, createWork } from '@fancywork/core';
+import { SchemaMetadata, createWork, createSchemaImage } from '@fancywork/core';
 import { WORKS_PATHNAME } from '../../works-page/constants';
-import { useAppStorage } from '@fancywork/storage';
+import { useAppStorage, SchemaIndex } from '@fancywork/storage';
 import styles from './index.module.scss';
 
 type Props = {
-  schema?: Schema;
+  metadata?: SchemaMetadata;
   onCancel?: () => void;
 };
 
-export const CreateWorkModal: FC<Props> = ({ schema, onCancel }) => {
+export const CreateWorkModal: FC<Props> = ({ metadata, onCancel }) => {
   const appStorage = useAppStorage();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 
   const onFinish = (values: any) => {
-    if (schema) {
+    if (metadata) {
       const action = async () => {
         setLoading(true);
         try {
-          const work = createWork(values.name, schema);
-          await appStorage.table('works').add(work);
-          history.push(WORKS_PATHNAME);
+          const schema = await appStorage
+            .table('schemas')
+            .get({ [SchemaIndex.Id]: metadata.id });
+
+          if (schema) {
+            const image = await createSchemaImage(schema);
+            const work = createWork(values.name, schema);
+            await appStorage.addWork(work, image);
+            history.push(WORKS_PATHNAME);
+          } else {
+            throw new Error('No schema');
+          }
         } catch (error) {
           setLoading(false);
           if (error instanceof Error) {
@@ -41,7 +50,7 @@ export const CreateWorkModal: FC<Props> = ({ schema, onCancel }) => {
   return (
     <Modal
       title="Create work"
-      visible={!!schema}
+      visible={!!metadata}
       closable
       onCancel={onCancel}
       width="400px"
@@ -49,7 +58,10 @@ export const CreateWorkModal: FC<Props> = ({ schema, onCancel }) => {
       centered
     >
       <Form layout="vertical" requiredMark={false} onFinish={onFinish}>
-        <p>Based on schema: {schema?.metadata.name}</p>
+        <p>
+          Based on schema:
+          <br /> {metadata?.name}
+        </p>
         <Form.Item
           name="name"
           label="Name"

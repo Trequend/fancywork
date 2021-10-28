@@ -51,7 +51,7 @@ export class SchemaViewProvider {
     const length = schema.palette.colors.length;
     for (let i = 0; i < length; i++) {
       const symbol = SchemaViewProvider.generateSymbol(i);
-      const symbolColor = getContrastColor(schema.palette.colors[i].hexColor);
+      const symbolColor = getContrastColor(schema.palette.colors[i].hex);
       this.colorMap.push({
         symbol,
         symbolColor,
@@ -62,8 +62,8 @@ export class SchemaViewProvider {
   public getCell(i: number, j: number) {
     const cellIndex = this.getCellIndex(i, j);
     const colorIndex = this.schema.grid[cellIndex];
-    if (colorIndex === undefined) {
-      return undefined;
+    if (colorIndex === null) {
+      return null;
     } else {
       return {
         color: this.schema.palette.colors[colorIndex],
@@ -73,7 +73,7 @@ export class SchemaViewProvider {
   }
 
   protected getCellIndex(i: number, j: number) {
-    const { width } = this.schema;
+    const { width } = this.schema.metadata.canvasMetadata;
     return j * width + i;
   }
 

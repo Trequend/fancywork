@@ -16,7 +16,7 @@ export class WorkViewProvider extends SchemaViewProvider {
         embroidered,
       };
     } else {
-      return undefined;
+      return null;
     }
   }
 

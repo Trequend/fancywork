@@ -33,10 +33,9 @@ export class SchemaCanvas<
   constructor(public readonly viewProvider: Provider, root: HTMLDivElement) {
     super();
 
-    this.cellsCount = new Vector2Int(
-      this.viewProvider.schema.width,
-      this.viewProvider.schema.height
-    );
+    const { width, height } = this.viewProvider.schema.metadata.canvasMetadata;
+
+    this.cellsCount = new Vector2Int(width, height);
 
     const canvas = this.createCanvas();
     const context = canvas.getContext('2d');
@@ -222,11 +221,11 @@ export class SchemaCanvas<
 
   protected drawCell(i: number, j: number, x: number, y: number) {
     const cell = this.viewProvider.getCell(i, j);
-    if (cell === undefined) {
+    if (cell === null) {
       return;
     }
 
-    this.context.fillStyle = cell.color.hexColor;
+    this.context.fillStyle = cell.color.hex;
     this.context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 
     this.context.fillStyle = cell.symbolColor;

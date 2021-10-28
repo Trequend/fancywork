@@ -1,4 +1,9 @@
-export { createSchema, createSchemaGrid, downloadSchema } from './schema';
+export {
+  createSchema,
+  createSchemaGrid,
+  downloadSchema,
+  createSchemaImage,
+} from './schema';
 export type { GenerateSchemaOptions } from './schema';
 
 export {

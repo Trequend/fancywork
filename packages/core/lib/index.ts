@@ -26,6 +26,7 @@ export {
   convertSize,
   cellsEquals,
   createWork,
+  createSchemaImage,
 } from './functions';
 export type { GenerateSchemaOptions, ConvertSizeOptions } from './functions';
 
@@ -42,6 +43,10 @@ export type {
   Work,
   PaletteReduceAlgorithm,
   SizeType,
+  CanvasMetadata,
+  PaletteMetadata,
+  WorkMetadata,
+  WorkGrid,
 } from './types';
 
 export { palettes } from './palettes';

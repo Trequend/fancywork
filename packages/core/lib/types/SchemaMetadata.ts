@@ -1,9 +1,11 @@
+import { CanvasMetadata } from './CanvasMetadata';
+import { PaletteMetadata } from './PaletteMetadata';
+
 export type SchemaMetadata = {
+  id: string;
   name: string;
-  nameWords: Array<string>;
   createdAt: Date;
-  width: number;
-  height: number;
-  paletteName: string;
-  schemaImageDataURL: string;
+  stitchCount: number;
+  canvasMetadata: CanvasMetadata;
+  paletteMetadata: PaletteMetadata;
 };

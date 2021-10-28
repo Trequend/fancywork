@@ -3,7 +3,7 @@ import { message, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BasicLayout, Stages, FullscreenSpin } from 'src/components';
-import { Schema, createSchema } from '@fancywork/core';
+import { Schema, createSchema, createSchemaImage } from '@fancywork/core';
 import { useAppStorage } from '@fancywork/storage';
 import { AppPage } from 'src/types';
 import {
@@ -35,6 +35,7 @@ export const CreateSchemePage: AppPage = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [schema, setSchema] = useState<Schema>();
+  const [schemaImage, setSchemaImage] = useState<string>();
 
   const executeTask = async (task: () => Promise<void>) => {
     setLoading(true);
@@ -70,14 +71,17 @@ export const CreateSchemePage: AppPage = () => {
         withDithering: paletteSettings.withDithering,
       });
 
+      const schemaImage = await createSchemaImage(schema);
+
       setSchema(schema);
+      setSchemaImage(schemaImage);
     });
   };
 
   const onFinish = async () => {
-    if (schema) {
+    if (schema && schemaImage) {
       await executeTask(async () => {
-        await appStorage.table('schemas').add(schema);
+        await appStorage.addSchema(schema, schemaImage);
         history.replace(SCHEMAS_PATHNAME);
       });
     }
@@ -209,10 +213,11 @@ export const CreateSchemePage: AppPage = () => {
         </Stages.Stage>
         <Stages.Stage title="Result" overrideDefaultLayout>
           {(completeStage, { DefaultLayout }) =>
-            schema ? (
+            schema && schemaImage ? (
               <GeneratorResult
                 layout={DefaultLayout}
                 schema={schema}
+                schemaImage={schemaImage}
                 onSave={() => {
                   completeStage();
                 }}

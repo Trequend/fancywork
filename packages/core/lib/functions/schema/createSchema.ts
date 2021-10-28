@@ -1,4 +1,3 @@
-import { RGBColor } from 'lib/classes';
 import {
   Palette,
   PaletteReduceAlgorithm,
@@ -7,7 +6,7 @@ import {
   SchemaGrid,
   SchemaMetadata,
 } from 'lib/types';
-import { executeInCanvasContext, processImageInCanvas } from '../utils';
+import { processImageInCanvas } from '../utils';
 import { createSchemaGrid } from './createSchemaGrid';
 import { createImagePalette } from './createImagePalette';
 import { v4 as uuidv4 } from 'uuid';
@@ -67,19 +66,16 @@ export async function createSchema(
     options.withDithering
   );
 
-  const metadata = await createSchemaMetadata(imageData, {
+  const metadata = createSchemaMetadata(imageData, {
     name: options.name,
     grid,
     palette,
+    stitchCount: options.stitchCount,
   });
 
   return {
-    id: uuidv4(),
     metadata,
     palette,
-    width: imageData.width,
-    height: imageData.height,
-    stitchCount: options.stitchCount,
     grid,
   };
 }
@@ -88,72 +84,33 @@ type CreateSchemaMetadataOptions = {
   name: string;
   grid: SchemaGrid;
   palette: Palette;
+  stitchCount: number;
 };
 
-async function createSchemaMetadata(
+function createSchemaMetadata(
   imageData: ImageData,
   options: CreateSchemaMetadataOptions
-): Promise<SchemaMetadata> {
-  const schemaImageDataURL = await getSchemaImageDataURL(
-    imageData.width,
-    imageData.height,
-    options.grid,
-    options.palette
-  );
-
+): SchemaMetadata {
   return {
+    id: uuidv4(),
     name: options.name,
-    nameWords: options.name.toLowerCase().split(' '),
     createdAt: new Date(),
-    width: imageData.width,
-    height: imageData.height,
-    paletteName: options.palette.name,
-    schemaImageDataURL,
-  };
-}
-
-async function getSchemaImageDataURL(
-  width: number,
-  height: number,
-  grid: SchemaGrid,
-  palette: Palette
-): Promise<string> {
-  const dataURL = executeInCanvasContext((context) => {
-    const data = new Uint8ClampedArray(grid.length * 4);
-    const colors = palette.colors.map(({ hexColor }) =>
-      RGBColor.fromHex(hexColor)
-    );
-
-    for (let i = 0, offset = 0; i < grid.length; i++, offset += 4) {
-      const colorIndex = grid[i];
-      if (colorIndex !== undefined) {
-        const color = colors[colorIndex];
-        data[offset + 0] = color.red;
-        data[offset + 1] = color.green;
-        data[offset + 2] = color.blue;
-        data[offset + 3] = 255;
-      } else {
-        data[offset + 3] = 0;
-      }
-    }
-
-    context.canvas.width = width;
-    context.canvas.height = height;
-    const imageData = new ImageData(data, width, height);
-    context.putImageData(imageData, 0, 0);
-    return context.canvas.toDataURL();
-  });
-
-  const CELL_SIZE = width > 500 || height > 500 ? 1 : 5;
-  return await processImageInCanvas(
-    (context) => {
-      return context.canvas.toDataURL();
+    stitchCount:
+      options.grid.reduce((accumulator, value) => {
+        if (value === undefined) {
+          return accumulator;
+        } else {
+          return (accumulator ?? 0) + 1;
+        }
+      }, 0) ?? 0,
+    canvasMetadata: {
+      width: imageData.width,
+      height: imageData.height,
+      stitchCount: options.stitchCount,
     },
-    {
-      imageURL: dataURL,
-      width: width * CELL_SIZE,
-      height: height * CELL_SIZE,
-      imageSmoothingEnabled: false,
-    }
-  );
+    paletteMetadata: {
+      name: options.palette.name,
+      colorsCount: options.palette.colors.length,
+    },
+  };
 }

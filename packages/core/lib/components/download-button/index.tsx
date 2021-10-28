@@ -4,11 +4,11 @@ import { Schema } from 'lib/types';
 import { FC, useState } from 'react';
 
 export type DownloadButtonProps = {
-  schema: Schema;
+  schemaLoader: () => Promise<Schema> | Schema;
 } & Omit<ButtonProps, 'onClick'>;
 
 export const DownloadButton: FC<DownloadButtonProps> = ({
-  schema,
+  schemaLoader,
   ...props
 }) => {
   const [visible, setVisible] = useState(false);
@@ -22,7 +22,8 @@ export const DownloadButton: FC<DownloadButtonProps> = ({
         <>
           <Button
             type="link"
-            onClick={() => {
+            onClick={async () => {
+              const schema = await schemaLoader();
               downloadSchema(schema, true);
               setVisible(false);
             }}
@@ -31,7 +32,8 @@ export const DownloadButton: FC<DownloadButtonProps> = ({
           </Button>
           <Button
             type="link"
-            onClick={() => {
+            onClick={async () => {
+              const schema = await schemaLoader();
               downloadSchema(schema, false);
               setVisible(false);
             }}

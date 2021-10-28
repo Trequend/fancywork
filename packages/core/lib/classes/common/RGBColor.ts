@@ -34,8 +34,8 @@ export class RGBColor {
     return `rgb(${this.red}, ${this.green}, ${this.blue})`;
   }
 
-  public static fromHex(hexColor: HexColor) {
-    let hex = hexColor.trim();
+  public static fromHex(hex: HexColor) {
+    hex = hex.trim();
 
     if (/^#([0-9a-fA-F]){3,4}$/.test(hex)) {
       let hexParts = hex.substring(1).split('');

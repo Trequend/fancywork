@@ -7,7 +7,7 @@ export class Vertex {
   private readonly attachedColors = new Map<number, number>();
 
   constructor(public readonly paletteColor: PaletteColor) {
-    this.color = RGBColor.fromHex(paletteColor.hexColor);
+    this.color = RGBColor.fromHex(paletteColor.hex);
   }
 
   public get attachedColorsCount() {

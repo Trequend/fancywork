@@ -12,7 +12,7 @@ export class WorkCanvas extends SchemaCanvas<WorkViewProvider, EventMap> {
     const cell = this.viewProvider.getCell(i, j);
     if (cell) {
       if (cell.embroidered) {
-        this.context.fillStyle = cell.color.hexColor;
+        this.context.fillStyle = cell.color.hex;
         this.context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
       } else {
         super.drawCell(i, j, x, y);

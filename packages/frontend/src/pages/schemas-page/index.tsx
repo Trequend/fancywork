@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row, Image, Popconfirm } from 'antd';
+import { Button, Card, Col, Row, Popconfirm, Image } from 'antd';
 import {
   DeleteOutlined,
   EyeOutlined,
@@ -7,13 +7,19 @@ import {
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppPage } from 'src/types';
-import { Schema, SchemaInfoTable, DownloadButton } from '@fancywork/core';
+import {
+  SchemaMetadata,
+  SchemaInfoTable,
+  DownloadButton,
+} from '@fancywork/core';
 import {
   useAppStorage,
   TablePaginationLayout,
   useTablePagination,
   Search,
   SchemaIndex,
+  SchemaImage,
+  SchemaImageIndex,
 } from '@fancywork/storage';
 import { CreateWorkModal } from './create-work-modal';
 import { SCHEMAS_PATHNAME } from './constants';
@@ -27,25 +33,40 @@ export const SchemasPage: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
-  const [schema, setSchema] = useState<Schema>();
+  const [schemaMetadata, setSchemaMetadata] = useState<SchemaMetadata>();
 
-  const tablePagination = useTablePagination(PAGE_SIZE, (storage) => {
-    const params = new URLSearchParams(history.location.search);
-    const param = params.get(PARAM_NAME);
-    return param
-      ? storage
-          .table('schemas')
-          .where(SchemaIndex.NameWords)
-          .startsWithAnyOf(param.toLowerCase().split(' '))
-      : storage.table('schemas').toCollection();
+  const tablePagination = useTablePagination<
+    SchemaMetadata,
+    SchemaImage | undefined
+  >(PAGE_SIZE, {
+    query: (storage) => {
+      const params = new URLSearchParams(history.location.search);
+      const param = params.get(PARAM_NAME)?.toLowerCase();
+      return param
+        ? storage
+            .table('schema_metadata')
+            .filter(
+              (metadata) => metadata.name.toLowerCase().indexOf(param) !== -1
+            )
+        : storage.table('schema_metadata').toCollection();
+    },
+    loadAdditional: async (data) => {
+      return await Promise.all(
+        data.map(({ id }) => {
+          return appStorage
+            .table('schema_images')
+            .get({ [SchemaImageIndex.Id]: id });
+        })
+      );
+    },
   });
 
   return (
     <>
       <CreateWorkModal
-        schema={schema}
+        metadata={schemaMetadata}
         onCancel={() => {
-          setSchema(undefined);
+          setSchemaMetadata(undefined);
         }}
       />
       <TablePaginationLayout
@@ -67,9 +88,12 @@ export const SchemasPage: AppPage = () => {
         }
       >
         <Row gutter={[24, 24]}>
-          {tablePagination.data.map((schema) => {
+          {tablePagination.data.map((metadata, index) => {
+            const { additionalData } = tablePagination;
+            const image = additionalData ? additionalData[index] : undefined;
+
             return (
-              <Col span={24} md={12} key={schema.id}>
+              <Col span={24} md={12} key={metadata.id}>
                 <Card
                   className={styles.card}
                   actions={[
@@ -79,11 +103,7 @@ export const SchemasPage: AppPage = () => {
                       key="delete"
                       okType="danger"
                       onConfirm={async () => {
-                        await appStorage
-                          .table('schemas')
-                          .where(SchemaIndex.Id)
-                          .equals(schema.id)
-                          .delete();
+                        await appStorage.deleteSchema(metadata.id);
                         tablePagination.refresh();
                       }}
                     >
@@ -93,20 +113,22 @@ export const SchemasPage: AppPage = () => {
                 >
                   <Card.Meta
                     avatar={
-                      <div className={styles.image}>
-                        <Image
-                          preview={{
-                            mask: <EyeOutlined />,
-                          }}
-                          src={schema.metadata.schemaImageDataURL}
-                          alt={schema.metadata.name}
-                        />
-                      </div>
+                      image ? (
+                        <div className={styles.image}>
+                          <Image
+                            preview={{
+                              mask: <EyeOutlined />,
+                            }}
+                            src={image.dataURL}
+                            alt={metadata.name}
+                          />
+                        </div>
+                      ) : null
                     }
-                    title={schema.metadata.name}
+                    title={metadata.name}
                   />
                   <SchemaInfoTable
-                    schema={schema}
+                    metadata={metadata}
                     pagination={false}
                     className={styles.table}
                     scroll={{ x: true }}
@@ -115,8 +137,8 @@ export const SchemasPage: AppPage = () => {
                     <Button
                       type="primary"
                       className={styles.cardButton}
-                      onClick={async () => {
-                        setSchema(schema);
+                      onClick={() => {
+                        setSchemaMetadata(metadata);
                       }}
                     >
                       To Embroider
@@ -124,14 +146,24 @@ export const SchemasPage: AppPage = () => {
                     <Button
                       className={styles.cardButton}
                       onClick={() => {
-                        history.push(`${SCHEMA_PATHNAME}?id=${schema.id}`);
+                        history.push(`${SCHEMA_PATHNAME}?id=${metadata.id}`);
                       }}
                     >
                       View Schema
                     </Button>
                     <DownloadButton
-                      schema={schema}
                       className={styles.cardButton}
+                      schemaLoader={async () => {
+                        const schema = await appStorage
+                          .table('schemas')
+                          .get({ [SchemaIndex.Id]: metadata.id });
+
+                        if (schema) {
+                          return schema;
+                        } else {
+                          throw new Error('No schema');
+                        }
+                      }}
                     />
                   </div>
                 </Card>

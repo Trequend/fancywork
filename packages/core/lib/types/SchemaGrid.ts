@@ -1,1 +1,1 @@
-export type SchemaGrid = Array<number | undefined>;
+export type SchemaGrid = Array<number | null>;

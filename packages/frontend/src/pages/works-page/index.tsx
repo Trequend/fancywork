@@ -1,19 +1,21 @@
 import { AppPage } from 'src/types';
 import { WORKS_PATHNAME } from './constants';
-import { Button, Card, Col, Row, Image, Popconfirm } from 'antd';
+import { Button, Card, Col, Row, Popconfirm, Image } from 'antd';
 import {
   DeleteOutlined,
   EyeOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { SchemaInfoTable } from '@fancywork/core';
+import { SchemaInfoTable, WorkMetadata } from '@fancywork/core';
 import {
   useAppStorage,
   useTablePagination,
   TablePaginationLayout,
-  WorkIndex,
   Search,
+  WorkImage,
+  WorkImageIndex,
+  WorkMetadataIndex,
 } from '@fancywork/storage';
 import { WORK_PATHNAME } from '../work-page/constants';
 import styles from './index.module.scss';
@@ -25,15 +27,32 @@ export const WorksPage: AppPage = () => {
   const history = useHistory();
   const appStorage = useAppStorage();
 
-  const tablePagination = useTablePagination(PAGE_SIZE, (storage) => {
-    const params = new URLSearchParams(history.location.search);
-    const param = params.get(PARAM_NAME);
-    return param
-      ? storage
-          .table('works')
-          .where(WorkIndex.NameWords)
-          .startsWithAnyOf(param.toLowerCase().split(' '))
-      : storage.table('works').orderBy(WorkIndex.LastActivity);
+  const tablePagination = useTablePagination<
+    WorkMetadata,
+    WorkImage | undefined
+  >(PAGE_SIZE, {
+    query: (storage) => {
+      const params = new URLSearchParams(history.location.search);
+      const param = params.get(PARAM_NAME)?.toLowerCase();
+      return param
+        ? storage
+            .table('work_metadata')
+            .filter(
+              (metadata) => metadata.name.toLowerCase().indexOf(param) !== -1
+            )
+        : storage
+            .table('work_metadata')
+            .orderBy(WorkMetadataIndex.LastActivity);
+    },
+    loadAdditional: async (data) => {
+      return await Promise.all(
+        data.map(({ id }) => {
+          return appStorage
+            .table('work_images')
+            .get({ [WorkImageIndex.Id]: id });
+        })
+      );
+    },
   });
 
   return (
@@ -56,11 +75,13 @@ export const WorksPage: AppPage = () => {
       }
     >
       <Row gutter={[24, 24]}>
-        {tablePagination.data.map((work) => {
-          const { schema } = work;
+        {tablePagination.data.map((metadata, index) => {
+          const { schemaMetadata } = metadata;
+          const { additionalData } = tablePagination;
+          const image = additionalData ? additionalData[index] : undefined;
 
           return (
-            <Col span={24} md={12} key={work.id}>
+            <Col span={24} md={12} key={metadata.id}>
               <Card
                 className={styles.card}
                 actions={[
@@ -70,11 +91,7 @@ export const WorksPage: AppPage = () => {
                     key="delete"
                     okType="danger"
                     onConfirm={async () => {
-                      await appStorage
-                        .table('works')
-                        .where(WorkIndex.Id)
-                        .equals(work.id)
-                        .delete();
+                      await appStorage.deleteWork(metadata.id);
                       tablePagination.refresh();
                     }}
                   >
@@ -84,20 +101,22 @@ export const WorksPage: AppPage = () => {
               >
                 <Card.Meta
                   avatar={
-                    <div className={styles.image}>
-                      <Image
-                        preview={{
-                          mask: <EyeOutlined />,
-                        }}
-                        src={schema.metadata.schemaImageDataURL}
-                        alt={schema.metadata.name}
-                      />
-                    </div>
+                    image ? (
+                      <div className={styles.image}>
+                        <Image
+                          preview={{
+                            mask: <EyeOutlined />,
+                          }}
+                          src={image.dataURL}
+                          alt={metadata.name}
+                        />
+                      </div>
+                    ) : null
                   }
-                  title={work.name}
+                  title={metadata.name}
                 />
                 <SchemaInfoTable
-                  schema={schema}
+                  metadata={schemaMetadata}
                   pagination={false}
                   className={styles.table}
                   scroll={{ x: true }}
@@ -107,7 +126,7 @@ export const WorksPage: AppPage = () => {
                     type="primary"
                     className={styles.cardButton}
                     onClick={() => {
-                      history.push(`${WORK_PATHNAME}?id=${work.id}`);
+                      history.push(`${WORK_PATHNAME}?id=${metadata.id}`);
                     }}
                   >
                     Continue

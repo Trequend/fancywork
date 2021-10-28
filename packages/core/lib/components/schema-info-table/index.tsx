@@ -1,13 +1,13 @@
 import { ColumnType } from 'antd/lib/table';
 import { Table, TableProps, Typography } from 'antd';
 import { FC } from 'react';
-import { Schema } from 'lib/types';
+import { SchemaMetadata } from 'lib/types';
 
 type Props = {
-  schema: Schema;
+  metadata: SchemaMetadata;
 } & Omit<TableProps<any>, 'dataSource' | 'columns' | 'rowKey'>;
 
-export const SchemaInfoTable: FC<Props> = ({ schema, ...rest }) => {
+export const SchemaInfoTable: FC<Props> = ({ metadata, ...rest }) => {
   const columns: Array<ColumnType<any>> = [
     {
       title: 'Property',
@@ -28,33 +28,27 @@ export const SchemaInfoTable: FC<Props> = ({ schema, ...rest }) => {
   const data = [
     {
       property: 'Schema name',
-      value: schema.metadata.name,
+      value: metadata.name,
     },
     {
       property: 'Width (stitch)',
-      value: schema.width,
+      value: metadata.canvasMetadata.width,
     },
     {
       property: 'Height (stitch)',
-      value: schema.height,
+      value: metadata.canvasMetadata.height,
     },
     {
       property: 'Palette name',
-      value: schema.palette.name,
+      value: metadata.paletteMetadata.name,
     },
     {
       property: 'Colors count',
-      value: schema.palette.colors.length,
+      value: metadata.paletteMetadata.colorsCount,
     },
     {
       property: 'Stitch count',
-      value: schema.grid.reduce((accumulator, value) => {
-        if (value === undefined) {
-          return accumulator;
-        } else {
-          return (accumulator ?? 0) + 1;
-        }
-      }, 0),
+      value: metadata.stitchCount,
     },
   ];
 

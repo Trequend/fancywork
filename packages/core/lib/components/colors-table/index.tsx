@@ -17,12 +17,12 @@ export const ColorsTable: FC<Props> = ({ palette, ...rest }) => {
   }, [palette]);
 
   const data = useMemo(() => {
-    const getAnalogs = (hexColor: HexColor) => {
+    const getAnalogs = (hex: HexColor) => {
       const analogs: Record<string, string | undefined> = {};
       otherPalettes.forEach((palette) => {
         analogs[palette.name] =
           palette.colors.find((color) => {
-            return color.hexColor === hexColor;
+            return color.hex === hex;
           })?.code ?? '-';
       });
 
@@ -31,9 +31,9 @@ export const ColorsTable: FC<Props> = ({ palette, ...rest }) => {
 
     return palette.colors.map((color) => {
       return {
-        hexColor: color.hexColor,
+        hex: color.hex,
         code: color.code,
-        analogs: getAnalogs(color.hexColor),
+        analogs: getAnalogs(color.hex),
       };
     });
   }, [palette, otherPalettes]);
@@ -41,7 +41,7 @@ export const ColorsTable: FC<Props> = ({ palette, ...rest }) => {
   const columns: Array<ColumnType<any> | ColumnGroupType<any>> = [
     {
       title: 'Color',
-      dataIndex: 'hexColor',
+      dataIndex: 'hex',
       render: (value) => {
         return (
           <>

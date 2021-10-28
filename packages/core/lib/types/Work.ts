@@ -1,11 +1,9 @@
-import { Schema } from '.';
+import { Schema } from './Schema';
+import { WorkGrid } from './WorkGrid';
+import { WorkMetadata } from './WorkMetadata';
 
 export type Work = {
-  id: string;
-  createdAt: Date;
-  lastActivity: Date;
-  name: string;
-  nameWords: Array<string>;
+  metadata: WorkMetadata;
   schema: Schema;
-  embroidered: Array<boolean | null>;
+  embroidered: WorkGrid;
 };

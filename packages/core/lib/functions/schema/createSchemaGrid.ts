@@ -30,7 +30,7 @@ export function createSchemaGrid(
       let { alpha, ...color } = getImageDataPixel(imageData, offset);
 
       if (alpha === 0) {
-        grid.push(undefined);
+        grid.push(null);
       } else {
         if (withDithering) {
           color = errors[lineOffset + j].apply(color);
@@ -51,7 +51,7 @@ export function createSchemaGrid(
         if (withDithering) {
           const delta = computeColorDelta(
             originalColor,
-            RGBColor.fromHex(similarColor.hexColor)
+            RGBColor.fromHex(similarColor.hex)
           );
 
           /*

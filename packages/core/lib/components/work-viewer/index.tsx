@@ -38,7 +38,7 @@ export const WorkViewer: FC<Props> = ({ work, onCanvasInit, onBack }) => {
 
   return (
     <div className={styles.wrapper}>
-      <Layout title={work.name} onBack={onBack}>
+      <Layout title={work.metadata.name} onBack={onBack}>
         <div className={styles.root} ref={rootRef} />
       </Layout>
     </div>
