@@ -7,6 +7,7 @@ export {
   Vector2Int,
   WorkCanvas,
   WorkViewProvider,
+  EventEmitter,
 } from './classes';
 export type { SchemaCanvasEventMap } from './classes';
 export {

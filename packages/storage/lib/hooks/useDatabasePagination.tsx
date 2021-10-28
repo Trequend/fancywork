@@ -39,7 +39,6 @@ export function useDatabasePagination<T>(
   const [data, setData] = useState<Array<T>>([]);
 
   const queryRef = useRef(query);
-
   useEffect(() => {
     queryRef.current = query;
   }, [query]);
@@ -87,6 +86,25 @@ export function useDatabasePagination<T>(
     loadData(pageNumber);
   }, [loadData, pageNumber]);
 
+  const refresh = () => {
+    loadData(pageNumber);
+  };
+  const refreshRef = useRef(refresh);
+  refreshRef.current = refresh;
+
+  useEffect(() => {
+    const listener = ({ data }: { data: { partial: boolean } }) => {
+      if (!data.partial) {
+        refreshRef.current();
+      }
+    };
+
+    database.addEventListener('changes', listener);
+    return () => {
+      database.removeEventListener('changes', listener);
+    };
+  }, [database]);
+
   return {
     loading,
     total,
@@ -94,9 +112,7 @@ export function useDatabasePagination<T>(
     pageSize,
     data,
     error,
-    refresh: () => {
-      loadData(pageNumber);
-    },
+    refresh,
     setPage: (page) => {
       setPageNumber(page);
     },
