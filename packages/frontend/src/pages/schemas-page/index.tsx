@@ -2,6 +2,8 @@ import { SchemaMetadata } from '@fancywork/core';
 import {
   SchemaImage,
   SchemaImageIndex,
+  SCHEMA_IMAGES_TABLE,
+  SCHEMA_METADATA_TABLE,
   Search,
   TablePaginationLayout,
   useAppStorage,
@@ -30,17 +32,17 @@ export const SchemasPage: AppPage = () => {
       const param = params.get(PARAM_NAME)?.toLowerCase();
       return param
         ? storage
-            .table('schema_metadata')
+            .table(SCHEMA_METADATA_TABLE)
             .filter(
               (metadata) => metadata.name.toLowerCase().indexOf(param) !== -1
             )
-        : storage.table('schema_metadata').toCollection();
+        : storage.table(SCHEMA_METADATA_TABLE).toCollection();
     },
     loadAdditional: async (data) => {
       return await Promise.all(
         data.map(({ id }) => {
           return appStorage
-            .table('schema_images')
+            .table(SCHEMA_IMAGES_TABLE)
             .get({ [SchemaImageIndex.Id]: id });
         })
       );

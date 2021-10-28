@@ -7,6 +7,8 @@ import {
   WorkImage,
   WorkImageIndex,
   WorkMetadataIndex,
+  WORK_IMAGES_TABLE,
+  WORK_METADATA_TABLE,
 } from '@fancywork/storage';
 import { Col, Row } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -30,19 +32,19 @@ export const WorksPage: AppPage = () => {
         const param = params.get(PARAM_NAME)?.toLowerCase();
         return param
           ? storage
-              .table('work_metadata')
+              .table(WORK_METADATA_TABLE)
               .filter(
                 (metadata) => metadata.name.toLowerCase().indexOf(param) !== -1
               )
           : storage
-              .table('work_metadata')
+              .table(WORK_METADATA_TABLE)
               .orderBy(WorkMetadataIndex.LastActivity);
       },
       loadAdditional: async (data) => {
         return await Promise.all(
           data.map(({ id }) => {
             return appStorage
-              .table('work_images')
+              .table(WORK_IMAGES_TABLE)
               .get({ [WorkImageIndex.Id]: id });
           })
         );

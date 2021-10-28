@@ -1,13 +1,4 @@
-export {
-  AppStorage,
-  SchemaImageIndex,
-  SchemaIndex,
-  SchemaMetadataIndex,
-  WorkImageIndex,
-  WorkIndex,
-  WorkMetadataIndex,
-} from './AppStorage';
-export type { AppTable, TableMap } from './AppStorage';
+export { AppStorage } from './AppStorage';
 export {
   AppStorageProvider,
   Search,
@@ -25,4 +16,12 @@ export {
 } from './constants';
 export { useSearchParam, useTableItem, useTablePagination } from './hooks';
 export type { TablePagination } from './hooks';
-export type { SchemaImage, WorkImage } from './types';
+export {
+  SchemaImageIndex,
+  SchemaIndex,
+  SchemaMetadataIndex,
+  WorkImageIndex,
+  WorkIndex,
+  WorkMetadataIndex,
+} from './indices';
+export type { AppTable, SchemaImage, TableMap, WorkImage } from './types';

@@ -1,4 +1,4 @@
-import { Schema, SchemaMetadata, Work, WorkMetadata } from '@fancywork/core';
+import { Schema, Work } from '@fancywork/core';
 import Dexie, { Table } from 'dexie';
 import {
   DB_NAME,
@@ -9,45 +9,15 @@ import {
   WORK_IMAGES_TABLE,
   WORK_METADATA_TABLE,
 } from './constants';
-import { SchemaImage, WorkImage } from './types';
-
-export type TableMap = {
-  [SCHEMAS_TABLE]: Schema;
-  [SCHEMA_METADATA_TABLE]: SchemaMetadata;
-  [SCHEMA_IMAGES_TABLE]: SchemaImage;
-
-  [WORKS_TABLE]: Work;
-  [WORK_METADATA_TABLE]: WorkMetadata;
-  [WORK_IMAGES_TABLE]: WorkImage;
-};
-
-export enum SchemaIndex {
-  Id = 'metadata.id',
-}
-
-export enum SchemaMetadataIndex {
-  Id = 'id',
-}
-
-export enum SchemaImageIndex {
-  Id = 'id',
-}
-
-export enum WorkIndex {
-  Id = 'metadata.id',
-  LastActivity = 'metadata.lastActivity',
-}
-
-export enum WorkMetadataIndex {
-  Id = 'id',
-  LastActivity = 'lastActivity',
-}
-
-export enum WorkImageIndex {
-  Id = 'id',
-}
-
-export type AppTable = keyof TableMap;
+import {
+  SchemaImageIndex,
+  SchemaIndex,
+  SchemaMetadataIndex,
+  WorkImageIndex,
+  WorkIndex,
+  WorkMetadataIndex,
+} from './indices';
+import { AppTable, TableMap } from './types';
 
 export class AppStorage {
   public static async open() {
@@ -83,11 +53,11 @@ export class AppStorage {
   public async addSchema(schema: Schema, schemaImageDataURL: string) {
     return await this.transaction(
       'rw',
-      ['schemas', 'schema_metadata', 'schema_images'],
+      [SCHEMAS_TABLE, SCHEMA_METADATA_TABLE, SCHEMA_IMAGES_TABLE],
       () => {
-        this.table('schemas').add(schema);
-        this.table('schema_metadata').add(schema.metadata);
-        this.table('schema_images').add({
+        this.table(SCHEMAS_TABLE).add(schema);
+        this.table(SCHEMA_METADATA_TABLE).add(schema.metadata);
+        this.table(SCHEMA_IMAGES_TABLE).add({
           id: schema.metadata.id,
           dataURL: schemaImageDataURL,
         });
@@ -96,21 +66,21 @@ export class AppStorage {
   }
 
   public async getSchema(id: string) {
-    return await this.table('schemas').get({ [SchemaIndex.Id]: id });
+    return await this.table(SCHEMAS_TABLE).get({ [SchemaIndex.Id]: id });
   }
 
   public async deleteSchema(id: string) {
     return await this.transaction(
       'rw',
-      ['schemas', 'schema_metadata', 'schema_images'],
+      [SCHEMAS_TABLE, SCHEMA_METADATA_TABLE, SCHEMA_IMAGES_TABLE],
       () => {
-        this.table('schemas')
+        this.table(SCHEMAS_TABLE)
           .where({ [SchemaIndex.Id]: id })
           .delete();
-        this.table('schema_metadata')
+        this.table(SCHEMA_METADATA_TABLE)
           .where({ [SchemaMetadataIndex.Id]: id })
           .delete();
-        this.table('schema_images')
+        this.table(SCHEMA_IMAGES_TABLE)
           .where({ [SchemaImageIndex.Id]: id })
           .delete();
       }
@@ -120,11 +90,11 @@ export class AppStorage {
   public async addWork(work: Work, workImageDataURL: string) {
     return await this.transaction(
       'rw',
-      ['works', 'work_metadata', 'work_images'],
+      [WORKS_TABLE, WORK_METADATA_TABLE, WORK_IMAGES_TABLE],
       () => {
-        this.table('works').add(work);
-        this.table('work_metadata').add(work.metadata);
-        this.table('work_images').add({
+        this.table(WORKS_TABLE).add(work);
+        this.table(WORK_METADATA_TABLE).add(work.metadata);
+        this.table(WORK_IMAGES_TABLE).add({
           id: work.metadata.id,
           dataURL: workImageDataURL,
         });
@@ -133,21 +103,21 @@ export class AppStorage {
   }
 
   public async getWork(id: string) {
-    return await this.table('works').get({ [WorkIndex.Id]: id });
+    return await this.table(WORKS_TABLE).get({ [WorkIndex.Id]: id });
   }
 
   public async deleteWork(id: string) {
     return await this.transaction(
       'rw',
-      ['works', 'work_metadata', 'work_images'],
+      [WORKS_TABLE, WORK_METADATA_TABLE, WORK_IMAGES_TABLE],
       () => {
-        this.table('works')
+        this.table(WORKS_TABLE)
           .where({ [WorkIndex.Id]: id })
           .delete();
-        this.table('work_metadata')
+        this.table(WORK_METADATA_TABLE)
           .where({ [WorkMetadataIndex.Id]: id })
           .delete();
-        this.table('work_images')
+        this.table(WORK_IMAGES_TABLE)
           .where({ [WorkImageIndex.Id]: id })
           .delete();
       }
