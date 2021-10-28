@@ -1,16 +1,15 @@
 import { Schema, SchemaMetadata, Work, WorkMetadata } from '@fancywork/core';
 import Dexie, { Table } from 'dexie';
+import {
+  DB_NAME,
+  SCHEMAS_TABLE,
+  SCHEMA_IMAGES_TABLE,
+  SCHEMA_METADATA_TABLE,
+  WORKS_TABLE,
+  WORK_IMAGES_TABLE,
+  WORK_METADATA_TABLE,
+} from './constants';
 import { SchemaImage, WorkImage } from './types';
-
-const DB_NAME = 'fancywork';
-
-const SCHEMAS_TABLE = 'schemas';
-const SCHEMA_METADATA_TABLE = 'schema_metadata';
-const SCHEMA_IMAGES_TABLE = 'schema_images';
-
-const WORKS_TABLE = 'works';
-const WORK_METADATA_TABLE = 'work_metadata';
-const WORK_IMAGES_TABLE = 'work_images';
 
 export type TableMap = {
   [SCHEMAS_TABLE]: Schema;
@@ -96,6 +95,10 @@ export class AppStorage {
     );
   }
 
+  public async getSchema(id: string) {
+    return await this.table('schemas').get({ [SchemaIndex.Id]: id });
+  }
+
   public async deleteSchema(id: string) {
     return await this.transaction(
       'rw',
@@ -127,6 +130,10 @@ export class AppStorage {
         });
       }
     );
+  }
+
+  public async getWork(id: string) {
+    return await this.table('works').get({ [WorkIndex.Id]: id });
   }
 
   public async deleteWork(id: string) {
