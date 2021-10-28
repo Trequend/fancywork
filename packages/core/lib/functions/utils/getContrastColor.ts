@@ -1,5 +1,5 @@
-import { HexColor } from 'lib/types';
 import { RGBColor } from 'lib/classes';
+import { HexColor } from 'lib/types';
 
 function convertComponent(component: number) {
   component /= 255;

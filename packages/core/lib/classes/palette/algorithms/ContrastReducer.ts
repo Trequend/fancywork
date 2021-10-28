@@ -1,5 +1,5 @@
-import { Vertex } from '../Vertex';
 import { PaletteReducer } from '../PaletteReducer';
+import { Vertex } from '../Vertex';
 
 export class ContrastReducer extends PaletteReducer {
   public reduce(verticies: Array<Vertex>) {

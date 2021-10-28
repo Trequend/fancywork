@@ -1,17 +1,17 @@
+import { MAX_HEIGHT, MAX_WIDTH } from 'lib/constants';
 import {
   Palette,
   PaletteReduceAlgorithm,
-  SizeType,
   Schema,
   SchemaGrid,
   SchemaMetadata,
+  SizeType,
 } from 'lib/types';
-import { processImageInCanvas } from '../utils';
-import { createSchemaGrid } from './createSchemaGrid';
-import { createImagePalette } from './createImagePalette';
 import { v4 as uuidv4 } from 'uuid';
-import { MAX_HEIGHT, MAX_WIDTH } from 'lib/constants';
+import { processImageInCanvas } from '../utils';
 import { convertSize } from '../utils/convertSize';
+import { createImagePalette } from './createImagePalette';
+import { createSchemaGrid } from './createSchemaGrid';
 
 export type GenerateSchemaOptions = {
   name: string;

@@ -1,11 +1,13 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { message, Button } from 'antd';
+import { createSchema, createSchemaImage, Schema } from '@fancywork/core';
+import { useAppStorage } from '@fancywork/storage';
+import { Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { BasicLayout, Stages, FullscreenSpin } from 'src/components';
-import { Schema, createSchema, createSchemaImage } from '@fancywork/core';
-import { useAppStorage } from '@fancywork/storage';
+import { BasicLayout, FullscreenSpin, Stages } from 'src/components';
 import { AppPage } from 'src/types';
+import { SCHEMAS_PATHNAME } from '../schemas-page/constants';
+import { CREATE_SCHEMA_PATHNAME } from './constants';
 import {
   ChooseImage,
   GeneralSettings,
@@ -16,8 +18,6 @@ import {
   SizeSettings,
   SizeSettingsValues,
 } from './stages';
-import { SCHEMAS_PATHNAME } from '../schemas-page/constants';
-import { CREATE_SCHEMA_PATHNAME } from './constants';
 
 export const CreateSchemePage: AppPage = () => {
   const history = useHistory();

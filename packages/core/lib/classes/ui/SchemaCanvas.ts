@@ -1,9 +1,9 @@
-import { EventEmitter, Vector2, Vector2Int } from '../common';
-import { BorderCell, SchemaCell } from 'lib/types';
+import { CELL_SIZE, HALF_CELL_SIZE } from 'lib/constants';
 import { cellsEquals } from 'lib/functions';
+import { BorderCell, SchemaCell } from 'lib/types';
+import { EventEmitter, Vector2, Vector2Int } from '../common';
 import { Chunk } from './Chunk';
 import { SchemaViewProvider } from './SchemaViewProvider';
-import { CELL_SIZE, HALF_CELL_SIZE } from 'lib/constants';
 
 export type SchemaCanvasEventMap = {
   schemaCellClick: SchemaCell;

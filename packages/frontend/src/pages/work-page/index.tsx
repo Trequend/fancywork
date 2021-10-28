@@ -1,9 +1,9 @@
+import { WorkViewer } from '@fancywork/core';
+import { useTableItem, WorkIndex } from '@fancywork/storage';
 import { Result } from 'antd';
 import { useHistory } from 'react-router';
-import { WorkViewer } from '@fancywork/core';
 import { FullscreenSpin } from 'src/components';
 import { useQueryParam } from 'src/hooks';
-import { useTableItem, WorkIndex } from '@fancywork/storage';
 import { AppPage } from 'src/types';
 import { WORK_PATHNAME } from './constants';
 

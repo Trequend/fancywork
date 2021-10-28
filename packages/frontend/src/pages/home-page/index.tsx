@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
+import logo from 'src/assets/logo.svg';
 import { AppPage } from 'src/types';
 import { CREATE_SCHEMA_PATHNAME } from '../create-schema-page/constants';
-import { HOME_PATHNAME } from './constants';
-import styles from './index.module.scss';
-import logo from 'src/assets/logo.svg';
 import { SCHEMAS_PATHNAME } from '../schemas-page/constants';
 import { WORKS_PATHNAME } from '../works-page/constants';
+import { HOME_PATHNAME } from './constants';
+import styles from './index.module.scss';
 
 export const HomePage: AppPage = () => {
   return (

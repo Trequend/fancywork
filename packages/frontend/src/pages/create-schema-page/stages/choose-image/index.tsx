@@ -1,6 +1,6 @@
+import { InboxOutlined } from '@ant-design/icons';
 import Dragger from 'antd/lib/upload/Dragger';
 import { FC } from 'react';
-import { InboxOutlined } from '@ant-design/icons';
 import styles from './index.module.scss';
 
 type Props = {

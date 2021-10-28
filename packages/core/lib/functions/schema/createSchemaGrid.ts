@@ -1,4 +1,4 @@
-import { RGBColor, KMeansPalette, QuantizationError } from 'lib/classes';
+import { KMeansPalette, QuantizationError, RGBColor } from 'lib/classes';
 import { Palette, PaletteColor, SchemaGrid } from 'lib/types';
 import { getImageDataPixel } from '../utils';
 

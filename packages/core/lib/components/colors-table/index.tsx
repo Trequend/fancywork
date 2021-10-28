@@ -1,8 +1,8 @@
-import { ColumnGroupType, ColumnType } from 'antd/lib/table';
 import { Table, TableProps } from 'antd';
-import { FC, useMemo } from 'react';
-import { HexColor, Palette } from 'lib/types';
+import { ColumnGroupType, ColumnType } from 'antd/lib/table';
 import { palettes } from 'lib/palettes';
+import { HexColor, Palette } from 'lib/types';
+import { FC, useMemo } from 'react';
 
 type Props = {
   palette: Palette;

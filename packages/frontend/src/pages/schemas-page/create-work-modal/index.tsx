@@ -1,9 +1,9 @@
-import { Button, Modal, Form, Input, message } from 'antd';
+import { createSchemaImage, createWork, SchemaMetadata } from '@fancywork/core';
+import { SchemaIndex, useAppStorage } from '@fancywork/storage';
+import { Button, Form, Input, message, Modal } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router';
-import { SchemaMetadata, createWork, createSchemaImage } from '@fancywork/core';
 import { WORKS_PATHNAME } from '../../works-page/constants';
-import { useAppStorage, SchemaIndex } from '@fancywork/storage';
 import styles from './index.module.scss';
 
 type Props = {

@@ -1,15 +1,15 @@
+import { convertSize, MAX_HEIGHT, MAX_WIDTH, SizeType } from '@fancywork/core';
 import {
-  Col,
-  Row,
-  Form,
-  Select,
-  InputNumber,
-  Checkbox,
   Button,
+  Checkbox,
+  Col,
+  Form,
   Image,
+  InputNumber,
+  Row,
+  Select,
 } from 'antd';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { SizeType, convertSize, MAX_WIDTH, MAX_HEIGHT } from '@fancywork/core';
 import styles from './index.module.scss';
 
 export type SizeSettingsValues = {

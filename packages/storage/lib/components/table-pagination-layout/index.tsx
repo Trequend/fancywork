@@ -1,6 +1,6 @@
-import { Pagination, Spin, PageHeader, PageHeaderProps, Empty } from 'antd';
-import { FC, ReactNode, useEffect } from 'react';
+import { Empty, PageHeader, PageHeaderProps, Pagination, Spin } from 'antd';
 import { useTablePagination } from 'lib/hooks';
+import { FC, ReactNode, useEffect } from 'react';
 import styles from './index.module.scss';
 
 export type TablePaginationLayoutProps = {

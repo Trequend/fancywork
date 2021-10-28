@@ -1,9 +1,9 @@
+import { SchemaViewer } from '@fancywork/core';
+import { SchemaIndex, useTableItem } from '@fancywork/storage';
 import { Result } from 'antd';
 import { useHistory } from 'react-router';
-import { SchemaViewer } from '@fancywork/core';
 import { FullscreenSpin } from 'src/components';
 import { useQueryParam } from 'src/hooks';
-import { useTableItem, SchemaIndex } from '@fancywork/storage';
 import { AppPage } from 'src/types';
 import { SCHEMA_PATHNAME } from './constants';
 

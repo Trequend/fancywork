@@ -1,4 +1,4 @@
-import { RGBColor, PaletteReducerFactory, KMeansPalette } from 'lib/classes';
+import { KMeansPalette, PaletteReducerFactory, RGBColor } from 'lib/classes';
 import { Palette, PaletteReduceAlgorithm } from 'lib/types';
 import { forEachPixel } from '../utils';
 

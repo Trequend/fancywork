@@ -1,15 +1,15 @@
+import { Palette, palettes } from '@fancywork/core';
 import {
-  Col,
-  Row,
-  Image,
-  Form,
-  Select,
-  Input,
   Button,
+  Col,
+  Form,
+  Image,
+  Input,
   InputNumber,
+  Row,
+  Select,
 } from 'antd';
 import { FC } from 'react';
-import { Palette, palettes } from '@fancywork/core';
 import styles from './index.module.scss';
 
 export type GeneralSettingsValues = {

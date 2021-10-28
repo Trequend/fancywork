@@ -8,47 +8,41 @@ export {
   WorkCanvas,
   WorkViewProvider,
 } from './classes';
-
 export type { SchemaCanvasEventMap } from './classes';
-
 export {
   ColorsTable,
+  DownloadButton,
   SchemaInfoTable,
   SchemaViewer,
   WorkViewer,
-  DownloadButton,
 } from './components';
 export type { DownloadButtonProps } from './components';
-
+export { CELL_SIZE, HALF_CELL_SIZE, MAX_HEIGHT, MAX_WIDTH } from './constants';
 export {
-  createSchema,
-  downloadSchema,
-  convertSize,
   cellsEquals,
-  createWork,
+  convertSize,
+  createSchema,
   createSchemaImage,
+  createWork,
+  downloadSchema,
 } from './functions';
-export type { GenerateSchemaOptions, ConvertSizeOptions } from './functions';
-
+export type { ConvertSizeOptions, GenerateSchemaOptions } from './functions';
+export { palettes } from './palettes';
 export type {
   BorderCell,
+  CanvasMetadata,
   Cell,
   HexColor,
   Palette,
   PaletteColor,
+  PaletteMetadata,
+  PaletteReduceAlgorithm,
   Schema,
   SchemaCell,
   SchemaGrid,
   SchemaMetadata,
-  Work,
-  PaletteReduceAlgorithm,
   SizeType,
-  CanvasMetadata,
-  PaletteMetadata,
-  WorkMetadata,
+  Work,
   WorkGrid,
+  WorkMetadata,
 } from './types';
-
-export { palettes } from './palettes';
-
-export { CELL_SIZE, HALF_CELL_SIZE, MAX_HEIGHT, MAX_WIDTH } from './constants';

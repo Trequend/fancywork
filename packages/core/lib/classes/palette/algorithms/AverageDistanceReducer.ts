@@ -1,5 +1,5 @@
-import { Vertex } from '../Vertex';
 import { PaletteReducer } from '../PaletteReducer';
+import { Vertex } from '../Vertex';
 
 export class AverageDistanceReducer extends PaletteReducer {
   public reduce(verticies: Array<Vertex>) {

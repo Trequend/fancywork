@@ -1,5 +1,5 @@
-import { FC } from 'react';
 import { PageHeader, PageHeaderProps } from 'antd';
+import { FC } from 'react';
 import styles from './index.module.scss';
 
 export type LayoutProps = Omit<PageHeaderProps, 'className'>;

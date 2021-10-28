@@ -1,5 +1,4 @@
 export { EventEmitter, RGBColor, Vector2, Vector2Int } from './common';
-
 export {
   KMeansPalette,
   PaletteReducer,
@@ -7,7 +6,6 @@ export {
   QuantizationError,
   Vertex,
 } from './palette';
-
 export {
   Chunk,
   SchemaCanvas,

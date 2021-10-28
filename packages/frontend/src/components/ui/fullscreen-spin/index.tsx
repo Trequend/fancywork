@@ -1,6 +1,6 @@
-import { FC, useEffect, useState } from 'react';
-import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
+import { FC, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
 type Props = {

@@ -1,7 +1,7 @@
+import { WorkCanvas, WorkViewProvider } from 'lib/classes';
+import { Work } from 'lib/types';
 import { FC, useEffect, useRef, useState } from 'react';
 import { Layout } from '../layout';
-import { Work } from 'lib/types';
-import { WorkCanvas, WorkViewProvider } from 'lib/classes';
 import styles from './index.module.scss';
 
 type Props = {

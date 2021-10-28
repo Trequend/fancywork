@@ -1,7 +1,7 @@
+import { SchemaCanvas, SchemaViewProvider } from 'lib/classes';
+import { Schema } from 'lib/types';
 import { FC, useEffect, useRef } from 'react';
 import { Layout } from '../layout';
-import { Schema } from 'lib/types';
-import { SchemaCanvas, SchemaViewProvider } from 'lib/classes';
 import styles from './index.module.scss';
 
 type Props = {

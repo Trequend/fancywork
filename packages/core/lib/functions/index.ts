@@ -1,20 +1,18 @@
 export {
   createSchema,
   createSchemaGrid,
-  downloadSchema,
   createSchemaImage,
+  downloadSchema,
 } from './schema';
 export type { GenerateSchemaOptions } from './schema';
-
 export {
-  convertSize,
   cellsEquals,
+  convertSize,
   executeInCanvasContext,
+  forEachPixel,
   getContrastColor,
   getImageDataPixel,
   processImageInCanvas,
-  forEachPixel,
 } from './utils';
-export type { ProcessImageInCanvasOptions, ConvertSizeOptions } from './utils';
-
+export type { ConvertSizeOptions, ProcessImageInCanvasOptions } from './utils';
 export { createWork } from './work';

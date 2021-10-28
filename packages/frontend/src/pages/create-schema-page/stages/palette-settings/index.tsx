@@ -1,15 +1,15 @@
+import { PaletteReduceAlgorithm } from '@fancywork/core';
 import {
-  Col,
-  Row,
-  Image,
-  Form,
-  Select,
   Button,
   Checkbox,
+  Col,
+  Form,
+  Image,
   InputNumber,
+  Row,
+  Select,
 } from 'antd';
 import { FC, useState } from 'react';
-import { PaletteReduceAlgorithm } from '@fancywork/core';
 import styles from './index.module.scss';
 
 export type PaletteSettingsValues = {

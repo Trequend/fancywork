@@ -1,5 +1,5 @@
-import { Vector2, Vector2Int } from '../common';
 import { Cell } from 'lib/types';
+import { Vector2, Vector2Int } from '../common';
 
 export class Chunk {
   public readonly cellOffset: Vector2;

@@ -1,12 +1,12 @@
-import { Col, Row, Image, Button } from 'antd';
-import React, { FC, useState } from 'react';
 import {
   ColorsTable,
+  DownloadButton,
+  Schema,
   SchemaInfoTable,
   SchemaViewer,
-  Schema,
-  DownloadButton,
 } from '@fancywork/core';
+import { Button, Col, Image, Row } from 'antd';
+import React, { FC, useState } from 'react';
 import styles from './index.module.scss';
 
 type Props = {

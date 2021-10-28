@@ -1,7 +1,7 @@
-import { ColumnType } from 'antd/lib/table';
 import { Table, TableProps, Typography } from 'antd';
-import { FC } from 'react';
+import { ColumnType } from 'antd/lib/table';
 import { SchemaMetadata } from 'lib/types';
+import { FC } from 'react';
 
 type Props = {
   metadata: SchemaMetadata;
