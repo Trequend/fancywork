@@ -63,10 +63,14 @@ export class WorkStorage extends BaseStorage<Map> {
   }> {
     const searchNameLower = searchName?.toLowerCase();
     const collection = searchName
-      ? this.table(WORK_METADATA_TABLE).filter(
-          ({ name }) => name.toLowerCase().indexOf(searchNameLower!) !== -1
-        )
-      : this.table(WORK_METADATA_TABLE).orderBy(WorkMetadataIndex.LastActivity);
+      ? this.table(WORK_METADATA_TABLE)
+          .filter(
+            ({ name }) => name.toLowerCase().indexOf(searchNameLower!) !== -1
+          )
+          .reverse()
+      : this.table(WORK_METADATA_TABLE)
+          .orderBy(WorkMetadataIndex.LastActivity)
+          .reverse();
 
     return {
       count: () => collection.count(),
