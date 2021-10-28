@@ -1,5 +1,3 @@
-import BaseEventEmitter from 'events';
-
 type EventMap = Record<string, any>;
 
 type EventKey<T extends EventMap> = keyof T;
@@ -22,7 +20,7 @@ type EventListener<
 > = (event: Event<T, K, E>) => void;
 
 export class EventEmitter<T extends EventMap, E extends EventEmitter<T, E>> {
-  private readonly emitter = new BaseEventEmitter();
+  private listeners: Record<string, ((data: any) => void)[] | undefined> = {};
 
   protected emit<K extends EventKey<T>>(eventName: K, eventData: T[K]) {
     let prevented = false;
@@ -33,12 +31,19 @@ export class EventEmitter<T extends EventMap, E extends EventEmitter<T, E>> {
 
     const defaultPrevented = () => prevented;
 
-    this.emitter.emit(eventName.toString(), {
+    const data = {
       target: this,
       data: eventData,
       preventDefault,
       defaultPrevented,
-    });
+    };
+
+    const eventListeners = this.listeners[eventName.toString()];
+    if (eventListeners) {
+      eventListeners.forEach((listener) => {
+        listener(data);
+      });
+    }
 
     return prevented;
   }
@@ -47,17 +52,31 @@ export class EventEmitter<T extends EventMap, E extends EventEmitter<T, E>> {
     eventName: K,
     listener: EventListener<T, K, E>
   ) {
-    this.emitter.addListener(eventName.toString(), listener);
+    const eventListeners = this.listeners[eventName.toString()];
+    if (eventListeners) {
+      const index = eventListeners.findIndex((value) => value === listener);
+      if (index === -1) {
+        eventListeners.push(listener);
+      }
+    } else {
+      this.listeners[eventName.toString()] = [listener];
+    }
   }
 
   public removeEventListener<K extends EventKey<T>>(
     eventName: K,
     listener: EventListener<T, K, E>
   ) {
-    this.emitter.removeListener(eventName.toString(), listener);
+    const eventListeners = this.listeners[eventName.toString()];
+    if (eventListeners) {
+      const index = eventListeners.findIndex((value) => value === listener);
+      if (index !== -1) {
+        eventListeners.splice(index, 1);
+      }
+    }
   }
 
   public removeAllEventListeners<K extends EventKey<T>>(eventName: K) {
-    this.emitter.removeAllListeners(eventName.toString());
+    delete this.listeners[eventName.toString()];
   }
 }
