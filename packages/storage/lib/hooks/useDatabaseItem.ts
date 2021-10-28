@@ -1,12 +1,9 @@
-import { Collection } from 'dexie';
+import { useDatabase } from 'lib/components';
+import { Database } from 'lib/database';
 import { useEffect, useRef, useState } from 'react';
-import { AppStorage } from '../AppStorage';
-import { useAppStorage } from '../components';
 
-export function useTableItem<T>(
-  query: (storage: AppStorage) => Collection<T, any>
-) {
-  const appStorage = useAppStorage();
+export function useDatabaseItem<T>(query: (database: Database) => Promise<T>) {
+  const database = useDatabase();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
@@ -18,7 +15,7 @@ export function useTableItem<T>(
     const action = async () => {
       setLoading(true);
       try {
-        const item = await queryRef.current(appStorage).first();
+        const item = await queryRef.current(database);
         setItem(item);
       } catch (error) {
         if (error instanceof Error) {
@@ -32,7 +29,7 @@ export function useTableItem<T>(
     };
 
     action();
-  }, [appStorage]);
+  }, [database]);
 
   return {
     item,

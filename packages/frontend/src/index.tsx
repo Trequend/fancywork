@@ -1,4 +1,4 @@
-import { AppStorageProvider } from '@fancywork/storage';
+import { DatabaseProvider } from '@fancywork/storage';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { pages } from './pages';
@@ -10,7 +10,7 @@ import '@fancywork/storage/dist/main.css';
 import './styles/global.scss';
 
 ReactDOM.render(
-  <AppStorageProvider>
+  <DatabaseProvider>
     <BrowserRouter>
       {pages.map((page) => (
         <Route
@@ -21,7 +21,7 @@ ReactDOM.render(
         />
       ))}
     </BrowserRouter>
-  </AppStorageProvider>,
+  </DatabaseProvider>,
   document.getElementById('root')
 );
 

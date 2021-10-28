@@ -1,5 +1,5 @@
 import { WorkViewer } from '@fancywork/core';
-import { useTableItem, WorkIndex } from '@fancywork/storage';
+import { useDatabaseItem } from '@fancywork/storage';
 import { Result } from 'antd';
 import { useHistory } from 'react-router';
 import { FullscreenSpin } from 'src/components';
@@ -10,8 +10,8 @@ import { WORK_PATHNAME } from './constants';
 export const WorkPage: AppPage = () => {
   const history = useHistory();
   const id = useQueryParam('id');
-  const { item, loading, error } = useTableItem((storage) => {
-    return storage.table('works').where(WorkIndex.Id).equals(id);
+  const { item, loading, error } = useDatabaseItem((database) => {
+    return database.works.get(id);
   });
 
   if (loading) {

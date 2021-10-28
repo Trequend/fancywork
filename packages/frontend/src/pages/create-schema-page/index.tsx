@@ -1,6 +1,6 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { createSchema, createSchemaImage, Schema } from '@fancywork/core';
-import { useAppStorage } from '@fancywork/storage';
+import { useDatabase } from '@fancywork/storage';
 import { Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -21,7 +21,7 @@ import {
 
 export const CreateSchemePage: AppPage = () => {
   const history = useHistory();
-  const appStorage = useAppStorage();
+  const database = useDatabase();
 
   const [sourceImage, setSourceImage] = useState<File>();
   const [imageURL, setImageURL] = useState<string>();
@@ -81,7 +81,7 @@ export const CreateSchemePage: AppPage = () => {
   const onFinish = async () => {
     if (schema && schemaImage) {
       await executeTask(async () => {
-        await appStorage.addSchema(schema, schemaImage);
+        await database.schemas.add(schema, schemaImage);
         history.replace(SCHEMAS_PATHNAME);
       });
     }

@@ -1,30 +1,26 @@
-import { Collection } from 'dexie';
+import { useDatabase } from 'lib/components';
+import { Database } from 'lib/database';
+import { IterableCollection } from 'lib/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AppStorage } from '../AppStorage';
-import { useAppStorage } from '../components';
 import { useSearchParam } from './useSearchParam';
 
-export type TablePagination<T, A> = {
+export type DatabasePagination<T> = {
   loading: boolean;
   total?: number;
   page: number;
   pageSize: number;
   error?: string;
   data: Array<T>;
-  additionalData?: Array<A>;
   setPage: (page: number) => void;
   refresh: () => void;
   reset: () => void;
 };
 
-export function useTablePagination<T, A>(
+export function useDatabasePagination<T>(
   pageSize: number,
-  options: {
-    query: (appStorage: AppStorage) => Collection<T, any>;
-    loadAdditional?: (data: Array<T>) => Promise<Array<A>> | Array<A>;
-  }
-): TablePagination<T, A> {
-  const appStorage = useAppStorage();
+  query: (database: Database) => IterableCollection<T>
+): DatabasePagination<T> {
+  const database = useDatabase();
 
   const [pageNumber, setPageNumber] = useSearchParam<number>('page', {
     parse: (value) => {
@@ -41,13 +37,12 @@ export function useTablePagination<T, A>(
   const [total, setTotal] = useState<number>();
   const [error, setError] = useState<string>();
   const [data, setData] = useState<Array<T>>([]);
-  const [additionalData, setAdditionalData] = useState<Array<A>>([]);
 
-  const optionsRef = useRef(options);
+  const queryRef = useRef(query);
 
   useEffect(() => {
-    optionsRef.current = options;
-  }, [options]);
+    queryRef.current = query;
+  }, [query]);
 
   const loadData = useCallback(
     (page: number) => {
@@ -56,9 +51,7 @@ export function useTablePagination<T, A>(
       const action = async () => {
         setLoading(true);
         try {
-          const { query, loadAdditional } = optionsRef.current;
-
-          const collection = query(appStorage);
+          const collection = queryRef.current(database);
 
           const total = await collection.count();
           if (page > 1 && previousPage * pageSize >= total) {
@@ -67,17 +60,12 @@ export function useTablePagination<T, A>(
             return;
           }
 
-          const data = await collection
-            .offset(previousPage * pageSize)
-            .limit(pageSize)
-            .toArray();
-
-          const additionalData = loadAdditional
-            ? await loadAdditional(data)
-            : [];
+          const data = await collection.range(
+            previousPage * pageSize,
+            pageSize
+          );
 
           setData(data);
-          setAdditionalData(additionalData);
           setTotal(total);
         } catch (error) {
           if (error instanceof Error) {
@@ -92,7 +80,7 @@ export function useTablePagination<T, A>(
 
       action();
     },
-    [setPageNumber, appStorage, pageSize]
+    [setPageNumber, database, pageSize]
   );
 
   useEffect(() => {
@@ -105,7 +93,6 @@ export function useTablePagination<T, A>(
     page: pageNumber,
     pageSize,
     data,
-    additionalData,
     error,
     refresh: () => {
       loadData(pageNumber);

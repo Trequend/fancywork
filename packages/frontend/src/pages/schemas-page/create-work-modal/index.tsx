@@ -1,5 +1,5 @@
 import { createSchemaImage, createWork, SchemaMetadata } from '@fancywork/core';
-import { SchemaIndex, useAppStorage } from '@fancywork/storage';
+import { useDatabase } from '@fancywork/storage';
 import { Button, Form, Input, message, Modal, Tag } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const CreateWorkModal: FC<Props> = ({ metadata, onCancel }) => {
-  const appStorage = useAppStorage();
+  const database = useDatabase();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 
@@ -21,14 +21,11 @@ export const CreateWorkModal: FC<Props> = ({ metadata, onCancel }) => {
       const action = async () => {
         setLoading(true);
         try {
-          const schema = await appStorage
-            .table('schemas')
-            .get({ [SchemaIndex.Id]: metadata.id });
-
+          const schema = await database.schemas.get(metadata.id);
           if (schema) {
             const image = await createSchemaImage(schema);
             const work = createWork(values.name, schema);
-            await appStorage.addWork(work, image);
+            await database.works.add(work, image);
             history.push(WORKS_PATHNAME);
           } else {
             throw new Error('No schema');

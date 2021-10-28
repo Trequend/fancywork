@@ -8,7 +8,7 @@ import {
   SchemaInfoTable,
   SchemaMetadata,
 } from '@fancywork/core';
-import { SchemaImage, useAppStorage } from '@fancywork/storage';
+import { SchemaImage, useDatabase } from '@fancywork/storage';
 import { Button, Card, Image, Popconfirm } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const SchemaCard: FC<Props> = ({ metadata, image, onDelete }) => {
-  const appStorage = useAppStorage();
+  const database = useDatabase();
   const history = useHistory();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -97,7 +97,7 @@ export const SchemaCard: FC<Props> = ({ metadata, image, onDelete }) => {
           <DownloadButton
             className={styles.cardButton}
             schemaLoader={async () => {
-              const schema = await appStorage.getSchema(metadata.id);
+              const schema = await database.schemas.get(metadata.id);
 
               if (schema) {
                 return schema;

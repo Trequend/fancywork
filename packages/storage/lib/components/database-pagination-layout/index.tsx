@@ -1,23 +1,23 @@
 import { Empty, PageHeader, PageHeaderProps, Pagination, Spin } from 'antd';
-import { useTablePagination } from 'lib/hooks';
+import { useDatabasePagination } from 'lib/hooks';
 import { FC, ReactNode, useEffect } from 'react';
 import styles from './index.module.scss';
 
-export type TablePaginationLayoutProps = {
-  tablePagination: ReturnType<typeof useTablePagination>;
+export type DatabasePaginationLayoutProps = {
+  databasePagination: ReturnType<typeof useDatabasePagination>;
   noDataText?: string;
   extraContent?: ReactNode;
 } & Omit<PageHeaderProps, 'className'>;
 
-export const TablePaginationLayout: FC<TablePaginationLayoutProps> = ({
+export const DatabasePaginationLayout: FC<DatabasePaginationLayoutProps> = ({
   children,
   style,
-  tablePagination,
+  databasePagination,
   noDataText,
   extraContent,
   ...props
 }) => {
-  const { loading, total, page, pageSize, setPage } = tablePagination;
+  const { loading, total, page, pageSize, setPage } = databasePagination;
 
   useEffect(() => {
     window.scroll({

@@ -1,13 +1,8 @@
-import { SchemaMetadata } from '@fancywork/core';
 import {
-  SchemaImage,
-  SchemaImageIndex,
-  SCHEMA_IMAGES_TABLE,
-  SCHEMA_METADATA_TABLE,
+  DatabasePaginationLayout,
   Search,
-  TablePaginationLayout,
-  useAppStorage,
-  useTablePagination,
+  useDatabase,
+  useDatabasePagination,
 } from '@fancywork/storage';
 import { Col, Row } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -21,42 +16,21 @@ const PARAM_NAME = 'search';
 
 export const SchemasPage: AppPage = () => {
   const history = useHistory();
-  const appStorage = useAppStorage();
+  const database = useDatabase();
 
-  const pagination = useTablePagination<
-    SchemaMetadata,
-    SchemaImage | undefined
-  >(PAGE_SIZE, {
-    query: (storage) => {
-      const params = new URLSearchParams(history.location.search);
-      const param = params.get(PARAM_NAME)?.toLowerCase();
-      return param
-        ? storage
-            .table(SCHEMA_METADATA_TABLE)
-            .filter(
-              (metadata) => metadata.name.toLowerCase().indexOf(param) !== -1
-            )
-        : storage.table(SCHEMA_METADATA_TABLE).toCollection();
-    },
-    loadAdditional: async (data) => {
-      return await Promise.all(
-        data.map(({ id }) => {
-          return appStorage
-            .table(SCHEMA_IMAGES_TABLE)
-            .get({ [SchemaImageIndex.Id]: id });
-        })
-      );
-    },
+  const pagination = useDatabasePagination(PAGE_SIZE, (database) => {
+    const params = new URLSearchParams(history.location.search);
+    return database.schemas.collection(params.get(PARAM_NAME));
   });
 
   return (
-    <TablePaginationLayout
+    <DatabasePaginationLayout
       title="My schemas"
       noDataText="No Schemas"
       onBack={() => {
         history.goBack();
       }}
-      tablePagination={pagination}
+      databasePagination={pagination}
       extraContent={
         <Search
           paramName={PARAM_NAME}
@@ -69,25 +43,20 @@ export const SchemasPage: AppPage = () => {
       }
     >
       <Row gutter={[24, 24]}>
-        {pagination.data.map((metadata, index) => {
-          const { additionalData } = pagination;
-          const image = additionalData ? additionalData[index] : undefined;
-
-          return (
-            <Col span={24} md={12} key={metadata.id}>
-              <SchemaCard
-                metadata={metadata}
-                image={image}
-                onDelete={async (id) => {
-                  await appStorage.deleteSchema(id);
-                  pagination.refresh();
-                }}
-              />
-            </Col>
-          );
-        })}
+        {pagination.data.map(({ metadata, image }) => (
+          <Col span={24} md={12} key={metadata.id}>
+            <SchemaCard
+              metadata={metadata}
+              image={image}
+              onDelete={async (id) => {
+                await database.schemas.delete(id);
+                pagination.refresh();
+              }}
+            />
+          </Col>
+        ))}
       </Row>
-    </TablePaginationLayout>
+    </DatabasePaginationLayout>
   );
 };
 

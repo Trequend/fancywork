@@ -9,7 +9,7 @@ import {
   WorkMetadata,
   WorkProgress,
 } from '@fancywork/core';
-import { useAppStorage, WorkImage } from '@fancywork/storage';
+import { useDatabase, WorkImage } from '@fancywork/storage';
 import { Button, Card, Image, Popconfirm } from 'antd';
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const WorkCard: FC<Props> = ({ metadata, image, onDelete }) => {
-  const appStorage = useAppStorage();
+  const database = useDatabase();
   const history = useHistory();
 
   return (
@@ -81,7 +81,7 @@ export const WorkCard: FC<Props> = ({ metadata, image, onDelete }) => {
         <DownloadButton
           className={styles.cardButton}
           schemaLoader={async () => {
-            const work = await appStorage.getWork(metadata.id);
+            const work = await database.works.get(metadata.id);
 
             if (work) {
               return work.schema;

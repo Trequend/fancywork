@@ -1,5 +1,5 @@
 import { SchemaViewer } from '@fancywork/core';
-import { SchemaIndex, useTableItem } from '@fancywork/storage';
+import { useDatabaseItem } from '@fancywork/storage';
 import { Result } from 'antd';
 import { useHistory } from 'react-router';
 import { FullscreenSpin } from 'src/components';
@@ -10,8 +10,8 @@ import { SCHEMA_PATHNAME } from './constants';
 export const SchemaPage: AppPage = () => {
   const history = useHistory();
   const id = useQueryParam('id');
-  const { item, loading, error } = useTableItem((storage) => {
-    return storage.table('schemas').where(SchemaIndex.Id).equals(id);
+  const { item, loading, error } = useDatabaseItem((database) => {
+    return database.schemas.get(id);
   });
 
   if (loading) {
