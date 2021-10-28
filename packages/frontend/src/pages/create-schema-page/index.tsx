@@ -62,7 +62,7 @@ export const CreateSchemePage: AppPage = () => {
       const schema = await createSchema(imageURL, {
         name: generalSettings.name,
         palette: generalSettings.palette,
-        stitchCount: generalSettings.stitchCount,
+        stitchesPerInch: generalSettings.stitchesPerInch,
         width: sizeSettings.width,
         height: sizeSettings.height,
         sizeType: sizeSettings.sizeType,
@@ -177,7 +177,7 @@ export const CreateSchemePage: AppPage = () => {
               <SizeSettings
                 imageURL={imageURL}
                 image={image}
-                stitchCount={generalSettings.stitchCount}
+                stitchesPerInch={generalSettings.stitchesPerInch}
                 initialValues={sizeSettings}
                 onSubmit={(result) => {
                   setSizeSettings(result);

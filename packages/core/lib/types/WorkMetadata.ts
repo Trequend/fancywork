@@ -5,5 +5,6 @@ export type WorkMetadata = {
   name: string;
   createdAt: Date;
   lastActivity: Date;
+  stitchEmbroideredCount: number;
   schemaMetadata: SchemaMetadata;
 };

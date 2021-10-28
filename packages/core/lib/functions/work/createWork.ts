@@ -15,6 +15,7 @@ export function createWork(name: string, schema: Schema): Work {
       name,
       createdAt: new Date(),
       lastActivity: new Date(),
+      stitchEmbroideredCount: 0,
       schemaMetadata: schema.metadata,
     },
     schema,

@@ -1,12 +1,12 @@
-import '@fancywork/core/dist/main.css';
 import { AppStorageProvider } from '@fancywork/storage';
-import '@fancywork/storage/dist/main.css';
-import 'antd/dist/antd.css';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { pages } from './pages';
 import { reportWebVitals } from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import 'antd/dist/antd.css';
+import '@fancywork/core/dist/main.css';
+import '@fancywork/storage/dist/main.css';
 import './styles/global.scss';
 
 ReactDOM.render(

@@ -17,7 +17,7 @@ export type GenerateSchemaOptions = {
   name: string;
   width: number;
   height: number;
-  stitchCount: number;
+  stitchesPerInch: number;
   withDithering: boolean;
   palette: Palette;
   maxColorsCount?: number;
@@ -30,7 +30,7 @@ export async function createSchema(
   options: GenerateSchemaOptions
 ): Promise<Schema> {
   const size = convertSize(options.width, options.height, {
-    stitchCount: options.stitchCount,
+    stitchesPerInch: options.stitchesPerInch,
     from: options.sizeType,
     to: 'stitch',
   });
@@ -70,7 +70,7 @@ export async function createSchema(
     name: options.name,
     grid,
     palette,
-    stitchCount: options.stitchCount,
+    stitchesPerInch: options.stitchesPerInch,
   });
 
   return {
@@ -84,7 +84,7 @@ type CreateSchemaMetadataOptions = {
   name: string;
   grid: SchemaGrid;
   palette: Palette;
-  stitchCount: number;
+  stitchesPerInch: number;
 };
 
 function createSchemaMetadata(
@@ -106,7 +106,7 @@ function createSchemaMetadata(
     canvasMetadata: {
       width: imageData.width,
       height: imageData.height,
-      stitchCount: options.stitchCount,
+      stitchesPerInch: options.stitchesPerInch,
     },
     paletteMetadata: {
       name: options.palette.name,

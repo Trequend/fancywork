@@ -22,7 +22,7 @@ export type SizeSettingsValues = {
 type Props = {
   imageURL: string;
   image: HTMLImageElement;
-  stitchCount: number;
+  stitchesPerInch: number;
   initialValues?: SizeSettingsValues;
   onSubmit: (values: SizeSettingsValues) => void;
 };
@@ -30,7 +30,7 @@ type Props = {
 export const SizeSettings: FC<Props> = ({
   imageURL,
   image,
-  stitchCount,
+  stitchesPerInch,
   initialValues,
   onSubmit,
 }) => {
@@ -49,20 +49,20 @@ export const SizeSettings: FC<Props> = ({
         from: 'stitch',
         to: 'centimeter',
         floor: true,
-        stitchCount,
+        stitchesPerInch,
       }),
       inch: convertSize(MAX_WIDTH, MAX_HEIGHT, {
         from: 'stitch',
         to: 'inch',
         floor: true,
-        stitchCount,
+        stitchesPerInch,
       }),
       stitch: {
         width: MAX_WIDTH,
         height: MAX_HEIGHT,
       },
     }),
-    [stitchCount]
+    [stitchesPerInch]
   );
 
   const normalize = useCallback(

@@ -1,6 +1,6 @@
 import { createSchemaImage, createWork, SchemaMetadata } from '@fancywork/core';
 import { SchemaIndex, useAppStorage } from '@fancywork/storage';
-import { Button, Form, Input, message, Modal } from 'antd';
+import { Button, Form, Input, message, Modal, Tag } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router';
 import { WORKS_PATHNAME } from '../../works-page/constants';
@@ -47,37 +47,41 @@ export const CreateWorkModal: FC<Props> = ({ metadata, onCancel }) => {
     }
   };
 
-  return (
-    <Modal
-      title="Create work"
-      visible={!!metadata}
-      closable
-      onCancel={onCancel}
-      width="400px"
-      footer={null}
-      centered
-    >
-      <Form layout="vertical" requiredMark={false} onFinish={onFinish}>
-        <p>
-          Based on schema:
-          <br /> {metadata?.name}
-        </p>
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: 'Required field' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Button
-          loading={loading}
-          className={styles.button}
-          htmlType="submit"
-          type="primary"
-        >
-          Create
-        </Button>
-      </Form>
-    </Modal>
-  );
+  if (metadata) {
+    return (
+      <Modal
+        title="Create work"
+        closable
+        visible
+        onCancel={onCancel}
+        width="400px"
+        footer={null}
+        centered
+      >
+        <Form layout="horizontal" requiredMark={false} onFinish={onFinish}>
+          <p>
+            Based on <Tag className={styles.tag}>{metadata.name}</Tag>
+          </p>
+          <Form.Item
+            name="name"
+            label="Name"
+            initialValue={metadata.name}
+            rules={[{ required: true, message: 'Required field' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Button
+            loading={loading}
+            className={styles.button}
+            htmlType="submit"
+            type="primary"
+          >
+            Create
+          </Button>
+        </Form>
+      </Modal>
+    );
+  } else {
+    return null;
+  }
 };

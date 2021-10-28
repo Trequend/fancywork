@@ -1,14 +1,14 @@
 import { Table, TableProps, Typography } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { convertSize } from 'lib/functions';
-import { SchemaMetadata } from 'lib/types';
+import { WorkMetadata } from 'lib/types';
 import { FC } from 'react';
 
 type Props = {
-  metadata: SchemaMetadata;
+  metadata: WorkMetadata;
 } & Omit<TableProps<any>, 'dataSource' | 'columns' | 'rowKey'>;
 
-export const SchemaInfoTable: FC<Props> = ({ metadata, ...rest }) => {
+export const WorkInfoTable: FC<Props> = ({ metadata, ...rest }) => {
   const columns: Array<ColumnType<any>> = [
     {
       title: 'Property',
@@ -26,21 +26,23 @@ export const SchemaInfoTable: FC<Props> = ({ metadata, ...rest }) => {
     },
   ];
 
+  const { schemaMetadata } = metadata;
+
   const size = {
-    width: metadata.canvasMetadata.width,
-    height: metadata.canvasMetadata.height,
+    width: schemaMetadata.canvasMetadata.width,
+    height: schemaMetadata.canvasMetadata.height,
   };
 
   const sizeInCentimeters = convertSize(size.width, size.height, {
     from: 'stitch',
     to: 'centimeter',
-    stitchesPerInch: metadata.canvasMetadata.stitchesPerInch,
+    stitchesPerInch: schemaMetadata.canvasMetadata.stitchesPerInch,
   });
 
   const sizeInInches = convertSize(size.width, size.height, {
     from: 'stitch',
     to: 'inch',
-    stitchesPerInch: metadata.canvasMetadata.stitchesPerInch,
+    stitchesPerInch: schemaMetadata.canvasMetadata.stitchesPerInch,
   });
 
   const round = (number: number) => {
@@ -49,8 +51,12 @@ export const SchemaInfoTable: FC<Props> = ({ metadata, ...rest }) => {
 
   const data = [
     {
-      property: 'Schema name',
+      property: 'Name',
       value: metadata.name,
+    },
+    {
+      property: 'Schema name',
+      value: schemaMetadata.name,
     },
     {
       property: 'Width',
@@ -66,19 +72,23 @@ export const SchemaInfoTable: FC<Props> = ({ metadata, ...rest }) => {
     },
     {
       property: 'Stitches per inch',
-      value: metadata.canvasMetadata.stitchesPerInch,
+      value: schemaMetadata.canvasMetadata.stitchesPerInch,
     },
     {
       property: 'Palette name',
-      value: metadata.paletteMetadata.name,
+      value: schemaMetadata.paletteMetadata.name,
     },
     {
       property: 'Number of colors',
-      value: metadata.paletteMetadata.colorsCount,
+      value: schemaMetadata.paletteMetadata.colorsCount,
     },
     {
       property: 'Number of stitches',
-      value: metadata.stitchCount,
+      value: schemaMetadata.stitchCount,
+    },
+    {
+      property: 'Embroidered stitches',
+      value: metadata.stitchEmbroideredCount,
     },
   ];
 

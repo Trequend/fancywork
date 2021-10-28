@@ -33,7 +33,7 @@
 }
 
 .table {
-  margin: 24px 0;
+  margin: 24px 0 12px;
 }
 
 .card-button {
@@ -56,6 +56,10 @@
   top: 0;
   left: 0;
   z-index: 10;
+}
+
+.progress {
+  margin-bottom: 12px;
 }
 
 .search {

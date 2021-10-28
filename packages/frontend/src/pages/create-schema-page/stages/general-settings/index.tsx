@@ -15,7 +15,7 @@ import styles from './index.module.scss';
 export type GeneralSettingsValues = {
   name: string;
   palette: Palette;
-  stitchCount: number;
+  stitchesPerInch: number;
 };
 
 type Props = {
@@ -33,7 +33,7 @@ export const GeneralSettings: FC<Props> = ({
     const result: GeneralSettingsValues = {
       name: values.name,
       palette: palettes.find((palette) => palette.name === values.palette)!,
-      stitchCount: values.stitchCount,
+      stitchesPerInch: values.stitchesPerInch,
     };
 
     onSubmit(result);
@@ -79,10 +79,10 @@ export const GeneralSettings: FC<Props> = ({
               </Select>
             </Form.Item>
             <Form.Item
-              name="stitchCount"
-              label="Stitch Count"
-              tooltip="Canvas property. Stitch count in one inch."
-              initialValue={initialValues?.stitchCount}
+              name="stitchesPerInch"
+              label="Stitches per inch"
+              tooltip="Canvas property"
+              initialValue={initialValues?.stitchesPerInch}
               normalize={(value) =>
                 value === '' ? '' : Math.abs(Math.round(value))
               }

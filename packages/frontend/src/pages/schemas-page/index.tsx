@@ -26,7 +26,7 @@ import { SCHEMAS_PATHNAME } from './constants';
 import { CreateWorkModal } from './create-work-modal';
 import styles from './index.module.scss';
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 10;
 const PARAM_NAME = 'search';
 
 export const SchemasPage: AppPage = () => {

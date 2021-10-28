@@ -3,7 +3,7 @@ import { SizeType } from 'lib/types';
 const CENTIMETERS_IN_INCH = 2.54;
 
 export type ConvertSizeOptions = {
-  stitchCount: number;
+  stitchesPerInch: number;
   from: SizeType;
   to: SizeType;
   floor?: boolean;
@@ -30,8 +30,8 @@ export function convertSize(
 
       // Centimeter to stitch
       () => ({
-        width: (width / CENTIMETERS_IN_INCH) * options.stitchCount,
-        height: (width / CENTIMETERS_IN_INCH) * options.stitchCount,
+        width: (width / CENTIMETERS_IN_INCH) * options.stitchesPerInch,
+        height: (width / CENTIMETERS_IN_INCH) * options.stitchesPerInch,
       }),
     ],
     [
@@ -46,21 +46,21 @@ export function convertSize(
 
       // Inch to stitch
       () => ({
-        width: width * options.stitchCount,
-        height: height * options.stitchCount,
+        width: width * options.stitchesPerInch,
+        height: height * options.stitchesPerInch,
       }),
     ],
     [
       // Stitch to centimeter
       () => ({
-        width: (width / options.stitchCount) * CENTIMETERS_IN_INCH,
-        height: (height / options.stitchCount) * CENTIMETERS_IN_INCH,
+        width: (width / options.stitchesPerInch) * CENTIMETERS_IN_INCH,
+        height: (height / options.stitchesPerInch) * CENTIMETERS_IN_INCH,
       }),
 
       // Stitch to inch
       () => ({
-        width: width / options.stitchCount,
-        height: height / options.stitchCount,
+        width: width / options.stitchesPerInch,
+        height: height / options.stitchesPerInch,
       }),
 
       // Stitch to stitch

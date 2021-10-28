@@ -3,7 +3,12 @@ import {
   EyeOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import { SchemaInfoTable, WorkMetadata } from '@fancywork/core';
+import {
+  DownloadButton,
+  WorkInfoTable,
+  WorkMetadata,
+  WorkProgress,
+} from '@fancywork/core';
 import {
   Search,
   TablePaginationLayout,
@@ -12,6 +17,7 @@ import {
   WorkImage,
   WorkImageIndex,
   WorkMetadataIndex,
+  WorkIndex,
 } from '@fancywork/storage';
 import { Button, Card, Col, Image, Popconfirm, Row } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -20,7 +26,7 @@ import { WORK_PATHNAME } from '../work-page/constants';
 import { WORKS_PATHNAME } from './constants';
 import styles from './index.module.scss';
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 10;
 const PARAM_NAME = 'search';
 
 export const WorksPage: AppPage = () => {
@@ -76,7 +82,6 @@ export const WorksPage: AppPage = () => {
     >
       <Row gutter={[24, 24]}>
         {tablePagination.data.map((metadata, index) => {
-          const { schemaMetadata } = metadata;
           const { additionalData } = tablePagination;
           const image = additionalData ? additionalData[index] : undefined;
 
@@ -115,12 +120,15 @@ export const WorksPage: AppPage = () => {
                   }
                   title={metadata.name}
                 />
-                <SchemaInfoTable
-                  metadata={schemaMetadata}
+                <WorkInfoTable
+                  metadata={metadata}
                   pagination={false}
                   className={styles.table}
                   scroll={{ x: true }}
                 />
+                <div className={styles.progress}>
+                  <WorkProgress metadata={metadata} />
+                </div>
                 <div className={styles.cardButtons}>
                   <Button
                     type="primary"
@@ -131,6 +139,20 @@ export const WorksPage: AppPage = () => {
                   >
                     Continue
                   </Button>
+                  <DownloadButton
+                    className={styles.cardButton}
+                    schemaLoader={async () => {
+                      const work = await appStorage
+                        .table('works')
+                        .get({ [WorkIndex.Id]: metadata.id });
+
+                      if (work) {
+                        return work.schema;
+                      } else {
+                        throw new Error('No work');
+                      }
+                    }}
+                  />
                 </div>
               </Card>
             </Col>

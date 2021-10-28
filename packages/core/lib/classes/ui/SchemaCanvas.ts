@@ -6,10 +6,12 @@ import { Chunk } from './Chunk';
 import { SchemaViewProvider } from './SchemaViewProvider';
 
 export type SchemaCanvasEventMap = {
-  schemaCellClick: SchemaCell;
-  borderCellClick: BorderCell;
+  schemaCellClick: { cell: SchemaCell; mouseEvent: MouseEvent };
+  borderCellClick: { cell: BorderCell; mouseEvent: MouseEvent };
+  schemaCellMouseMove: { cell: SchemaCell; mouseEvent: MouseEvent };
+  borderCellMouseMove: { cell: BorderCell; mouseEvent: MouseEvent };
   destroy: {};
-  redraw: {};
+  redraw: Chunk;
 };
 
 export class SchemaCanvas<
@@ -80,8 +82,9 @@ export class SchemaCanvas<
   }
 
   private attach() {
-    window.addEventListener('mousedown', this.mouseDown);
+    this.scrollArea.addEventListener('mousedown', this.mouseDown);
     this.scrollArea.addEventListener('click', this.onClick);
+    this.scrollArea.addEventListener('mousemove', this.mouseMove);
     this.scrollArea.addEventListener('scroll', this.onScroll);
     window.addEventListener('resize', this.onResize);
     window.requestAnimationFrame(() => {
@@ -91,8 +94,9 @@ export class SchemaCanvas<
 
   private detach() {
     window.removeEventListener('resize', this.onResize);
-    window.removeEventListener('mousedown', this.mouseDown);
+    this.scrollArea.removeEventListener('mousedown', this.mouseDown);
     this.scrollArea.removeEventListener('click', this.onClick);
+    this.scrollArea.removeEventListener('mousemove', this.mouseMove);
     this.scrollArea.removeEventListener('scroll', this.onScroll);
   }
 
@@ -117,14 +121,14 @@ export class SchemaCanvas<
 
   private mouseDownPosition?: Vector2;
 
-  private mouseDown = (event: MouseEvent) => {
+  private mouseDown = (mouseEvent: MouseEvent) => {
     this.mouseDownPosition = this.clientPositionToCanvas(
-      event.clientX,
-      event.clientY
+      mouseEvent.clientX,
+      mouseEvent.clientY
     );
   };
 
-  private onClick = (event: MouseEvent) => {
+  private onClick = (mouseEvent: MouseEvent) => {
     if (this.mouseDownPosition === undefined) {
       return;
     }
@@ -132,8 +136,8 @@ export class SchemaCanvas<
     const chunk = this.computeChunk();
 
     const clickPosition = this.clientPositionToCanvas(
-      event.clientX,
-      event.clientY
+      mouseEvent.clientX,
+      mouseEvent.clientY
     );
 
     const mouseDownCell = chunk.mousePositionToCell(
@@ -152,12 +156,12 @@ export class SchemaCanvas<
     if (cellsEquals(mouseDownCell, clickCell)) {
       switch (clickCell.type) {
         case 'border':
-          this.emit('borderCellClick', clickCell) ||
-            this.onBorderCellClick(clickCell);
+          this.emit('borderCellClick', { cell: clickCell, mouseEvent }) ||
+            this.onBorderCellClick(clickCell, mouseEvent);
           break;
         case 'schema':
-          this.emit('schemaCellClick', clickCell) ||
-            this.onSchemaCellClick(clickCell);
+          this.emit('schemaCellClick', { cell: clickCell, mouseEvent }) ||
+            this.onSchemaCellClick(clickCell, mouseEvent);
           break;
         default:
           throw new Error('Not implemented');
@@ -165,14 +169,46 @@ export class SchemaCanvas<
     }
   };
 
+  protected onBorderCellClick(_cell: BorderCell, _mouseEvent: MouseEvent) {}
+
+  protected onSchemaCellClick(_cell: SchemaCell, _mouseEvent: MouseEvent) {}
+
+  private mouseMove = (mouseEvent: MouseEvent) => {
+    const position = this.clientPositionToCanvas(
+      mouseEvent.clientX,
+      mouseEvent.clientY
+    );
+
+    const chunk = this.computeChunk();
+
+    const cell = chunk.mousePositionToCell(position.x, position.y);
+
+    if (cell === undefined) {
+      return;
+    }
+
+    switch (cell.type) {
+      case 'border':
+        this.emit('borderCellMouseMove', { cell, mouseEvent }) ||
+          this.onBorderCellMouseMove(cell, mouseEvent);
+        break;
+      case 'schema':
+        this.emit('schemaCellMouseMove', { cell, mouseEvent }) ||
+          this.onSchemaCellMouseMove(cell, mouseEvent);
+        break;
+      default:
+        throw new Error('Not implemented');
+    }
+  };
+
+  protected onBorderCellMouseMove(_cell: BorderCell, _mouseEvent: MouseEvent) {}
+
+  protected onSchemaCellMouseMove(_cell: SchemaCell, _mouseEvent: MouseEvent) {}
+
   private clientPositionToCanvas(x: number, y: number) {
     const rect = this.scrollArea.getBoundingClientRect();
     return new Vector2(x - rect.x, y - rect.y);
   }
-
-  protected onBorderCellClick(_cell: BorderCell) {}
-
-  protected onSchemaCellClick(_cell: SchemaCell) {}
 
   protected requireRedraw() {
     this.drawRequired = true;
@@ -204,12 +240,12 @@ export class SchemaCanvas<
     this.drawScale(chunk);
     this.drawGrid(chunk);
 
-    this.emit('redraw', {}) || this.onRedraw();
+    this.emit('redraw', chunk) || this.onRedraw(chunk);
     const delta = Math.round(performance.now() - time);
     this.context.fillText(delta.toString(), HALF_CELL_SIZE, HALF_CELL_SIZE);
   }
 
-  protected onRedraw() {}
+  protected onRedraw(_chunk: Chunk) {}
 
   protected drawCells(chunk: Chunk) {
     this.context.textAlign = 'center';
