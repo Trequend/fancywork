@@ -1,4 +1,12 @@
-export { EventEmitter, RGBColor, Vector2, Vector2Int, Vector3 } from './common';
+export {
+  EventEmitter,
+  RGBAColor,
+  RGBColor,
+  Vector2,
+  Vector2Int,
+  Vector3,
+  Vector4,
+} from './common';
 export {
   KMeansPalette,
   PaletteReducer,
@@ -10,6 +18,7 @@ export {
   AnimatedSchemaCanvas,
   BezierCurve,
   BezierCurveRGB,
+  BezierCurveRGBA,
   CellAnimation,
   Chunk,
   ContinuousCellAnimation,

@@ -42,19 +42,35 @@ export abstract class AnimatedSchemaCanvas<
     });
   }
 
-  public startCellAnimation(
-    animation: new (
-      context: AnimationContext<Provider>
-    ) => CellAnimation<Provider>,
+  public startCellAnimation<
+    Animation extends new (
+      context: AnimationContext<Provider>,
+      ...args: any[]
+    ) => CellAnimation<Provider>
+  >(
+    animation: Animation,
     i: number,
-    j: number
+    j: number,
+    ...args: Animation extends new (
+      context: AnimationContext<Provider>,
+      ...args: infer U
+    ) => CellAnimation<Provider>
+      ? U
+      : any[]
   ) {
     const key = this.getCellKey(i, j);
     const cell = { i, j };
-    this.cellAnimations[key] = new animation({
-      cell,
-      drawContext: this.drawContext,
-    });
+    if (this.cellAnimations[key]) {
+      this.stopCellAnimation(i, j);
+    }
+
+    this.cellAnimations[key] = new animation(
+      {
+        cell,
+        drawContext: this.drawContext,
+      },
+      ...args
+    );
   }
 
   public stopCellAnimation(i: number, j: number) {

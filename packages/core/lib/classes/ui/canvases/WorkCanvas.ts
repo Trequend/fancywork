@@ -1,5 +1,5 @@
 import { Cell, SchemaCell } from 'lib/types';
-import { CellSelection } from '../animations/work-canvas';
+import { CellSelection, CellTransition } from '../animations/work-canvas';
 import { Chunk } from '../Chunk';
 import { WorkViewProvider } from '../view-providers';
 import { AnimatedSchemaCanvas } from './AnimatedSchemaCanvas';
@@ -79,14 +79,30 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     }
 
     if (schemaCell.embroidered && this.eraseMode) {
-      this.viewProvider.eraseCell(i, j);
-      this.forceUpdateCell(i, j);
-      this.emit('cellErased', { i, j });
+      this.eraseCell(i, j);
     } else if (!schemaCell.embroidered && !this.eraseMode) {
-      this.viewProvider.embroiderСell(i, j);
-      this.forceUpdateCell(i, j);
-      this.emit('cellEmbroidered', { i, j });
+      this.embroiderСell(i, j);
     }
+  }
+
+  private eraseCell(i: number, j: number) {
+    this.viewProvider.eraseCell(i, j);
+    this.forceUpdateCell(i, j);
+    this.startCellAnimation(CellTransition, i, j, {
+      mode: 'fade-out',
+      duration: 200,
+    });
+    this.emit('cellErased', { i, j });
+  }
+
+  private embroiderСell(i: number, j: number) {
+    this.viewProvider.embroiderСell(i, j);
+    this.forceUpdateCell(i, j);
+    this.startCellAnimation(CellTransition, i, j, {
+      mode: 'fade-in',
+      duration: 200,
+    });
+    this.emit('cellEmbroidered', { i, j });
   }
 
   private forceUpdateCell(i: number, j: number) {
@@ -102,7 +118,7 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     this.requireRedraw();
   }
 
-  public selectCell(i: number, j: number) {
+  private selectCell(i: number, j: number) {
     this.clearSelection();
     this.selectedCell = { i, j };
     this.startCellAnimation(CellSelection, i, j);
@@ -114,7 +130,7 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     );
   }
 
-  public clearSelection() {
+  private clearSelection() {
     if (this.selectedCell) {
       const { i, j } = this.selectedCell;
       this.stopCellAnimation(i, j);

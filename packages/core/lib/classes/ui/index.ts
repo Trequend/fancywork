@@ -1,6 +1,7 @@
 export {
   BezierCurve,
   BezierCurveRGB,
+  BezierCurveRGBA,
   CellAnimation,
   ContinuousCellAnimation,
 } from './animations';
