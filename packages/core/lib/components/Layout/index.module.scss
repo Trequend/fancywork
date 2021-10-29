@@ -5,9 +5,13 @@
   height: 100%;
 }
 
-.header-test {
+.header {
   flex: 0 0 auto;
   box-shadow: 0 0 10px 1px rgb(200 200 200);
+
+  & > * {
+    flex-wrap: nowrap !important;
+  }
 }
 
 .main {

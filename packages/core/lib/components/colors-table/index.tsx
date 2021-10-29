@@ -6,9 +6,14 @@ import { FC, useMemo } from 'react';
 
 type Props = {
   palette: Palette;
+  symbolResolver?: (code: string) => string;
 } & Omit<TableProps<any>, 'dataSource' | 'columns' | 'rowKey'>;
 
-export const ColorsTable: FC<Props> = ({ palette, ...rest }) => {
+export const ColorsTable: FC<Props> = ({
+  palette,
+  symbolResolver,
+  ...rest
+}) => {
   const otherPalettes = useMemo(() => {
     const copy = [...palettes];
     const index = copy.findIndex((value) => value.name === palette.name);
@@ -31,14 +36,25 @@ export const ColorsTable: FC<Props> = ({ palette, ...rest }) => {
 
     return palette.colors.map((color) => {
       return {
+        symbol: symbolResolver ? symbolResolver(color.code) : undefined,
         hex: color.hex,
         code: color.code,
         analogs: getAnalogs(color.hex),
       };
     });
-  }, [palette, otherPalettes]);
+  }, [palette, symbolResolver, otherPalettes]);
+
+  const symbolColumn = symbolResolver
+    ? [
+        {
+          title: 'Symbol',
+          dataIndex: 'symbol',
+        },
+      ]
+    : [];
 
   const columns: Array<ColumnType<any> | ColumnGroupType<any>> = [
+    ...symbolColumn,
     {
       title: 'Color',
       dataIndex: 'hex',

@@ -16,15 +16,15 @@ export function useDatabaseItem<T>(query: (database: Database) => Promise<T>) {
       setLoading(true);
       try {
         const item = await queryRef.current(database);
+        setLoading(false);
         setItem(item);
       } catch (error) {
+        setLoading(false);
         if (error instanceof Error) {
           setError(error.message);
         } else {
           setError('Unknown error');
         }
-      } finally {
-        setLoading(false);
       }
     };
 

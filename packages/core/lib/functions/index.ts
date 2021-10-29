@@ -15,4 +15,4 @@ export {
   processImageInCanvas,
 } from './utils';
 export type { ConvertSizeOptions, ProcessImageInCanvasOptions } from './utils';
-export { createWork } from './work';
+export { createWork, createWorkImage } from './work';

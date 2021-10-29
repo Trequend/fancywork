@@ -1,6 +1,7 @@
 import { SchemaViewer } from '@fancywork/core';
 import { useDatabaseItem } from '@fancywork/storage';
 import { Result } from 'antd';
+import { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { FullscreenSpin } from 'src/components';
 import { useQueryParam } from 'src/hooks';
@@ -13,6 +14,16 @@ export const SchemaPage: AppPage = () => {
   const { item, loading, error } = useDatabaseItem((database) => {
     return database.schemas.get(id);
   });
+
+  useEffect(() => {
+    if (item) {
+      const saved = document.title;
+      document.title = `${item.metadata.name} - Fancywork`;
+      return () => {
+        document.title = saved;
+      };
+    }
+  }, [item]);
 
   if (loading) {
     return <FullscreenSpin />;

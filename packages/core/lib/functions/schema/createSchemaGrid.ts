@@ -16,24 +16,24 @@ export function createSchemaGrid(
     ? QuantizationError.createArray(imageData.width * 2)
     : [];
 
-  for (let i = 0, offset = 0; i < imageData.height; i++) {
-    const lineOffset = i % 2 === 0 ? 0 : imageData.width;
-    const nextLineOffset = i % 2 === 0 ? imageData.width : 0;
+  for (let j = 0, offset = 0; j < imageData.height; j++) {
+    const lineOffset = j % 2 === 0 ? 0 : imageData.width;
+    const nextLineOffset = j % 2 === 0 ? imageData.width : 0;
 
     if (withDithering) {
-      for (let j = 0; j < imageData.width; j++) {
-        errors[nextLineOffset + j].clear();
+      for (let i = 0; i < imageData.width; i++) {
+        errors[nextLineOffset + i].clear();
       }
     }
 
-    for (let j = 0; j < imageData.width; j++, offset += 4) {
+    for (let i = 0; i < imageData.width; i++, offset += 4) {
       let { alpha, ...color } = getImageDataPixel(imageData, offset);
 
       if (alpha === 0) {
         grid.push(null);
       } else {
         if (withDithering) {
-          color = errors[lineOffset + j].apply(color);
+          color = errors[lineOffset + i].apply(color);
         }
 
         const originalColor = new RGBColor(color.red, color.green, color.blue);
@@ -61,19 +61,19 @@ export function createSchemaGrid(
            *   (1/16)
            */
 
-          if (j + 1 !== imageData.width) {
-            errors[lineOffset + j + 1].add(delta, 7);
+          if (i + 1 !== imageData.width) {
+            errors[lineOffset + i + 1].add(delta, 7);
           }
 
-          if (i + 1 !== imageData.height) {
-            if (j !== 0) {
-              errors[nextLineOffset + j].add(delta, 3);
+          if (j + 1 !== imageData.height) {
+            if (i !== 0) {
+              errors[nextLineOffset + i].add(delta, 3);
             }
 
-            errors[nextLineOffset + j].add(delta, 5);
+            errors[nextLineOffset + i].add(delta, 5);
 
-            if (j + 1 !== imageData.width) {
-              errors[nextLineOffset + j + 1].add(delta, 1);
+            if (i + 1 !== imageData.width) {
+              errors[nextLineOffset + i + 1].add(delta, 1);
             }
           }
         }

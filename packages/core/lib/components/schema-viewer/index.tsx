@@ -28,7 +28,7 @@ export const SchemaViewer: FC<Props> = ({ schema, onBack }) => {
 
   return (
     <div className={styles.wrapper}>
-      <Layout title={schema.metadata.name} onBack={onBack}>
+      <Layout title={schema.metadata.name} subTitle="view only" onBack={onBack}>
         <div className={styles.root} ref={rootRef} />
       </Layout>
     </div>

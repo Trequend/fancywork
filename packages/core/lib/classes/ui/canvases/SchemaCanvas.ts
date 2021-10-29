@@ -1,9 +1,9 @@
-import { CELL_SIZE, HALF_CELL_SIZE } from 'lib/constants';
+import { CELL_SIZE } from 'lib/constants';
 import { cellsEquals } from 'lib/functions';
 import { BorderCell, SchemaCell } from 'lib/types';
-import { EventEmitter, Vector2, Vector2Int } from '../common';
-import { Chunk } from './Chunk';
-import { SchemaViewProvider } from './SchemaViewProvider';
+import { EventEmitter, Vector2, Vector2Int } from '../../common';
+import { Chunk } from '../Chunk';
+import { SchemaViewProvider } from '../view-providers';
 
 export type SchemaCanvasEventMap = {
   schemaCellClick: { cell: SchemaCell; mouseEvent: MouseEvent };
@@ -12,6 +12,10 @@ export type SchemaCanvasEventMap = {
   borderCellMouseMove: { cell: BorderCell; mouseEvent: MouseEvent };
   destroy: {};
   redraw: Chunk;
+};
+
+export type ScrollToCellOptions = {
+  center: boolean;
 };
 
 export class SchemaCanvas<
@@ -82,9 +86,9 @@ export class SchemaCanvas<
   }
 
   private attach() {
-    this.scrollArea.addEventListener('mousedown', this.mouseDown);
+    this.scrollArea.addEventListener('mousedown', this.onMouseDown);
     this.scrollArea.addEventListener('click', this.onClick);
-    this.scrollArea.addEventListener('mousemove', this.mouseMove);
+    this.scrollArea.addEventListener('mousemove', this.onMouseMove);
     this.scrollArea.addEventListener('scroll', this.onScroll);
     window.addEventListener('resize', this.onResize);
     window.requestAnimationFrame(() => {
@@ -94,9 +98,9 @@ export class SchemaCanvas<
 
   private detach() {
     window.removeEventListener('resize', this.onResize);
-    this.scrollArea.removeEventListener('mousedown', this.mouseDown);
+    this.scrollArea.removeEventListener('mousedown', this.onMouseDown);
     this.scrollArea.removeEventListener('click', this.onClick);
-    this.scrollArea.removeEventListener('mousemove', this.mouseMove);
+    this.scrollArea.removeEventListener('mousemove', this.onMouseMove);
     this.scrollArea.removeEventListener('scroll', this.onScroll);
   }
 
@@ -121,7 +125,7 @@ export class SchemaCanvas<
 
   private mouseDownPosition?: Vector2;
 
-  private mouseDown = (mouseEvent: MouseEvent) => {
+  private onMouseDown = (mouseEvent: MouseEvent) => {
     this.mouseDownPosition = this.clientPositionToCanvas(
       mouseEvent.clientX,
       mouseEvent.clientY
@@ -169,11 +173,23 @@ export class SchemaCanvas<
     }
   };
 
-  protected onBorderCellClick(_cell: BorderCell, _mouseEvent: MouseEvent) {}
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onBorderCellClick(
+    _cell: BorderCell,
+    _mouseEvent: MouseEvent
+  ): boolean | void {}
 
-  protected onSchemaCellClick(_cell: SchemaCell, _mouseEvent: MouseEvent) {}
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onSchemaCellClick(
+    _cell: SchemaCell,
+    _mouseEvent: MouseEvent
+  ): boolean | void {}
 
-  private mouseMove = (mouseEvent: MouseEvent) => {
+  private onMouseMove = (mouseEvent: MouseEvent) => {
     const position = this.clientPositionToCanvas(
       mouseEvent.clientX,
       mouseEvent.clientY
@@ -201,13 +217,52 @@ export class SchemaCanvas<
     }
   };
 
-  protected onBorderCellMouseMove(_cell: BorderCell, _mouseEvent: MouseEvent) {}
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onBorderCellMouseMove(
+    _cell: BorderCell,
+    _mouseEvent: MouseEvent
+  ): boolean | void {}
 
-  protected onSchemaCellMouseMove(_cell: SchemaCell, _mouseEvent: MouseEvent) {}
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onSchemaCellMouseMove(
+    _cell: SchemaCell,
+    _mouseEvent: MouseEvent
+  ): boolean | void {}
 
   private clientPositionToCanvas(x: number, y: number) {
     const rect = this.scrollArea.getBoundingClientRect();
     return new Vector2(x - rect.x, y - rect.y);
+  }
+
+  public scrollToCell(
+    cell: SchemaCell | BorderCell,
+    options?: ScrollToCellOptions
+  ) {
+    let x: number;
+    let y: number;
+
+    if (cell.type === 'border') {
+      x = cell.axis === 'x' ? cell.number * CELL_SIZE : 0;
+      y = cell.axis === 'y' ? cell.number * CELL_SIZE : 0;
+    } else {
+      x = cell.i * CELL_SIZE;
+      y = cell.j * CELL_SIZE;
+    }
+
+    const scrollArea = this.scrollArea;
+    const offset = new Vector2(
+      options && options.center ? -scrollArea.clientWidth / 2 : 0,
+      options && options.center ? -scrollArea.clientHeight / 2 : 0
+    );
+    scrollArea.scroll({
+      left: x + offset.x,
+      top: y + offset.y,
+      behavior: 'smooth',
+    });
   }
 
   protected requireRedraw() {
@@ -220,8 +275,8 @@ export class SchemaCanvas<
     }
 
     if (this.drawRequired) {
-      this.draw();
       this.drawRequired = false;
+      this.draw();
     }
 
     window.requestAnimationFrame(() => {
@@ -236,16 +291,35 @@ export class SchemaCanvas<
 
     const chunk = this.computeChunk();
 
+    this.preRender(chunk);
     this.drawCells(chunk);
     this.drawScale(chunk);
     this.drawGrid(chunk);
+    this.postRender(chunk);
 
     this.emit('redraw', chunk) || this.onRedraw(chunk);
     const delta = Math.round(performance.now() - time);
-    this.context.fillText(delta.toString(), HALF_CELL_SIZE, HALF_CELL_SIZE);
+    this.context.fillText(
+      delta.toString(),
+      chunk.halfCellSize,
+      chunk.halfCellSize
+    );
   }
 
-  protected onRedraw(_chunk: Chunk) {}
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected preRender(_chunk: Chunk): boolean | void {}
+
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected postRender(_chunk: Chunk): boolean | void {}
+
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onRedraw(_chunk: Chunk): boolean | void {}
 
   protected drawCells(chunk: Chunk) {
     this.context.textAlign = 'center';
@@ -255,68 +329,79 @@ export class SchemaCanvas<
     chunk.forEachCell(this.drawCell.bind(this));
   }
 
-  protected drawCell(i: number, j: number, x: number, y: number) {
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected drawCell(
+    i: number,
+    j: number,
+    x: number,
+    y: number,
+    chunk: Chunk
+  ): boolean | void {
     const cell = this.viewProvider.getCell(i, j);
     if (cell === null) {
       return;
     }
 
     this.context.fillStyle = cell.color.hex;
-    this.context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+    this.context.fillRect(x, y, chunk.cellSize, chunk.cellSize);
 
     this.context.fillStyle = cell.symbolColor;
-    this.context.fillText(cell.symbol, x + HALF_CELL_SIZE, y + HALF_CELL_SIZE);
+    this.context.fillText(
+      cell.symbol,
+      x + chunk.halfCellSize,
+      y + chunk.halfCellSize
+    );
   }
 
   private drawScale(chunk: Chunk) {
     const canvas = this.context.canvas;
 
-    this.context.clearRect(0, 0, canvas.width, CELL_SIZE);
-    this.context.clearRect(0, 0, CELL_SIZE, canvas.height);
+    this.context.clearRect(0, 0, canvas.width, chunk.cellSize);
+    this.context.clearRect(0, 0, chunk.cellSize, canvas.height);
 
     this.context.fillStyle = 'black';
     this.context.textAlign = 'center';
     this.context.font = 'bold 16px sans-serif';
     this.context.textBaseline = 'middle';
 
-    const halfCellSize = CELL_SIZE / 2;
-
-    chunk.forEachCellX((i, x) => {
+    chunk.forEachCellI((i, x) => {
       const number = (i + 1).toString();
-      this.context.fillText(number, x + halfCellSize, halfCellSize);
+      this.context.fillText(number, x + chunk.halfCellSize, chunk.halfCellSize);
     });
 
-    chunk.forEachCellY((i, y) => {
-      const number = (i + 1).toString();
-      this.context.fillText(number, halfCellSize, y + halfCellSize);
+    chunk.forEachCellJ((j, y) => {
+      const number = (j + 1).toString();
+      this.context.fillText(number, chunk.halfCellSize, y + chunk.halfCellSize);
     });
   }
 
   private drawGrid(chunk: Chunk) {
-    this.context.clearRect(0, 0, CELL_SIZE, CELL_SIZE);
+    this.context.clearRect(0, 0, chunk.cellSize, chunk.cellSize);
 
     this.context.fillStyle = 'black';
 
     this.context.lineWidth = 2.5;
     this.context.beginPath();
-    this.context.moveTo(CELL_SIZE, 0);
-    this.context.lineTo(CELL_SIZE, chunk.height);
-    this.context.moveTo(0, CELL_SIZE);
-    this.context.lineTo(chunk.width, CELL_SIZE);
+    this.context.moveTo(chunk.cellSize, 0);
+    this.context.lineTo(chunk.cellSize, chunk.height);
+    this.context.moveTo(0, chunk.cellSize);
+    this.context.lineTo(chunk.width, chunk.cellSize);
     this.context.stroke();
 
     this.context.lineWidth = 1.5;
     this.context.beginPath();
-    chunk.forEachCellX((i, x) => {
+    chunk.forEachCellI((i, x) => {
       if ((i + 1) % 9 === 0) {
-        x += CELL_SIZE;
+        x += chunk.cellSize;
         this.context.moveTo(x, 0);
         this.context.lineTo(x, chunk.height);
       }
     });
-    chunk.forEachCellY((i, y) => {
-      if ((i + 1) % 9 === 0) {
-        y += CELL_SIZE;
+    chunk.forEachCellJ((j, y) => {
+      if ((j + 1) % 9 === 0) {
+        y += chunk.cellSize;
         this.context.moveTo(0, y);
         this.context.lineTo(chunk.width, y);
       }
@@ -325,16 +410,16 @@ export class SchemaCanvas<
 
     this.context.lineWidth = 0.5;
     this.context.beginPath();
-    chunk.forEachCellX((i, x) => {
+    chunk.forEachCellI((i, x) => {
       if ((i + 1) % 9 !== 0) {
-        x += CELL_SIZE;
+        x += chunk.cellSize;
         this.context.moveTo(x, 0);
         this.context.lineTo(x, chunk.height);
       }
     });
-    chunk.forEachCellY((i, y) => {
-      if ((i + 1) % 9 !== 0) {
-        y += CELL_SIZE;
+    chunk.forEachCellJ((j, y) => {
+      if ((j + 1) % 9 !== 0) {
+        y += chunk.cellSize;
         this.context.moveTo(0, y);
         this.context.lineTo(chunk.width, y);
       }
@@ -345,8 +430,8 @@ export class SchemaCanvas<
   private computeChunk() {
     const canvas = this.context.canvas;
     const offset = this.getOffset();
-    const size = new Vector2(canvas.width, canvas.height);
-    return new Chunk(CELL_SIZE, this.cellsCount, size, offset);
+    const canvasSize = new Vector2(canvas.width, canvas.height);
+    return new Chunk(CELL_SIZE, this.cellsCount, canvasSize, offset);
   }
 
   private getOffset() {
@@ -366,5 +451,8 @@ export class SchemaCanvas<
     this.emit('destroy', {}) || this.onDestroy();
   }
 
-  protected onDestroy() {}
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onDestroy(): boolean | void {}
 }

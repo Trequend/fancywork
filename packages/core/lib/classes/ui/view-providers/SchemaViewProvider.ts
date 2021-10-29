@@ -72,6 +72,17 @@ export class SchemaViewProvider {
     }
   }
 
+  public getColorSymbol(code: string) {
+    const index = this.schema.palette.colors.findIndex(
+      (color) => color.code === code
+    );
+    if (index === -1) {
+      return undefined;
+    } else {
+      return this.colorMap[index].symbol;
+    }
+  }
+
   protected getCellIndex(i: number, j: number) {
     const { width } = this.schema.metadata.canvasMetadata;
     return j * width + i;

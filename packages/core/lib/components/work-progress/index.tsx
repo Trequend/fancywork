@@ -7,7 +7,7 @@ export type WorkProgressProps = {
 } & ProgressProps;
 
 export const WorkProgress: FC<WorkProgressProps> = ({ metadata, ...props }) => {
-  const percent = Math.round(
+  const percent = Math.floor(
     (metadata.stitchEmbroideredCount / metadata.schemaMetadata.stitchCount) *
       100
   );

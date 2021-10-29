@@ -4,7 +4,7 @@ import { IterableCollection } from 'lib/types';
 export abstract class BaseStorage<Map> {
   protected constructor(protected readonly dexie: Dexie) {}
 
-  protected table<K extends keyof Map>(tableName: K): Table<Map[K], number> {
+  protected table<K extends keyof Map>(tableName: K): Table<Map[K], any> {
     return this.dexie.table(tableName.toString());
   }
 

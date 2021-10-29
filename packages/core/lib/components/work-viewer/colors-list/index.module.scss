@@ -1,0 +1,80 @@
+.container {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  border-radius: 10px 10px 0 0;
+
+  &::before {
+    position: absolute;
+    content: "";
+    box-shadow: none;
+    transition: box-shadow 0.3s;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    box-shadow: none;
+    transition: box-shadow 0.3s;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+}
+
+.container.left-border {
+  &::before {
+    box-shadow: inset 10px 0 8px -8px rgb(0 0 0 / 15%);
+  }
+}
+
+.container.right-border {
+  &::after {
+    box-shadow: inset -10px 0 8px -8px rgb(0 0 0 / 15%);
+  }
+}
+
+.content {
+  display: flex;
+  overflow: auto;
+  padding: 10px;
+
+  & > * {
+    margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.color {
+  display: flex;
+  position: relative;
+  border-radius: 60px;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2em;
+  flex: 0 0 auto;
+}
+
+.color.selected {
+  box-shadow: 0 0 10px #1890ff;
+}
+
+.color.success {
+  background-color: #52c41a;
+  color: #fff;
+}

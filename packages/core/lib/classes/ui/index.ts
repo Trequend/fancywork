@@ -1,6 +1,11 @@
+export {
+  BezierCurve,
+  BezierCurveRGB,
+  CellAnimation,
+  ContinuousCellAnimation,
+} from './animations';
+export type { AnimationContext, DrawContext, DrawFunction } from './animations';
+export { AnimatedSchemaCanvas, SchemaCanvas, WorkCanvas } from './canvases';
+export type { SchemaCanvasEventMap, ScrollToCellOptions } from './canvases';
 export { Chunk } from './Chunk';
-export { SchemaCanvas } from './SchemaCanvas';
-export type { SchemaCanvasEventMap } from './SchemaCanvas';
-export { SchemaViewProvider } from './SchemaViewProvider';
-export { WorkCanvas } from './WorkCanvas';
-export { WorkViewProvider } from './WorkViewProvider';
+export { SchemaViewProvider, WorkViewProvider } from './view-providers';

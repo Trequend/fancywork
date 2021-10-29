@@ -47,6 +47,22 @@ export class WorkStorage extends BaseStorage<Map> {
     );
   }
 
+  public async put(work: Work) {
+    await this.dexie.transaction(
+      'rw',
+      [WORKS_TABLE, WORK_METADATA_TABLE],
+      () => {
+        work.metadata.lastActivity = new Date();
+        this.table(WORKS_TABLE)
+          .where({ [WorkIndex.Id]: work.metadata.id })
+          .modify(work);
+        this.table(WORK_METADATA_TABLE)
+          .where({ [WorkMetadataIndex.Id]: work.metadata.id })
+          .modify(work.metadata);
+      }
+    );
+  }
+
   public async get(id: string) {
     return await this.table(WORKS_TABLE).get({ [WorkIndex.Id]: id });
   }
