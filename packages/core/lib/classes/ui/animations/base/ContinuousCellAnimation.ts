@@ -1,27 +1,22 @@
-import { Cell } from 'lib/types';
 import { Chunk } from '../../Chunk';
 import { SchemaViewProvider } from '../../view-providers';
-import { AnimationContext, CellAnimation, DrawContext } from './CellAnimation';
+import { AnimationContext, CellAnimation } from './CellAnimation';
 
-export type DrawFunction<Provider extends SchemaViewProvider> = (
+export type DrawFunction = (
   x: number,
   y: number,
   options: {
     time: number;
-    cell: Readonly<Cell>;
     deltaTime: number;
     chunk: Chunk;
-    drawContext: Omit<DrawContext<Provider>, 'requireRedraw'>;
   }
 ) => void;
 
-export type ContinuousCellAnimationOptions<
-  Provider extends SchemaViewProvider
-> = {
+export type ContinuousCellAnimationOptions = {
   delay?: number;
   trigger?: 'appear';
   duration?: number;
-  draw: DrawFunction<Provider>;
+  draw: DrawFunction;
 };
 
 export abstract class ContinuousCellAnimation<
@@ -37,7 +32,7 @@ export abstract class ContinuousCellAnimation<
 
   public constructor(
     context: AnimationContext<Provider>,
-    private readonly options: ContinuousCellAnimationOptions<Provider>
+    private readonly options: ContinuousCellAnimationOptions
   ) {
     super(context);
 
@@ -54,7 +49,7 @@ export abstract class ContinuousCellAnimation<
     }
   }
 
-  private validate(options: ContinuousCellAnimationOptions<Provider>) {
+  private validate(options: ContinuousCellAnimationOptions) {
     if (options.delay && options.delay < 0) {
       throw new RangeError('delay must be in range [0, infinity]');
     }
@@ -78,16 +73,13 @@ export abstract class ContinuousCellAnimation<
 
     let time = performance.now() - this.startTime!;
 
-    const { requireRedraw, ...rest } = this.drawContext;
     this.options.draw(x, y, {
       time,
-      cell: this.cell,
       deltaTime,
       chunk,
-      drawContext: rest,
     });
 
-    requireRedraw();
+    this.drawContext.requireRedraw();
   }
 
   private start() {

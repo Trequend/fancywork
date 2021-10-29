@@ -19,12 +19,11 @@ export class CellTransition extends ContinuousCellAnimation<WorkViewProvider> {
     }
 
     const { colorCurve, symbolColorCurve, symbol } = data;
+    const { renderer } = context.drawContext;
 
     super(context, {
       duration: options.duration,
-      draw: (x, y, { time, drawContext, chunk }) => {
-        const { renderer } = drawContext;
-
+      draw: (x, y, { time, chunk }) => {
         const color = colorCurve.evaluate(time / options.duration);
         renderer.fillStyle = color.toString();
         renderer.fillRect(x, y, chunk.cellSize, chunk.cellSize);
