@@ -46,38 +46,38 @@ export class Chunk {
       this.cellOffset.y + (this.endCell.j - this.startCell.j + 1) * cellSize;
   }
 
-  public mousePositionToCell(
-    mouseX: number,
-    mouseY: number
-  ): BorderCell | SchemaCell | undefined {
+  public getCellByCanvasPosition(
+    pointerX: number,
+    pointerY: number
+  ): BorderCell | SchemaCell | null {
     if (
-      mouseX < 0 ||
-      mouseY < 0 ||
-      mouseX > this.width ||
-      mouseY > this.height
+      pointerX < 0 ||
+      pointerY < 0 ||
+      pointerX > this.width ||
+      pointerY > this.height
     ) {
-      return undefined;
+      return null;
     }
 
     const cellNumberI = Math.floor(
-      (mouseX - this.cellSize + this.cellOffset.x) / this.cellSize
+      (pointerX - this.cellSize + this.cellOffset.x) / this.cellSize
     );
     const cellNumberJ = Math.floor(
-      (mouseY - this.cellSize + this.cellOffset.y) / this.cellSize
+      (pointerY - this.cellSize + this.cellOffset.y) / this.cellSize
     );
 
-    if (mouseX < this.cellSize && mouseY < this.cellSize) {
+    if (pointerX < this.cellSize && pointerY < this.cellSize) {
       return {
         type: 'border',
         axis: 'origin',
       };
-    } else if (mouseX < this.cellSize) {
+    } else if (pointerX < this.cellSize) {
       return {
         type: 'border',
         axis: 'y',
         number: cellNumberJ + this.startCell.j,
       };
-    } else if (mouseY < this.cellSize) {
+    } else if (pointerY < this.cellSize) {
       return {
         type: 'border',
         axis: 'x',

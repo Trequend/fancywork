@@ -6,10 +6,14 @@ import { Chunk } from '../Chunk';
 import { SchemaViewProvider } from '../view-providers';
 
 export type SchemaCanvasEventMap = {
-  schemaCellClick: { cell: SchemaCell; mouseEvent: MouseEvent };
-  borderCellClick: { cell: BorderCell; mouseEvent: MouseEvent };
-  schemaCellMouseMove: { cell: SchemaCell; mouseEvent: MouseEvent };
-  borderCellMouseMove: { cell: BorderCell; mouseEvent: MouseEvent };
+  schemaCellClick: { cell: SchemaCell; pointerEvent: PointerEvent };
+  borderCellClick: { cell: BorderCell; pointerEvent: PointerEvent };
+  schemaCellPointerMove: { cell: SchemaCell; pointerEvent: PointerEvent };
+  borderCellPointerMove: { cell: BorderCell; pointerEvent: PointerEvent };
+  schemaCellTouchStart: { cell: SchemaCell; touchEvent: TouchEvent };
+  borderCellTouchStart: { cell: BorderCell; touchEvent: TouchEvent };
+  schemaCellTouchMove: { cell: SchemaCell; touchEvent: TouchEvent };
+  borderCellTouchMove: { cell: BorderCell; touchEvent: TouchEvent };
   destroy: {};
   redraw: Chunk;
 };
@@ -76,6 +80,7 @@ export class SchemaCanvas<
     scrollArea.style.height = '100%';
     scrollArea.style.zIndex = '10';
     scrollArea.style.overflow = 'auto';
+    scrollArea.style.touchAction = 'pan-x pan-y';
 
     const mock = document.createElement('div');
     mock.style.width = `${CELL_SIZE * (this.cellsCount.x + 1)}px`;
@@ -86,22 +91,28 @@ export class SchemaCanvas<
   }
 
   private attach() {
-    this.scrollArea.addEventListener('mousedown', this.onMouseDown);
-    this.scrollArea.addEventListener('click', this.onClick);
-    this.scrollArea.addEventListener('mousemove', this.onMouseMove);
-    this.scrollArea.addEventListener('scroll', this.onScroll);
+    // Global
     window.addEventListener('resize', this.onResize);
     window.requestAnimationFrame(() => {
       this.drawLoop();
     });
+
+    // Local
+    this.scrollArea.addEventListener('pointerdown', this.onPointerDown);
+    this.scrollArea.addEventListener('pointermove', this.onPointerMove);
+    this.scrollArea.addEventListener('pointerup', this.onPointerUp);
+    this.scrollArea.addEventListener('pointercancel', this.onPointerCancel);
+
+    this.scrollArea.addEventListener('touchstart', this.onTouchStart);
+    this.scrollArea.addEventListener('touchmove', this.onTouchMove);
+    this.scrollArea.addEventListener('touchend', this.onTouchEnd);
+
+    this.scrollArea.addEventListener('scroll', this.onScroll);
   }
 
   private detach() {
+    // Global only
     window.removeEventListener('resize', this.onResize);
-    this.scrollArea.removeEventListener('mousedown', this.onMouseDown);
-    this.scrollArea.removeEventListener('click', this.onClick);
-    this.scrollArea.removeEventListener('mousemove', this.onMouseMove);
-    this.scrollArea.removeEventListener('scroll', this.onScroll);
   }
 
   private onScroll = () => {
@@ -123,53 +134,91 @@ export class SchemaCanvas<
     this.drawRequired = true;
   }
 
-  private mouseDownPosition?: Vector2;
+  private pointerDownPosition: Vector2 | null = null;
 
-  private onMouseDown = (mouseEvent: MouseEvent) => {
-    this.mouseDownPosition = this.clientPositionToCanvas(
-      mouseEvent.clientX,
-      mouseEvent.clientY
-    );
+  private onPointerDown = (pointerEvent: PointerEvent) => {
+    if (pointerEvent.isPrimary) {
+      this.scrollArea.setPointerCapture(pointerEvent.pointerId);
+      this.pointerDownPosition = this.clientPositionToCanvas(
+        pointerEvent.clientX,
+        pointerEvent.clientY
+      );
+    }
   };
 
-  private onClick = (mouseEvent: MouseEvent) => {
-    if (this.mouseDownPosition === undefined) {
+  private onPointerMove = (pointerEvent: PointerEvent) => {
+    if (!pointerEvent.isPrimary) {
+      return;
+    }
+
+    const position = this.clientPositionToCanvas(
+      pointerEvent.clientX,
+      pointerEvent.clientY
+    );
+    const chunk = this.computeChunk();
+    const cell = chunk.getCellByCanvasPosition(position.x, position.y);
+    if (cell === null) {
+      return;
+    }
+
+    switch (cell.type) {
+      case 'border':
+        this.emit('borderCellPointerMove', { cell, pointerEvent }) ||
+          this.onBorderCellPointerMove(cell, pointerEvent);
+        break;
+      case 'schema':
+        this.emit('schemaCellPointerMove', { cell, pointerEvent }) ||
+          this.onSchemaCellPointerMove(cell, pointerEvent);
+        break;
+      default:
+        throw new Error('Not implemented');
+    }
+  };
+
+  private onPointerUp = (pointerEvent: PointerEvent) => {
+    if (this.pointerDownPosition === null || !pointerEvent.isPrimary) {
       return;
     }
 
     const chunk = this.computeChunk();
-
     const clickPosition = this.clientPositionToCanvas(
-      mouseEvent.clientX,
-      mouseEvent.clientY
+      pointerEvent.clientX,
+      pointerEvent.clientY
     );
-
-    const mouseDownCell = chunk.mousePositionToCell(
-      this.mouseDownPosition.x,
-      this.mouseDownPosition.y
+    const poinerDownCell = chunk.getCellByCanvasPosition(
+      this.pointerDownPosition.x,
+      this.pointerDownPosition.y
     );
-    const clickCell = chunk.mousePositionToCell(
+    const clickCell = chunk.getCellByCanvasPosition(
       clickPosition.x,
       clickPosition.y
     );
 
-    if (mouseDownCell === undefined || clickCell === undefined) {
+    this.pointerDownPosition = null;
+
+    if (poinerDownCell === null || clickCell === null) {
       return;
     }
 
-    if (cellsEquals(mouseDownCell, clickCell)) {
+    if (cellsEquals(poinerDownCell, clickCell)) {
       switch (clickCell.type) {
         case 'border':
-          this.emit('borderCellClick', { cell: clickCell, mouseEvent }) ||
-            this.onBorderCellClick(clickCell, mouseEvent);
+          this.emit('borderCellClick', { cell: clickCell, pointerEvent }) ||
+            this.onBorderCellClick(clickCell, pointerEvent);
           break;
         case 'schema':
-          this.emit('schemaCellClick', { cell: clickCell, mouseEvent }) ||
-            this.onSchemaCellClick(clickCell, mouseEvent);
+          this.emit('schemaCellClick', { cell: clickCell, pointerEvent }) ||
+            this.onSchemaCellClick(clickCell, pointerEvent);
           break;
         default:
           throw new Error('Not implemented');
       }
+    }
+  };
+
+  private onPointerCancel = (poinerEvent: PointerEvent) => {
+    if (poinerEvent.isPrimary) {
+      this.pointerDownPosition = null;
     }
   };
 
@@ -178,7 +227,7 @@ export class SchemaCanvas<
    */
   protected onBorderCellClick(
     _cell: BorderCell,
-    _mouseEvent: MouseEvent
+    _pointerEvent: PointerEvent
   ): boolean | void {}
 
   /**
@@ -186,51 +235,136 @@ export class SchemaCanvas<
    */
   protected onSchemaCellClick(
     _cell: SchemaCell,
-    _mouseEvent: MouseEvent
+    _pointerEvent: PointerEvent
   ): boolean | void {}
 
-  private onMouseMove = (mouseEvent: MouseEvent) => {
-    const position = this.clientPositionToCanvas(
-      mouseEvent.clientX,
-      mouseEvent.clientY
-    );
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onBorderCellPointerMove(
+    _cell: BorderCell,
+    _pointerEvent: PointerEvent
+  ): boolean | void {}
+
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onSchemaCellPointerMove(
+    _cell: SchemaCell,
+    _pointerEvent: PointerEvent
+  ): boolean | void {}
+
+  private touchStarted = false;
+
+  private touchScrollPrevented = false;
+
+  private onTouchStart = (touchEvent: TouchEvent) => {
+    if (this.touchStarted) {
+      return;
+    }
+
+    this.touchStarted = true;
+    this.touchScrollPrevented = false;
 
     const chunk = this.computeChunk();
+    const position = this.clientPositionToCanvas(
+      touchEvent.touches[0].clientX,
+      touchEvent.touches[0].clientY
+    );
+    const cell = chunk.getCellByCanvasPosition(position.x, position.y);
 
-    const cell = chunk.mousePositionToCell(position.x, position.y);
-
-    if (cell === undefined) {
+    if (cell === null) {
       return;
     }
 
     switch (cell.type) {
       case 'border':
-        this.emit('borderCellMouseMove', { cell, mouseEvent }) ||
-          this.onBorderCellMouseMove(cell, mouseEvent);
+        this.emit('borderCellTouchStart', { cell, touchEvent }) ||
+          this.onBorderCellTouchStart(cell, touchEvent);
         break;
       case 'schema':
-        this.emit('schemaCellMouseMove', { cell, mouseEvent }) ||
-          this.onSchemaCellMouseMove(cell, mouseEvent);
+        this.emit('schemaCellTouchStart', { cell, touchEvent }) ||
+          this.onSchemaCellTouchStart(cell, touchEvent);
+        break;
+      default:
+        throw new Error('Not implemented');
+    }
+
+    if (touchEvent.defaultPrevented) {
+      this.touchScrollPrevented = true;
+    }
+  };
+
+  private onTouchMove = (touchEvent: TouchEvent) => {
+    if (this.touchScrollPrevented) {
+      touchEvent.preventDefault();
+    } else {
+      return;
+    }
+
+    const chunk = this.computeChunk();
+    const position = this.clientPositionToCanvas(
+      touchEvent.touches[0].clientX,
+      touchEvent.touches[0].clientY
+    );
+    const cell = chunk.getCellByCanvasPosition(position.x, position.y);
+
+    if (cell === null) {
+      return;
+    }
+
+    switch (cell.type) {
+      case 'border':
+        this.emit('borderCellTouchMove', { cell, touchEvent }) ||
+          this.onBorderCellTouchMove(cell, touchEvent);
+        break;
+      case 'schema':
+        this.emit('schemaCellTouchMove', { cell, touchEvent }) ||
+          this.onSchemaCellTouchMove(cell, touchEvent);
         break;
       default:
         throw new Error('Not implemented');
     }
   };
 
+  private onTouchEnd = (touchEvent: TouchEvent) => {
+    // Last touch end
+    if (touchEvent.touches.length === 0) {
+      this.touchStarted = false;
+      this.touchScrollPrevented = false;
+    }
+  };
+
   /**
    * @returns `true` if you need to stop the propagation
    */
-  protected onBorderCellMouseMove(
+  protected onBorderCellTouchStart(
     _cell: BorderCell,
-    _mouseEvent: MouseEvent
+    _touchEvent: TouchEvent
   ): boolean | void {}
 
   /**
    * @returns `true` if you need to stop the propagation
    */
-  protected onSchemaCellMouseMove(
+  protected onSchemaCellTouchStart(
     _cell: SchemaCell,
-    _mouseEvent: MouseEvent
+    _touchEvent: TouchEvent
+  ): boolean | void {}
+
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onBorderCellTouchMove(
+    _cell: BorderCell,
+    _touchEvent: TouchEvent
+  ): boolean | void {}
+
+  /**
+   * @returns `true` if you need to stop the propagation
+   */
+  protected onSchemaCellTouchMove(
+    _cell: SchemaCell,
+    _touchEvent: TouchEvent
   ): boolean | void {}
 
   private clientPositionToCanvas(x: number, y: number) {

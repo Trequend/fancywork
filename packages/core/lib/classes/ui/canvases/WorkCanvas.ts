@@ -61,28 +61,43 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     this.processCell(cell);
   }
 
-  protected onSchemaCellMouseMove(cell: SchemaCell, event: MouseEvent) {
+  protected onSchemaCellPointerMove(cell: SchemaCell, event: PointerEvent) {
     if (event.buttons === MOUSE_LEFT_BUTTON) {
       this.processCell(cell);
     }
+  }
+
+  protected onSchemaCellTouchStart(cell: SchemaCell, event: TouchEvent) {
+    const processed = this.processCell(cell);
+    if (processed) {
+      event.preventDefault();
+    }
+  }
+
+  protected onSchemaCellTouchMove(cell: SchemaCell) {
+    this.processCell(cell);
   }
 
   private processCell(cell: SchemaCell) {
     const { i, j } = cell;
     const schemaCell = this.viewProvider.getCell(i, j);
     if (schemaCell === null) {
-      return;
+      return false;
     }
 
     if (schemaCell.color.code !== this.penColorCode && !this.eraseMode) {
-      return;
+      return false;
     }
 
     if (schemaCell.embroidered && this.eraseMode) {
       this.eraseCell(i, j);
+      return true;
     } else if (!schemaCell.embroidered && !this.eraseMode) {
       this.embroiderСell(i, j);
+      return true;
     }
+
+    return false;
   }
 
   private eraseCell(i: number, j: number) {
