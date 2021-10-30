@@ -56,6 +56,7 @@ module.exports = {
     },
   },
   externals: {
+    '@fancywork/core': '@fancywork/core',
     'react-router-dom': 'react-router-dom',
     'react-dom': 'react-dom',
     react: 'react',
