@@ -25,16 +25,6 @@ export type {
   SchemaCanvasEventMap,
   ScrollToCellOptions,
 } from './classes';
-export {
-  ColorsTable,
-  DownloadButton,
-  SchemaInfoTable,
-  SchemaViewer,
-  WorkInfoTable,
-  WorkProgress,
-  WorkViewer,
-} from './components';
-export type { DownloadButtonProps } from './components';
 export { CELL_SIZE, MAX_HEIGHT, MAX_WIDTH } from './constants';
 export {
   cellsEquals,
@@ -44,6 +34,7 @@ export {
   createWork,
   createWorkImage,
   downloadSchema,
+  getContrastColor,
 } from './functions';
 export type { ConvertSizeOptions, GenerateSchemaOptions } from './functions';
 export { palettes } from './palettes';

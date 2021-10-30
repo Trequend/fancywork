@@ -27,7 +27,8 @@ export function createSchemaGrid(
     }
 
     for (let i = 0; i < imageData.width; i++, offset += 4) {
-      let { alpha, ...color } = getImageDataPixel(imageData, offset);
+      const { alpha, ...rest } = getImageDataPixel(imageData, offset);
+      let color = rest;
 
       if (alpha === 0) {
         grid.push(null);

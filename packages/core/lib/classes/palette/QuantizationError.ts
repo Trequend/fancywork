@@ -7,9 +7,9 @@ type Color = {
 const COEFFICIENT = 1 / 16;
 
 export class QuantizationError {
-  private red: number = 0;
-  private green: number = 0;
-  private blue: number = 0;
+  private red = 0;
+  private green = 0;
+  private blue = 0;
 
   public clear() {
     this.red = 0;

@@ -14,7 +14,7 @@ export type SchemaCanvasEventMap = {
   borderCellTouchStart: { cell: BorderCell; touchEvent: TouchEvent };
   schemaCellTouchMove: { cell: SchemaCell; touchEvent: TouchEvent };
   borderCellTouchMove: { cell: BorderCell; touchEvent: TouchEvent };
-  destroy: {};
+  destroy: Record<string, never>;
   redraw: Chunk;
 };
 
@@ -32,9 +32,9 @@ export class SchemaCanvas<
 
   private readonly scrollArea: HTMLDivElement;
 
-  private drawRequired: boolean = true;
+  private drawRequired = true;
 
-  private _isDestroyed: boolean = false;
+  private _isDestroyed = false;
 
   public get isDestroyed() {
     return this._isDestroyed;

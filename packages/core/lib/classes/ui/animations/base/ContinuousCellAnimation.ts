@@ -71,7 +71,7 @@ export abstract class ContinuousCellAnimation<
       return;
     }
 
-    let time = performance.now() - this.startTime!;
+    const time = performance.now() - this.startTime!;
 
     this.options.draw(x, y, {
       time,

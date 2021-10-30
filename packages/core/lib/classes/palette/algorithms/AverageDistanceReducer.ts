@@ -24,7 +24,7 @@ export class AverageDistanceReducer extends PaletteReducer {
     let index2 = -1;
     for (let i = 0; i < verticies.length; i++) {
       if (i !== index1) {
-        let distance = verticies[index1].distance(verticies[i]);
+        const distance = verticies[index1].distance(verticies[i]);
         if (distance < minDistance) {
           minDistance = distance;
           index2 = i;

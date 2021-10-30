@@ -1,5 +1,4 @@
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const tsTransformPaths = require('@zerollup/ts-transform-paths');
 
 module.exports = {
@@ -12,11 +11,10 @@ module.exports = {
       type: 'commonjs2',
     },
   },
-  plugins: [new MiniCssExtractPlugin({ filename: 'main.css' })],
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts$/,
         use: {
           loader: 'ts-loader',
           options: {
@@ -31,35 +29,15 @@ module.exports = {
           },
         },
       },
-      {
-        test: /\.((c|sa|sc)ss)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[folder]_[local]__[hash:base64:5]',
-                exportLocalsConvention: 'camelCaseOnly',
-              },
-            },
-          },
-          'sass-loader',
-        ],
-      },
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    extensions: ['.ts'],
     alias: {
       lib: path.resolve(__dirname, 'lib'),
     },
   },
   externals: {
     '@fancywork/core': '@fancywork/core',
-    'react-router-dom': 'react-router-dom',
-    'react-dom': 'react-dom',
-    react: 'react',
-    antd: 'antd',
   },
 };

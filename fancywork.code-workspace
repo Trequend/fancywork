@@ -1,9 +1,11 @@
 {
   "folders": [
     { "name": "root", "path": "." },
+    { "name": "website", "path": "website" },
     { "name": "core", "path": "packages/core" },
-    { "name": "frontend", "path": "packages/frontend" },
-    { "name": "storage", "path": "packages/storage" }
+    { "name": "core-react", "path": "packages/core-react" },
+    { "name": "storage", "path": "packages/storage" },
+    { "name": "storage-react", "path": "packages/storage-react" }
   ],
   "extensions": {
     "recommendations": [

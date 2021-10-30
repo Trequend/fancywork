@@ -29,8 +29,10 @@ module.exports = {
     { name: 'utils' },
     { name: 'git' },
     { name: 'core' },
-    { name: 'frontend' },
     { name: 'storage' },
+    { name: 'website' },
+    { name: 'core-react' },
+    { name: 'storage-react' },
   ],
 
   allowTicketNumber: false,

@@ -16,12 +16,13 @@
     "url": "https://github.com/Trequend/fancywork/issues"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "website"
   ],
   "scripts": {
-    "prepare": "husky install && yarn run build:lib",
+    "prepare": "husky install && yarn run build:packages",
     "build": "lerna run build --stream",
-    "build:lib": "lerna run --scope={@fancywork/core,@fancywork/storage} build --stream",
+    "build:packages": "lerna run --scope=@fancywork/* build --stream",
     "commitlint": "commitlint",
     "fmt": "prettier --write .",
     "test": "prettier --check . && lerna run test --stream",
