@@ -60,10 +60,9 @@ export class CellTransition extends ContinuousCellAnimation<WorkViewProvider> {
         : new RGBColor(255, 255, 255);
     const colorCurve = new BezierCurveRGB([fromColor, toColor]);
 
-    const { symbol, symbolColor } = cellInfo;
-    const { red, green, blue } = RGBColor.fromHex(symbolColor);
-    const visibleSymbolColor = new RGBAColor(red, green, blue, 255);
-    const invisibleSymbolColor = new RGBAColor(red, green, blue, 0);
+    const { symbol } = cellInfo;
+    const visibleSymbolColor = new RGBAColor(0, 0, 0, 255);
+    const invisibleSymbolColor = new RGBAColor(0, 0, 0, 0);
     const fromSymbolColor =
       options.mode === 'fade-in' ? visibleSymbolColor : invisibleSymbolColor;
     const toSymbolColor =
