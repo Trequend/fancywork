@@ -255,8 +255,8 @@ export class SchemaCanvas<
 
     const scrollArea = this.scrollArea;
     const offset = new Vector2(
-      options && options.center ? -scrollArea.clientWidth / 2 : 0,
-      options && options.center ? -scrollArea.clientHeight / 2 : 0
+      options && options.center ? -(scrollArea.clientWidth / 2 - CELL_SIZE) : 0,
+      options && options.center ? -(scrollArea.clientHeight / 2 - CELL_SIZE) : 0
     );
     scrollArea.scroll({
       left: x + offset.x,
