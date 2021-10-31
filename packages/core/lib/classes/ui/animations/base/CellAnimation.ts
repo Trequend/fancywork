@@ -1,9 +1,10 @@
 import { Cell } from 'lib/types';
 import { Chunk } from '../../Chunk';
+import { Renderer } from '../../renderer';
 import { SchemaViewProvider } from '../../view-providers';
 
 export type DrawContext<Provider extends SchemaViewProvider> = {
-  renderer: CanvasRenderingContext2D;
+  renderer: Renderer;
   requireRedraw: () => void;
   viewProvider: Provider;
 };

@@ -10,7 +10,7 @@ export abstract class AnimatedSchemaCanvas<
   private readonly cellAnimations: Record<string, CellAnimation<Provider>> = {};
 
   private readonly drawContext: DrawContext<Provider> = {
-    renderer: this.context,
+    renderer: this.renderer,
     requireRedraw: this.requireRedraw.bind(this),
     viewProvider: this.viewProvider,
   };

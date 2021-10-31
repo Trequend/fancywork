@@ -1,4 +1,4 @@
-import { RGBColor } from '../../../common';
+import { RGBColor, RGBAColor } from '../../../common';
 import { WorkViewProvider } from '../../view-providers';
 import { AnimationContext, ContinuousCellAnimation } from '../base';
 import { BezierCurveRGB } from '../bezier-curve';
@@ -12,21 +12,15 @@ export class CellSelection extends ContinuousCellAnimation<WorkViewProvider> {
 
     const { curve, duration, symbol } = data;
     const { renderer } = context.drawContext;
+    const symbolColor = new RGBAColor(0, 0, 0, 255);
 
     super(context, {
       trigger: 'appear',
       duration,
       draw: (x, y, { time, chunk }) => {
         const color = curve.evaluate(time / duration);
-        renderer.fillStyle = color.toString();
-        renderer.fillRect(x, y, chunk.cellSize, chunk.cellSize);
-
-        renderer.fillStyle = '#000';
-        renderer.fillText(
-          symbol,
-          x + chunk.halfCellSize,
-          y + chunk.halfCellSize
-        );
+        renderer.drawRect(x, y, chunk.cellSize, chunk.cellSize, color);
+        renderer.drawSchemaSymbol(symbol, x, y, symbolColor);
       },
     });
   }

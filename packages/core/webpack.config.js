@@ -29,6 +29,10 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(vert|frag)\.glsl$/,
+        type: 'asset/source',
+      },
     ],
   },
   resolve: {

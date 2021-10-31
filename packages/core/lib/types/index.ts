@@ -9,6 +9,7 @@ export type { Schema } from './Schema';
 export type { SchemaGrid } from './SchemaGrid';
 export type { SchemaMetadata } from './SchemaMetadata';
 export type { SizeType } from './SizeType';
+export type { WebGL } from './WebGL';
 export type { Work } from './Work';
 export type { WorkGrid } from './WorkGrid';
 export type { WorkMetadata } from './WorkMetadata';

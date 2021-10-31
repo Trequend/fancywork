@@ -119,7 +119,9 @@ export const WorkViewerMenu: FC<Props> = ({ work, viewProvider, onSave }) => {
         footer={null}
         centered
       >
-        <Image alt="Result" preview={false} src={result} />
+        <div className={styles.result}>
+          <Image alt="Result" preview={false} src={result} />
+        </div>
       </Modal>
       <Dropdown
         overlay={menu}

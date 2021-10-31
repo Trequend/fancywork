@@ -1,5 +1,6 @@
-import { Cell, SchemaCell } from 'lib/types';
-import { CellSelection, CellTransition } from '../animations/work-canvas';
+import { RGBAColor } from '../../common';
+import { SchemaCell } from 'lib/types';
+import { CellTransition } from '../animations/work-canvas';
 import { Chunk } from '../Chunk';
 import { WorkViewProvider } from '../view-providers';
 import { AnimatedSchemaCanvas } from './AnimatedSchemaCanvas';
@@ -20,8 +21,6 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
 
   public penColorCode?: string;
 
-  private selectedCell: Cell | null = null;
-
   protected drawCell(i: number, j: number, x: number, y: number, chunk: Chunk) {
     const prevented = super.drawCell(i, j, x, y, chunk);
     if (prevented) {
@@ -31,15 +30,22 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     const cell = this.viewProvider.getCell(i, j);
     if (cell) {
       if (cell.embroidered) {
-        this.context.fillStyle = cell.color.hex;
-        this.context.fillRect(x, y, chunk.cellSize, chunk.cellSize);
+        const color = RGBAColor.fromHex(cell.color.hex);
+        this.renderer.drawRect(x, y, chunk.cellSize, chunk.cellSize, color);
       } else {
-        this.context.fillStyle = '#000';
-        this.context.fillText(
-          cell.symbol,
-          x + chunk.halfCellSize,
-          y + chunk.halfCellSize
-        );
+        const color = new RGBAColor(0, 0, 0, 255);
+        if (cell.color.code === this.penColorCode) {
+          const backgroundColor = new RGBAColor(210, 210, 210, 255);
+          this.renderer.drawRect(
+            x,
+            y,
+            chunk.cellSize,
+            chunk.cellSize,
+            backgroundColor
+          );
+        }
+
+        this.renderer.drawSchemaSymbol(cell.symbol, x, y, color);
       }
     }
   }
@@ -50,7 +56,12 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
       for (let i = 0; i < width; i++) {
         const cell = this.viewProvider.getCell(i, j);
         if (cell && cell.color.code === colorCode && !cell.embroidered) {
-          this.selectCell(i, j);
+          this.scrollToCell(
+            { i, j, type: 'schema' },
+            {
+              center: true,
+            }
+          );
           return;
         }
       }
@@ -105,7 +116,7 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     this.forceUpdateCell(i, j);
     this.startCellAnimation(CellTransition, i, j, {
       mode: 'fade-out',
-      duration: 200,
+      duration: 100,
     });
     this.emit('cellErased', { i, j });
   }
@@ -115,41 +126,13 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     this.forceUpdateCell(i, j);
     this.startCellAnimation(CellTransition, i, j, {
       mode: 'fade-in',
-      duration: 200,
+      duration: 100,
     });
     this.emit('cellEmbroidered', { i, j });
   }
 
   private forceUpdateCell(i: number, j: number) {
-    if (
-      this.selectedCell &&
-      this.selectedCell.i === i &&
-      this.selectedCell.j === j
-    ) {
-      this.clearSelection();
-    }
-
     this.stopCellAnimation(i, j);
     this.requireRedraw();
-  }
-
-  private selectCell(i: number, j: number) {
-    this.clearSelection();
-    this.selectedCell = { i, j };
-    this.startCellAnimation(CellSelection, i, j);
-    this.scrollToCell(
-      { i, j, type: 'schema' },
-      {
-        center: true,
-      }
-    );
-  }
-
-  private clearSelection() {
-    if (this.selectedCell) {
-      const { i, j } = this.selectedCell;
-      this.stopCellAnimation(i, j);
-      this.selectedCell = null;
-    }
   }
 }

@@ -1,8 +1,14 @@
 import { CELL_SIZE } from 'lib/constants';
 import { cellsEquals } from 'lib/functions';
 import { BorderCell, SchemaCell } from 'lib/types';
-import { EventEmitter, Vector2, Vector2Int } from '../../common';
+import { EventEmitter, Vector2, Vector2Int, RGBAColor } from '../../common';
 import { Chunk } from '../Chunk';
+import {
+  Renderer,
+  SchemaInfo,
+  WebGL1Renderer,
+  WebGL2Renderer,
+} from '../renderer';
 import { SchemaViewProvider } from '../view-providers';
 
 export type SchemaCanvasEventMap = {
@@ -26,11 +32,15 @@ export class SchemaCanvas<
   Provider extends SchemaViewProvider = SchemaViewProvider,
   EventMap extends SchemaCanvasEventMap = SchemaCanvasEventMap
 > extends EventEmitter<EventMap, SchemaCanvas<Provider, EventMap>> {
-  protected readonly context: CanvasRenderingContext2D;
+  protected readonly renderer: Renderer;
 
   protected readonly cellsCount;
 
+  private readonly canvas: HTMLCanvasElement;
+
   private readonly scrollArea: HTMLDivElement;
+
+  private readonly timeDisplay: HTMLDivElement;
 
   private drawRequired = true;
 
@@ -47,19 +57,24 @@ export class SchemaCanvas<
 
     this.cellsCount = new Vector2Int(width, height);
 
-    const canvas = this.createCanvas();
-    const context = canvas.getContext('2d');
-    if (context) {
-      this.context = context;
-    } else {
-      throw new Error('2d context not supported');
-    }
-
+    this.canvas = this.createCanvas();
+    this.renderer = this.createRenderer();
     this.scrollArea = this.createScrollArea();
 
+    this.timeDisplay = document.createElement('div');
+    this.timeDisplay.style.position = 'absolute';
+    this.timeDisplay.style.top = '0';
+    this.timeDisplay.style.left = '0';
+    this.timeDisplay.style.width = '30px';
+    this.timeDisplay.style.height = '30px';
+    this.timeDisplay.style.display = 'flex';
+    this.timeDisplay.style.justifyContent = 'center';
+    this.timeDisplay.style.alignItems = 'center';
+
     root.innerHTML = '';
-    root.appendChild(canvas);
+    root.appendChild(this.canvas);
     root.appendChild(this.scrollArea);
+    root.appendChild(this.timeDisplay);
 
     this.resize();
     this.attach();
@@ -71,6 +86,27 @@ export class SchemaCanvas<
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     return canvas;
+  }
+
+  private createRenderer(): Renderer {
+    const schemaInfo: SchemaInfo = {
+      cellSize: CELL_SIZE,
+      width: this.cellsCount.x,
+      height: this.cellsCount.y,
+      symbols: this.viewProvider.getSymbols(),
+    };
+
+    const webgl2 = this.canvas.getContext('webgl2');
+    if (webgl2) {
+      return new WebGL2Renderer(webgl2, schemaInfo);
+    }
+
+    const webgl = this.canvas.getContext('webgl');
+    if (webgl) {
+      return new WebGL1Renderer(webgl, schemaInfo);
+    }
+
+    throw new Error('webgl not supported');
   }
 
   private createScrollArea() {
@@ -124,13 +160,14 @@ export class SchemaCanvas<
   };
 
   private resize() {
-    const canvas = this.context.canvas;
-    const ratio = Math.ceil(window.devicePixelRatio);
+    const canvas = this.canvas;
     canvas.style.width = `${this.scrollArea.clientWidth}px`;
     canvas.style.height = `${this.scrollArea.clientHeight}px`;
-    canvas.width = this.scrollArea.clientWidth * ratio;
-    canvas.height = this.scrollArea.clientHeight * ratio;
-    this.context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.round(rect.width * window.devicePixelRatio);
+    const height = Math.round(rect.height * window.devicePixelRatio);
+    canvas.width = width;
+    canvas.height = height;
     this.drawRequired = true;
   }
 
@@ -420,24 +457,20 @@ export class SchemaCanvas<
 
   private draw() {
     const time = performance.now();
-    const canvas = this.context.canvas;
-    this.context.clearRect(0, 0, canvas.width, canvas.height);
 
     const chunk = this.computeChunk();
 
+    this.renderer.start();
     this.preRender(chunk);
     this.drawCells(chunk);
     this.drawScale(chunk);
     this.drawGrid(chunk);
     this.postRender(chunk);
+    this.renderer.end();
 
     this.emit('redraw', chunk) || this.onRedraw(chunk);
     const delta = Math.round(performance.now() - time);
-    this.context.fillText(
-      delta.toString(),
-      chunk.halfCellSize,
-      chunk.halfCellSize
-    );
+    this.timeDisplay.innerText = delta.toString();
   }
 
   /**
@@ -456,10 +489,6 @@ export class SchemaCanvas<
   protected onRedraw(_chunk: Chunk): boolean | void {}
 
   protected drawCells(chunk: Chunk) {
-    this.context.textAlign = 'center';
-    this.context.font = '16px sans-serif';
-    this.context.textBaseline = 'middle';
-
     chunk.forEachCell(this.drawCell.bind(this));
   }
 
@@ -478,98 +507,107 @@ export class SchemaCanvas<
       return;
     }
 
-    this.context.fillStyle = cell.color.hex;
-    this.context.fillRect(x, y, chunk.cellSize, chunk.cellSize);
+    const rectColor = RGBAColor.fromHex(cell.color.hex);
+    this.renderer.drawRect(x, y, chunk.cellSize, chunk.cellSize, rectColor);
 
-    this.context.fillStyle = cell.symbolColor;
-    this.context.fillText(
-      cell.symbol,
-      x + chunk.halfCellSize,
-      y + chunk.halfCellSize
-    );
+    const symbolColor = RGBAColor.fromHex(cell.symbolColor);
+    this.renderer.drawSchemaSymbol(cell.symbol, x, y, symbolColor);
   }
 
   private drawScale(chunk: Chunk) {
-    const canvas = this.context.canvas;
-
-    this.context.clearRect(0, 0, canvas.width, chunk.cellSize);
-    this.context.clearRect(0, 0, chunk.cellSize, canvas.height);
-
-    this.context.fillStyle = 'black';
-    this.context.textAlign = 'center';
-    this.context.font = 'bold 16px sans-serif';
-    this.context.textBaseline = 'middle';
+    const whiteColor = new RGBAColor(255, 255, 255, 255);
+    this.renderer.drawRect(0, 0, chunk.width, chunk.cellSize, whiteColor);
+    this.renderer.drawRect(0, 0, chunk.cellSize, chunk.height, whiteColor);
 
     chunk.forEachCellI((i, x) => {
-      const number = (i + 1).toString();
-      this.context.fillText(number, x + chunk.halfCellSize, chunk.halfCellSize);
+      this.renderer.drawBorderNumber(i, x, 0);
     });
 
     chunk.forEachCellJ((j, y) => {
-      const number = (j + 1).toString();
-      this.context.fillText(number, chunk.halfCellSize, y + chunk.halfCellSize);
+      this.renderer.drawBorderNumber(j, 0, y);
     });
   }
 
   private drawGrid(chunk: Chunk) {
-    this.context.clearRect(0, 0, chunk.cellSize, chunk.cellSize);
+    const whiteColor = new RGBAColor(255, 255, 255, 255);
+    this.renderer.drawRect(0, 0, chunk.cellSize, chunk.cellSize, whiteColor);
 
-    this.context.fillStyle = 'black';
-
-    this.context.lineWidth = 2.5;
-    this.context.beginPath();
-    this.context.moveTo(chunk.cellSize, 0);
-    this.context.lineTo(chunk.cellSize, chunk.height);
-    this.context.moveTo(0, chunk.cellSize);
-    this.context.lineTo(chunk.width, chunk.cellSize);
-    this.context.stroke();
-
-    this.context.lineWidth = 1.5;
-    this.context.beginPath();
-    chunk.forEachCellI((i, x) => {
-      if ((i + 1) % 9 === 0) {
-        x += chunk.cellSize;
-        this.context.moveTo(x, 0);
-        this.context.lineTo(x, chunk.height);
-      }
+    let color = new RGBAColor(0, 0, 0, 255);
+    let lineWidth = 2.5;
+    this.renderer.drawLine(chunk.cellSize, 0, chunk.cellSize, chunk.height, {
+      lineWidth,
+      color,
     });
-    chunk.forEachCellJ((j, y) => {
-      if ((j + 1) % 9 === 0) {
-        y += chunk.cellSize;
-        this.context.moveTo(0, y);
-        this.context.lineTo(chunk.width, y);
-      }
+    this.renderer.drawLine(0, chunk.cellSize, chunk.width, chunk.cellSize, {
+      lineWidth,
+      color,
     });
-    this.context.stroke();
 
-    this.context.lineWidth = 0.5;
-    this.context.beginPath();
+    color = new RGBAColor(50, 50, 50, 255);
+    lineWidth = 1;
     chunk.forEachCellI((i, x) => {
       if ((i + 1) % 9 !== 0) {
         x += chunk.cellSize;
-        this.context.moveTo(x, 0);
-        this.context.lineTo(x, chunk.height);
+        this.renderer.drawLine(x, 0, x, chunk.height, {
+          lineWidth,
+          color,
+        });
       }
     });
     chunk.forEachCellJ((j, y) => {
       if ((j + 1) % 9 !== 0) {
         y += chunk.cellSize;
-        this.context.moveTo(0, y);
-        this.context.lineTo(chunk.width, y);
+        this.renderer.drawLine(0, y, chunk.width, y, {
+          lineWidth,
+          color,
+        });
       }
     });
-    this.context.stroke();
+
+    lineWidth = 2;
+    chunk.forEachCellI((i, x) => {
+      if ((i + 1) % 9 === 0) {
+        x += chunk.cellSize;
+        this.renderer.drawLine(x, 0, x, chunk.height, {
+          lineWidth,
+          color,
+        });
+      }
+    });
+    chunk.forEachCellJ((j, y) => {
+      if ((j + 1) % 9 === 0) {
+        y += chunk.cellSize;
+        this.renderer.drawLine(0, y, chunk.width, y, {
+          lineWidth,
+          color,
+        });
+      }
+    });
   }
 
   private computeChunk() {
-    const canvas = this.context.canvas;
+    const canvas = this.canvas;
     const offset = this.getOffset();
     const canvasSize = new Vector2(canvas.width, canvas.height);
     return new Chunk(CELL_SIZE, this.cellsCount, canvasSize, offset);
   }
 
   private getOffset() {
-    return new Vector2(this.scrollArea.scrollLeft, this.scrollArea.scrollTop);
+    const clamp = (x: number, min: number, max: number) => {
+      return x < min ? min : x > max ? max : x;
+    };
+
+    const x = clamp(
+      this.scrollArea.scrollLeft,
+      0,
+      this.scrollArea.scrollWidth - this.scrollArea.clientWidth
+    );
+    const y = clamp(
+      this.scrollArea.scrollTop,
+      0,
+      this.scrollArea.scrollHeight - this.scrollArea.clientHeight
+    );
+    return new Vector2(x, y);
   }
 
   public destroy() {
@@ -579,8 +617,9 @@ export class SchemaCanvas<
 
     this._isDestroyed = true;
     this.detach();
-    this.context.canvas.remove();
+    this.canvas.remove();
     this.scrollArea.remove();
+    this.renderer.destroy();
 
     this.emit('destroy', {}) || this.onDestroy();
   }

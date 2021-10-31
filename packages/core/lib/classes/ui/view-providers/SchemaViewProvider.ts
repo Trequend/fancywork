@@ -83,6 +83,10 @@ export class SchemaViewProvider {
     }
   }
 
+  public getSymbols() {
+    return this.colorMap.map(({ symbol }) => symbol);
+  }
+
   protected getCellIndex(i: number, j: number) {
     const { width } = this.schema.metadata.canvasMetadata;
     return j * width + i;
