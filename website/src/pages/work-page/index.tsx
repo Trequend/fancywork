@@ -1,12 +1,12 @@
 import { WorkViewer } from '@fancywork/core-react';
-import { useDatabaseItem, useDatabase } from '@fancywork/storage-react';
+import { useDatabase, useDatabaseItem } from '@fancywork/storage-react';
 import { Result } from 'antd';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { FullscreenSpin } from 'src/components';
 import { useQueryParam } from 'src/hooks';
 import { AppPage } from 'src/types';
-import { WORK_PATHNAME } from './constants';
+import { AUTO_SAVE_TIMEOUT, WORK_PATHNAME } from './constants';
 
 export const WorkPage: AppPage = () => {
   const database = useDatabase();
@@ -36,16 +36,19 @@ export const WorkPage: AppPage = () => {
     return (
       <WorkViewer
         work={item}
+        autoSaveTimeout={AUTO_SAVE_TIMEOUT}
         onBack={() => {
           history.goBack();
         }}
         onSave={async () => {
-          await database.works.put(item);
+          if (item) {
+            await database.works.put(item);
+          }
         }}
       />
     );
   } else {
-    return <Result title="Error" subTitle="Unknown error" />;
+    return <FullscreenSpin />;
   }
 };
 

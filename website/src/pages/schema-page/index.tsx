@@ -41,7 +41,7 @@ export const SchemaPage: AppPage = () => {
       />
     );
   } else {
-    return <Result title="Error" subTitle="Unknown error" />;
+    return <FullscreenSpin />;
   }
 };
 

@@ -17,9 +17,9 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
   WorkViewProvider,
   EventMap
 > {
-  public eraseMode = false;
+  private eraseMode = false;
 
-  public penColorCode?: string;
+  private penColorCode?: string;
 
   protected drawCell(i: number, j: number, x: number, y: number, chunk: Chunk) {
     const prevented = super.drawCell(i, j, x, y, chunk);
@@ -48,6 +48,16 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
         this.renderer.drawSchemaSymbol(cell.symbol, x, y, color);
       }
     }
+  }
+
+  public setIsEraseMode(value: boolean) {
+    this.eraseMode = value;
+    this.requireRedraw();
+  }
+
+  public setPenColorCode(code?: string) {
+    this.penColorCode = code;
+    this.requireRedraw();
   }
 
   public scrollToNotEmbroidered(colorCode: string) {

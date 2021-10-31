@@ -1,8 +1,8 @@
 import { ClearOutlined, SaveOutlined } from '@ant-design/icons';
+import { Work, WorkCanvas, WorkViewProvider } from '@fancywork/core';
 import { Button, message, Tag } from 'antd';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
-import { WorkCanvas, WorkViewProvider, Work } from '@fancywork/core';
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Layout } from '../layout';
 import { WorkProgress } from '../work-progress';
 import { ColorsList } from './colors-list';
@@ -11,11 +11,17 @@ import { WorkViewerMenu } from './work-viewer-menu';
 
 type Props = {
   work: Work;
+  autoSaveTimeout?: number;
   onBack?: () => void;
   onSave?: () => Promise<void> | void;
 };
 
-export const WorkViewer: FC<Props> = ({ work, onBack, onSave }) => {
+export const WorkViewer: FC<Props> = ({
+  work,
+  autoSaveTimeout,
+  onBack,
+  onSave,
+}) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const viewProvider = useMemo(() => new WorkViewProvider(work), [work]);
   const [canvas, setCanvas] = useState<WorkCanvas>();
@@ -55,13 +61,13 @@ export const WorkViewer: FC<Props> = ({ work, onBack, onSave }) => {
 
   useEffect(() => {
     if (canvas) {
-      canvas.eraseMode = eraseMode;
-      canvas.penColorCode = penColorCode;
+      canvas.setIsEraseMode(eraseMode);
+      canvas.setPenColorCode(penColorCode);
     }
   }, [canvas, eraseMode, penColorCode]);
 
-  const save = async () => {
-    if (saving || !onSave) {
+  const save = useCallback(async () => {
+    if (!onSave) {
       return;
     }
 
@@ -80,7 +86,19 @@ export const WorkViewer: FC<Props> = ({ work, onBack, onSave }) => {
     } finally {
       setSaving(false);
     }
-  };
+  }, [onSave]);
+
+  useEffect(() => {
+    if (changed && autoSaveTimeout) {
+      const timeout = setTimeout(() => {
+        save();
+      }, autoSaveTimeout);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [changed, save, autoSaveTimeout]);
 
   return (
     <div className={styles.wrapper}>
@@ -126,12 +144,7 @@ export const WorkViewer: FC<Props> = ({ work, onBack, onSave }) => {
         extra={
           <>
             {sm ? (
-              <Button
-                type="primary"
-                loading={saving}
-                onClick={save}
-                icon={<SaveOutlined />}
-              >
+              <Button type="primary" onClick={save} icon={<SaveOutlined />}>
                 Save
               </Button>
             ) : null}
