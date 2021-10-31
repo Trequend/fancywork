@@ -105,6 +105,10 @@ export const WorkViewerMenu: FC<Props> = ({ work, viewProvider, onSave }) => {
           symbolResolver={(code) => {
             return viewProvider.getColorSymbol(code) ?? 'none';
           }}
+          stitchCountResolver={(code) => {
+            const statistics = viewProvider.getColorStatistics(code);
+            return `${statistics.embroideredCellsCount}/${statistics.cellsCount}`;
+          }}
           scroll={{ x: true }}
           pagination={{ simple: true }}
         />

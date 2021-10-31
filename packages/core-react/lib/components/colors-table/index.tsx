@@ -1,4 +1,4 @@
-import { Table, TableProps } from 'antd';
+import { Table, TableProps, Typography } from 'antd';
 import { ColumnGroupType, ColumnType } from 'antd/lib/table';
 import { palettes, HexColor, Palette } from '@fancywork/core';
 import { FC, useMemo } from 'react';
@@ -6,11 +6,13 @@ import { FC, useMemo } from 'react';
 type Props = {
   palette: Palette;
   symbolResolver?: (code: string) => string;
+  stitchCountResolver?: (code: string) => string;
 } & Omit<TableProps<any>, 'dataSource' | 'columns' | 'rowKey'>;
 
 export const ColorsTable: FC<Props> = ({
   palette,
   symbolResolver,
+  stitchCountResolver,
   ...rest
 }) => {
   const otherPalettes = useMemo(() => {
@@ -38,16 +40,31 @@ export const ColorsTable: FC<Props> = ({
         symbol: symbolResolver ? symbolResolver(color.code) : undefined,
         hex: color.hex,
         code: color.code,
+        stitchCount: stitchCountResolver
+          ? stitchCountResolver(color.code)
+          : undefined,
         analogs: getAnalogs(color.hex),
       };
     });
-  }, [palette, symbolResolver, otherPalettes]);
+  }, [palette, symbolResolver, stitchCountResolver, otherPalettes]);
 
-  const symbolColumn = symbolResolver
+  const symbolColumn: Array<ColumnType<any>> = symbolResolver
     ? [
         {
           title: 'Symbol',
           dataIndex: 'symbol',
+        },
+      ]
+    : [];
+
+  const stitchCountColumn: Array<ColumnType<any>> = stitchCountResolver
+    ? [
+        {
+          title: 'Stitch count',
+          dataIndex: 'stitchCount',
+          render: (value) => {
+            return <Typography.Text ellipsis>{value}</Typography.Text>;
+          },
         },
       ]
     : [];
@@ -74,6 +91,7 @@ export const ColorsTable: FC<Props> = ({
         );
       },
     },
+    ...stitchCountColumn,
     {
       title: palette.name,
       dataIndex: 'code',
