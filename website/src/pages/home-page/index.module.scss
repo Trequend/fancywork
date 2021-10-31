@@ -54,6 +54,7 @@
 .button {
   color: $primary-color;
   text-align: center;
+  font-size: 1.1em;
 
   &:hover {
     color: color.adjust($color: $primary-color, $lightness: 10%);
@@ -65,11 +66,6 @@
     &:hover {
       color: color.adjust($color: $primary-color, $lightness: 10%);
     }
-  }
-
-  &.disabled {
-    color: gray !important;
-    cursor: not-allowed;
   }
 }
 

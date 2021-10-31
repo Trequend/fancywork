@@ -17,18 +17,11 @@ export const HomePage: AppPage = () => {
       <main className={styles.main}>
         <div className={styles.buttons}>
           <Link
-            to="/#"
-            onClick={(event) => {
-              event.preventDefault();
-            }}
-            title="Continue"
-            aria-disabled="true"
-            className={`${styles.button} ${styles.disabled}`}
+            to={CREATE_SCHEMA_PATHNAME}
+            title="Create schema"
+            className={styles.button}
           >
-            Continue
-          </Link>
-          <Link to={WORKS_PATHNAME} title="My works" className={styles.button}>
-            My works
+            Create schema
           </Link>
           <Link
             to={SCHEMAS_PATHNAME}
@@ -37,15 +30,8 @@ export const HomePage: AppPage = () => {
           >
             My schemas
           </Link>
-          <Link
-            to={CREATE_SCHEMA_PATHNAME}
-            title="Create schema"
-            className={styles.button}
-          >
-            Create schema
-          </Link>
-          <Link to="/#" title="Settings" className={styles.button}>
-            Settings
+          <Link to={WORKS_PATHNAME} title="My works" className={styles.button}>
+            My works
           </Link>
         </div>
       </main>
