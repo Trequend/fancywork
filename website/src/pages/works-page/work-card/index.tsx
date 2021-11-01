@@ -1,8 +1,4 @@
-import {
-  DeleteOutlined,
-  EyeOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { WorkMetadata } from '@fancywork/core';
 import {
   DownloadButton,
@@ -16,14 +12,14 @@ import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { WORK_PATHNAME } from 'src/pages/work-page/constants';
 import styles from './index.module.scss';
+import { WorkSettingsButton } from './work-settings-button';
 
 type Props = {
   metadata: WorkMetadata;
   image?: WorkImage;
-  onDelete?: (id: string) => Promise<void> | void;
 };
 
-export const WorkCard: FC<Props> = ({ metadata, image, onDelete }) => {
+export const WorkCard: FC<Props> = ({ metadata, image }) => {
   const database = useDatabase();
   const history = useHistory();
 
@@ -31,13 +27,25 @@ export const WorkCard: FC<Props> = ({ metadata, image, onDelete }) => {
     <Card
       className={styles.root}
       actions={[
-        <SettingOutlined key="edit" />,
+        <WorkSettingsButton
+          key="settings"
+          metadata={metadata}
+          onChangeName={async (name: string) => {
+            const work = await database.works.get(metadata.id);
+            if (work) {
+              work.metadata.name = name;
+              await database.works.put(work);
+            } else {
+              throw new Error('No work');
+            }
+          }}
+        />,
         <Popconfirm
           title="Delete work"
           key="delete"
           okType="danger"
           onConfirm={async () => {
-            onDelete && (await onDelete(metadata.id));
+            await database.works.delete(metadata.id);
           }}
         >
           <DeleteOutlined />

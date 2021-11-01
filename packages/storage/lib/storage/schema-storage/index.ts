@@ -55,6 +55,21 @@ export class SchemaStorage extends BaseStorage<Map> {
     });
   }
 
+  public async put(schema: Schema) {
+    await this.dexie.transaction(
+      'rw',
+      [SCHEMAS_TABLE, SCHEMA_METADATA_TABLE],
+      () => {
+        this.table(SCHEMAS_TABLE)
+          .where({ [SchemaIndex.Id]: schema.metadata.id })
+          .modify(schema);
+        this.table(SCHEMA_METADATA_TABLE)
+          .where({ [SchemaMetadataIndex.Id]: schema.metadata.id })
+          .modify(schema.metadata);
+      }
+    );
+  }
+
   public collection(searchName?: string | null): IterableCollection<{
     metadata: SchemaMetadata;
     image: SchemaImage;

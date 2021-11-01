@@ -1,8 +1,4 @@
-import {
-  DeleteOutlined,
-  EyeOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { SchemaMetadata } from '@fancywork/core';
 import { DownloadButton, SchemaInfoTable } from '@fancywork/core-react';
 import { SchemaImage } from '@fancywork/storage';
@@ -13,14 +9,14 @@ import { useHistory } from 'react-router-dom';
 import { SCHEMA_PATHNAME } from 'src/pages/schema-page/constants';
 import { CreateWorkModal } from '../create-work-modal';
 import styles from './index.module.scss';
+import { SchemaSettingsButton } from './schema-settings-button';
 
 type Props = {
   metadata: SchemaMetadata;
   image?: SchemaImage;
-  onDelete?: (id: string) => Promise<void> | void;
 };
 
-export const SchemaCard: FC<Props> = ({ metadata, image, onDelete }) => {
+export const SchemaCard: FC<Props> = ({ metadata, image }) => {
   const database = useDatabase();
   const history = useHistory();
 
@@ -39,13 +35,25 @@ export const SchemaCard: FC<Props> = ({ metadata, image, onDelete }) => {
       <Card
         className={styles.root}
         actions={[
-          <SettingOutlined key="edit" />,
+          <SchemaSettingsButton
+            key="settings"
+            metadata={metadata}
+            onChangeName={async (name: string) => {
+              const schema = await database.schemas.get(metadata.id);
+              if (schema) {
+                schema.metadata.name = name;
+                await database.schemas.put(schema);
+              } else {
+                throw new Error('No schema');
+              }
+            }}
+          />,
           <Popconfirm
             title="Delete schema"
             key="delete"
             okType="danger"
             onConfirm={async () => {
-              onDelete && (await onDelete(metadata.id));
+              await database.schemas.delete(metadata.id);
             }}
           >
             <DeleteOutlined />

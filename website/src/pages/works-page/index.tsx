@@ -1,7 +1,6 @@
 import {
   DatabasePaginationLayout,
   Search,
-  useDatabase,
   useDatabasePagination,
 } from '@fancywork/storage-react';
 import { Col, Row } from 'antd';
@@ -12,11 +11,11 @@ import styles from './index.module.scss';
 import { WorkCard } from './work-card';
 
 const PAGE_SIZE = 10;
+
 const PARAM_NAME = 'search';
 
 export const WorksPage: AppPage = () => {
   const history = useHistory();
-  const database = useDatabase();
 
   const pagination = useDatabasePagination(PAGE_SIZE, (database) => {
     const params = new URLSearchParams(history.location.search);
@@ -45,14 +44,7 @@ export const WorksPage: AppPage = () => {
       <Row gutter={[24, 24]}>
         {pagination.data.map(({ metadata, image }) => (
           <Col span={24} md={12} key={metadata.id}>
-            <WorkCard
-              metadata={metadata}
-              image={image}
-              onDelete={async (id) => {
-                await database.works.delete(id);
-                pagination.refresh();
-              }}
-            />
+            <WorkCard metadata={metadata} image={image} />
           </Col>
         ))}
       </Row>
