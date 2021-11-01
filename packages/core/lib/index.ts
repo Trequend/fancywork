@@ -1,11 +1,11 @@
 export {
   AnimatedSchemaCanvas,
+  Animation,
   BezierCurve,
   BezierCurveRGB,
   BezierCurveRGBA,
-  CellAnimation,
   Chunk,
-  ContinuousCellAnimation,
+  ContinuousAnimation,
   EventEmitter,
   RGBAColor,
   RGBColor,
@@ -20,7 +20,8 @@ export {
 } from './classes';
 export type {
   AnimationContext,
-  DrawContext,
+  CellPredicate,
+  ContinuousAnimationOptions,
   DrawFunction,
   SchemaCanvasEventMap,
   ScrollToCellOptions,

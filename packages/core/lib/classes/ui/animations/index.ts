@@ -1,3 +1,8 @@
-export { CellAnimation, ContinuousCellAnimation } from './base';
-export type { AnimationContext, DrawContext, DrawFunction } from './base';
+export { Animation, ContinuousAnimation } from './base';
+export type {
+  AnimationContext,
+  DrawFunction,
+  ContinuousAnimationOptions,
+  CellPredicate,
+} from './base';
 export { BezierCurve, BezierCurveRGB, BezierCurveRGBA } from './bezier-curve';

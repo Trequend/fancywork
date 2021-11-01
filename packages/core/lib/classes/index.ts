@@ -16,12 +16,12 @@ export {
 } from './palette';
 export {
   AnimatedSchemaCanvas,
+  Animation,
   BezierCurve,
   BezierCurveRGB,
   BezierCurveRGBA,
-  CellAnimation,
   Chunk,
-  ContinuousCellAnimation,
+  ContinuousAnimation,
   SchemaCanvas,
   SchemaViewProvider,
   WorkCanvas,
@@ -29,7 +29,8 @@ export {
 } from './ui';
 export type {
   AnimationContext,
-  DrawContext,
+  CellPredicate,
+  ContinuousAnimationOptions,
   DrawFunction,
   SchemaCanvasEventMap,
   ScrollToCellOptions,

@@ -1,4 +1,7 @@
-export { CellAnimation } from './CellAnimation';
-export type { AnimationContext, DrawContext } from './CellAnimation';
-export { ContinuousCellAnimation } from './ContinuousCellAnimation';
-export type { DrawFunction } from './ContinuousCellAnimation';
+export { Animation } from './Animation';
+export type { AnimationContext, CellPredicate } from './Animation';
+export { ContinuousAnimation } from './ContinuousAnimation';
+export type {
+  ContinuousAnimationOptions,
+  DrawFunction,
+} from './ContinuousAnimation';

@@ -1,4 +1,4 @@
-import { AnimationContext, CellAnimation, DrawContext } from '../animations';
+import { AnimationContext, Animation } from '../animations';
 import { Chunk } from '../Chunk';
 import { SchemaViewProvider } from '../view-providers';
 import { SchemaCanvas, SchemaCanvasEventMap } from './SchemaCanvas';
@@ -7,22 +7,25 @@ export abstract class AnimatedSchemaCanvas<
   Provider extends SchemaViewProvider = SchemaViewProvider,
   EventMap extends SchemaCanvasEventMap = SchemaCanvasEventMap
 > extends SchemaCanvas<Provider, EventMap> {
-  private readonly cellAnimations: Record<string, CellAnimation<Provider>> = {};
+  private animations: Array<Animation<Provider>> = [];
 
-  private readonly drawContext: DrawContext<Provider> = {
+  private readonly context: AnimationContext<Provider> = {
     renderer: this.renderer,
     requireRedraw: this.requireRedraw.bind(this),
     viewProvider: this.viewProvider,
   };
 
   protected drawCell(i: number, j: number, x: number, y: number, chunk: Chunk) {
-    const key = this.getCellKey(i, j);
-    const animation = this.cellAnimations[key];
-    if (animation) {
+    const animationIndex = this.animations.findIndex(
+      ({ cellPredicate }) => cellPredicate && cellPredicate(i, j)
+    );
+
+    if (animationIndex !== -1) {
+      const animation = this.animations[animationIndex];
       if (animation.finished) {
-        delete this.cellAnimations[key];
+        this.animations.splice(animationIndex, 1);
       } else {
-        animation.draw(x, y, chunk, this.drawContext);
+        animation.draw(i, j, x, y, chunk, this.context);
 
         // Stop propagation
         return true;
@@ -31,57 +34,41 @@ export abstract class AnimatedSchemaCanvas<
   }
 
   protected postRender(chunk: Chunk) {
-    const keys = Object.keys(this.cellAnimations);
-    keys.forEach((key) => {
-      const animation = this.cellAnimations[key];
+    const animations = [...this.animations];
+    animations.forEach((animation, index) => {
       if (animation.finished) {
-        delete this.cellAnimations[key];
+        this.animations.splice(index, 1);
       } else {
-        animation.postRender(chunk, this.drawContext);
+        animation.postRender(chunk, this.context);
       }
     });
   }
 
-  public startCellAnimation<
-    Animation extends new (
+  public startAnimation<
+    A extends new (
       context: AnimationContext<Provider>,
       ...args: any[]
-    ) => CellAnimation<Provider>
+    ) => Animation<Provider>
   >(
-    animation: Animation,
-    i: number,
-    j: number,
-    ...args: Animation extends new (
+    animation: A,
+    ...args: A extends new (
       context: AnimationContext<Provider>,
       ...args: infer U
-    ) => CellAnimation<Provider>
+    ) => Animation<Provider>
       ? U
       : any[]
   ) {
-    const key = this.getCellKey(i, j);
-    const cell = { i, j };
-    if (this.cellAnimations[key]) {
-      this.stopCellAnimation(i, j);
-    }
-
-    this.cellAnimations[key] = new animation(
-      {
-        cell,
-        drawContext: this.drawContext,
-      },
-      ...args
-    );
+    this.animations.unshift(new animation(this.context, ...args));
   }
 
-  public stopCellAnimation(i: number, j: number) {
-    const key = this.getCellKey(i, j);
-    const animation = this.cellAnimations[key];
-    if (animation) {
-      animation.stop();
-    }
-  }
-
-  private getCellKey(i: number, j: number) {
-    return `${i}+${j}`;
+  public stopAnimation(
+    animation: new (
+      context: AnimationContext<Provider>,
+      ...args: any[]
+    ) => Animation<Provider>
+  ) {
+    this.animations = this.animations.filter((value) => {
+      return !(value instanceof animation);
+    });
   }
 }

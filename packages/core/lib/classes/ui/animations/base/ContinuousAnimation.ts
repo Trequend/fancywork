@@ -1,27 +1,31 @@
+import { CellPredicate } from '.';
 import { Chunk } from '../../Chunk';
 import { SchemaViewProvider } from '../../view-providers';
-import { AnimationContext, CellAnimation } from './CellAnimation';
+import { AnimationContext, Animation } from './Animation';
 
 export type DrawFunction = (
   x: number,
   y: number,
   options: {
+    i: number;
+    j: number;
     time: number;
     deltaTime: number;
     chunk: Chunk;
   }
 ) => void;
 
-export type ContinuousCellAnimationOptions = {
+export type ContinuousAnimationOptions = {
   delay?: number;
   trigger?: 'appear';
   duration?: number;
   draw: DrawFunction;
+  cellPredicate?: CellPredicate;
 };
 
-export abstract class ContinuousCellAnimation<
+export abstract class ContinuousAnimation<
   Provider extends SchemaViewProvider
-> extends CellAnimation<Provider> {
+> extends Animation<Provider> {
   private started = false;
 
   private startTime?: number;
@@ -32,9 +36,13 @@ export abstract class ContinuousCellAnimation<
 
   public constructor(
     context: AnimationContext<Provider>,
-    private readonly options: ContinuousCellAnimationOptions
+    private options?: ContinuousAnimationOptions
   ) {
-    super(context);
+    super(context, options?.cellPredicate);
+    if (!options) {
+      this.finish();
+      return;
+    }
 
     this.validate(options);
 
@@ -49,7 +57,7 @@ export abstract class ContinuousCellAnimation<
     }
   }
 
-  private validate(options: ContinuousCellAnimationOptions) {
+  private validate(options: ContinuousAnimationOptions) {
     if (options.delay && options.delay < 0) {
       throw new RangeError('delay must be in range [0, infinity]');
     }
@@ -59,7 +67,11 @@ export abstract class ContinuousCellAnimation<
     }
   }
 
-  public draw(x: number, y: number, chunk: Chunk) {
+  public draw(i: number, j: number, x: number, y: number, chunk: Chunk) {
+    if (!this.options) {
+      return;
+    }
+
     let deltaTime: number;
     if (this.started) {
       deltaTime = performance.now() - this.lastFrameTime!;
@@ -74,15 +86,21 @@ export abstract class ContinuousCellAnimation<
     const time = performance.now() - this.startTime!;
 
     this.options.draw(x, y, {
+      i,
+      j,
       time,
       deltaTime,
       chunk,
     });
 
-    this.drawContext.requireRedraw();
+    this.context.requireRedraw();
   }
 
   private start() {
+    if (!this.options) {
+      return;
+    }
+
     this.started = true;
     this.startTime = performance.now();
     this.lastFrameTime = performance.now();

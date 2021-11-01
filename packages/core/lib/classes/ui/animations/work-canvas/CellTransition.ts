@@ -1,75 +1,70 @@
-import { RGBAColor, RGBColor } from '../../../common';
+import { RGBAColor } from '../../../common';
 import { WorkViewProvider } from '../../view-providers';
-import { AnimationContext, ContinuousCellAnimation } from '../base';
-import { BezierCurveRGB, BezierCurveRGBA } from '../bezier-curve';
+import { AnimationContext, ContinuousAnimation } from '../base';
+import { BezierCurveRGBA } from '../bezier-curve';
+import { CELL_FOREGROUND_COLOR } from './constants';
 
-type CellTransitionOptions = {
-  mode: 'fade-in' | 'fade-out';
-  duration: number;
-};
-
-export class CellTransition extends ContinuousCellAnimation<WorkViewProvider> {
+export class CellTransition extends ContinuousAnimation<WorkViewProvider> {
   constructor(
     context: AnimationContext<WorkViewProvider>,
-    options: CellTransitionOptions
+    options: {
+      i: number;
+      j: number;
+      mode: 'embroider' | 'erase';
+      fromColor: RGBAColor;
+      toColor: RGBAColor;
+    }
   ) {
-    const data = CellTransition.prepare(context, options);
-    if (!data) {
+    const duration = 150;
+    const { renderer, viewProvider } = context;
+    const cell = viewProvider.getCell(options.i, options.j);
+    if (!cell) {
+      super(context);
       return;
     }
 
-    const { colorCurve, symbolColorCurve, symbol } = data;
-    const { renderer } = context.drawContext;
-
-    super(context, {
-      duration: options.duration,
-      draw: (x, y, { time, chunk }) => {
-        const color = colorCurve.evaluate(time / options.duration);
-        renderer.drawRect(x, y, chunk.cellSize, chunk.cellSize, color);
-
-        const symbolColor = symbolColorCurve.evaluate(time / options.duration);
-        renderer.drawSchemaSymbol(symbol, x, y, symbolColor);
-      },
-    });
-  }
-
-  private static prepare(
-    context: AnimationContext<WorkViewProvider>,
-    options: CellTransitionOptions
-  ) {
-    const { cell, drawContext } = context;
-    const { viewProvider } = drawContext;
-    const cellInfo = viewProvider.getCell(cell.i, cell.j);
-    if (!cellInfo) {
-      return;
-    }
-
-    const fromColor =
-      options.mode === 'fade-in'
-        ? new RGBColor(255, 255, 255)
-        : RGBColor.fromHex(cellInfo.color.hex);
-    const toColor =
-      options.mode === 'fade-in'
-        ? RGBColor.fromHex(cellInfo.color.hex)
-        : new RGBColor(255, 255, 255);
-    const colorCurve = new BezierCurveRGB([fromColor, toColor]);
-
-    const { symbol } = cellInfo;
-    const visibleSymbolColor = new RGBAColor(0, 0, 0, 255);
-    const invisibleSymbolColor = new RGBAColor(0, 0, 0, 0);
-    const fromSymbolColor =
-      options.mode === 'fade-in' ? visibleSymbolColor : invisibleSymbolColor;
-    const toSymbolColor =
-      options.mode === 'fade-in' ? invisibleSymbolColor : visibleSymbolColor;
-    const symbolColorCurve = new BezierCurveRGBA([
-      fromSymbolColor,
-      toSymbolColor,
+    const colorCurve = new BezierCurveRGBA([
+      options.fromColor,
+      options.toColor,
     ]);
 
-    return {
-      symbol,
-      colorCurve,
-      symbolColorCurve,
-    };
+    const { symbol } = cell;
+    const transparent = new RGBAColor(0, 0, 0, 0);
+    const symbolColor = CELL_FOREGROUND_COLOR;
+    const symbolColorFrom =
+      options.mode === 'embroider' ? symbolColor : transparent;
+    const symbolColorTo =
+      options.mode === 'embroider' ? transparent : symbolColor;
+    const symbolColorCurve = new BezierCurveRGBA([
+      symbolColorFrom,
+      symbolColorTo,
+    ]);
+
+    super(context, {
+      duration,
+      draw: (x, y, { time, chunk }) => {
+        const color = colorCurve.evaluate(time / duration);
+        renderer.drawRect(x, y, chunk.cellSize, chunk.cellSize, color);
+
+        const symbolColor = symbolColorCurve.evaluate(time / duration);
+        renderer.drawSchemaSymbol(symbol, x, y, symbolColor);
+      },
+      cellPredicate: (i, j) => {
+        if (i !== options.i || j !== options.j) {
+          return false;
+        }
+
+        const cell = viewProvider.getCell(i, j);
+        if (cell) {
+          const { mode } = options;
+          return (
+            (cell.embroidered && mode === 'embroider') ||
+            (!cell.embroidered && mode === 'erase')
+          );
+        } else {
+          return false;
+        }
+      },
+    });
   }
 }

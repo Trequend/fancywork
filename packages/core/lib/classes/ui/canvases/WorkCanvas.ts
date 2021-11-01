@@ -1,6 +1,11 @@
+import { PaletteColor, SchemaCell } from 'lib/types';
 import { RGBAColor } from '../../common';
-import { SchemaCell } from 'lib/types';
-import { CellTransition } from '../animations/work-canvas';
+import {
+  CellTransition,
+  CELL_BACKGROUND_COLOR,
+  ColorSelection,
+  SELECTED_CELL_BACKGROUND_COLOR,
+} from '../animations/work-canvas';
 import { Chunk } from '../Chunk';
 import { WorkViewProvider } from '../view-providers';
 import { AnimatedSchemaCanvas } from './AnimatedSchemaCanvas';
@@ -56,8 +61,26 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
   }
 
   public setPenColorCode(code?: string) {
+    if (this.penColorCode === code) {
+      return;
+    }
+
+    if (this.penColorCode) {
+      this.stopAnimation(ColorSelection);
+      this.startAnimation(ColorSelection, {
+        mode: 'out',
+        code: this.penColorCode,
+      });
+    }
+
     this.penColorCode = code;
     this.requireRedraw();
+    if (code) {
+      this.startAnimation(ColorSelection, {
+        mode: 'in',
+        code,
+      });
+    }
   }
 
   public scrollToNotEmbroidered(colorCode: string) {
@@ -111,38 +134,45 @@ export class WorkCanvas extends AnimatedSchemaCanvas<
     }
 
     if (schemaCell.embroidered && this.eraseMode) {
-      this.eraseCell(i, j);
+      this.eraseCell(i, j, schemaCell.color);
       return true;
     } else if (!schemaCell.embroidered && !this.eraseMode) {
-      this.embroiderСell(i, j);
+      this.embroiderСell(i, j, schemaCell.color);
       return true;
     }
 
     return false;
   }
 
-  private eraseCell(i: number, j: number) {
+  private eraseCell(i: number, j: number, color: PaletteColor) {
     this.viewProvider.eraseCell(i, j);
-    this.forceUpdateCell(i, j);
-    this.startCellAnimation(CellTransition, i, j, {
-      mode: 'fade-out',
-      duration: 100,
+    this.requireRedraw();
+    this.startAnimation(CellTransition, {
+      i,
+      j,
+      mode: 'erase',
+      fromColor: RGBAColor.fromHex(color.hex),
+      toColor:
+        color.code === this.penColorCode
+          ? SELECTED_CELL_BACKGROUND_COLOR
+          : CELL_BACKGROUND_COLOR,
     });
     this.emit('cellErased', { i, j });
   }
 
-  private embroiderСell(i: number, j: number) {
+  private embroiderСell(i: number, j: number, color: PaletteColor) {
     this.viewProvider.embroiderСell(i, j);
-    this.forceUpdateCell(i, j);
-    this.startCellAnimation(CellTransition, i, j, {
-      mode: 'fade-in',
-      duration: 100,
+    this.requireRedraw();
+    this.startAnimation(CellTransition, {
+      i,
+      j,
+      mode: 'embroider',
+      fromColor:
+        color.code === this.penColorCode
+          ? SELECTED_CELL_BACKGROUND_COLOR
+          : CELL_BACKGROUND_COLOR,
+      toColor: RGBAColor.fromHex(color.hex),
     });
     this.emit('cellEmbroidered', { i, j });
-  }
-
-  private forceUpdateCell(i: number, j: number) {
-    this.stopCellAnimation(i, j);
-    this.requireRedraw();
   }
 }
