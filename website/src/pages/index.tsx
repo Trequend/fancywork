@@ -1,4 +1,4 @@
-import { AppPage } from 'src/types';
+import { AppPage } from '../types';
 import { CreateSchemePage } from './create-schema-page';
 import { HomePage } from './home-page';
 import { SchemaPage } from './schema-page';

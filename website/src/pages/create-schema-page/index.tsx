@@ -4,8 +4,8 @@ import { useDatabase } from '@fancywork/storage-react';
 import { Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { BasicLayout, FullscreenSpin, Stages } from 'src/components';
-import { AppPage } from 'src/types';
+import { BasicLayout, FullscreenSpin, Stages } from '../../components';
+import { AppPage } from '../../types';
 import { SCHEMAS_PATHNAME } from '../schemas-page/constants';
 import { CREATE_SCHEMA_PATHNAME } from './constants';
 import {

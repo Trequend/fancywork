@@ -1,7 +1,7 @@
 import { WorkMetadata } from '@fancywork/core';
 import { Button, Form, Input } from 'antd';
 import { FC } from 'react';
-import { ModalForm } from 'src/components';
+import { ModalForm } from '../../../../../components';
 import styles from './index.module.scss';
 
 type Props = {

@@ -10,7 +10,7 @@ import { useDatabase } from '@fancywork/storage-react';
 import { Button, Card, Image, Popconfirm } from 'antd';
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { WORK_PATHNAME } from 'src/pages/work-page/constants';
+import { WORK_PATHNAME } from '../../work-page/constants';
 import styles from './index.module.scss';
 import { WorkSettingsButton } from './work-settings-button';
 

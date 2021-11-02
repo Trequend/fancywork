@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import logo from 'src/assets/logo.svg';
-import { AppPage } from 'src/types';
+import logo from '../../assets/logo.svg';
+import { AppPage } from '../../types';
 import { CREATE_SCHEMA_PATHNAME } from '../create-schema-page/constants';
 import { SCHEMAS_PATHNAME } from '../schemas-page/constants';
 import { WORKS_PATHNAME } from '../works-page/constants';

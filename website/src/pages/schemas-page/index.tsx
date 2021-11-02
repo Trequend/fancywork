@@ -5,7 +5,7 @@ import {
 } from '@fancywork/storage-react';
 import { Col, Row } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { AppPage } from 'src/types';
+import { AppPage } from '../../types';
 import { SCHEMAS_PATHNAME } from './constants';
 import styles from './index.module.scss';
 import { SchemaCard } from './schema-card';

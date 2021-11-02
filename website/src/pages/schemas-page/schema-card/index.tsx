@@ -6,7 +6,7 @@ import { useDatabase } from '@fancywork/storage-react';
 import { Button, Card, Image, Popconfirm } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { SCHEMA_PATHNAME } from 'src/pages/schema-page/constants';
+import { SCHEMA_PATHNAME } from '../../schema-page/constants';
 import { CreateWorkModal } from '../create-work-modal';
 import styles from './index.module.scss';
 import { SchemaSettingsButton } from './schema-settings-button';

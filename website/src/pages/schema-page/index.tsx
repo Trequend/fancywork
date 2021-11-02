@@ -3,9 +3,9 @@ import { useDatabaseItem } from '@fancywork/storage-react';
 import { Result } from 'antd';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router';
-import { FullscreenSpin } from 'src/components';
-import { useQueryParam } from 'src/hooks';
-import { AppPage } from 'src/types';
+import { FullscreenSpin } from '../../components';
+import { useQueryParam } from '../../hooks';
+import { AppPage } from '../../types';
 import { SCHEMA_PATHNAME } from './constants';
 
 export const SchemaPage: AppPage = () => {
