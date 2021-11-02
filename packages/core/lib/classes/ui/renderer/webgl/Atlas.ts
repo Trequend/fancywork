@@ -31,8 +31,8 @@ export class Atlas {
     canvas.width = width;
     canvas.height = height;
 
-    const fontSize = `${14 * devicePixelRatio}px`;
-    const fontFamily = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`;
+    const fontSize = `${15 * devicePixelRatio}px`;
+    const fontFamily = `sans-serif`;
 
     context.fillStyle = '#fff';
     context.textAlign = 'center';
