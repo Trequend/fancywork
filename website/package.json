@@ -1,15 +1,27 @@
 {
   "name": "website",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "run-s test:lint",
-    "test:lint": "eslint src --ext .js,.jsx,.ts,.tsx && stylelint src/**/*.scss",
-    "test:cli": "craco test",
-    "pre-commit": "run-s test build",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test": "run-s test-lint",
+    "test-cli": "craco test",
+    "test-lint": "eslint src --ext .js,.jsx,.ts,.tsx && stylelint src/**/*.scss",
+    "pre-commit": "run-s test build"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "eslintConfig": {
     "extends": [
@@ -43,25 +55,13 @@
       ]
     }
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@craco/craco": "^6.3.0",
-    "@fancywork/core": "*",
-    "@fancywork/core-react": "*",
-    "@fancywork/storage": "*",
-    "@fancywork/storage-react": "*",
+    "@fancywork/core": "workspace:*",
+    "@fancywork/core-react": "workspace:*",
+    "@fancywork/storage": "workspace:*",
+    "@fancywork/storage-react": "workspace:*",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -69,13 +69,18 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.1.8",
     "antd": "^4.16.13",
+    "eslint": "7.32.0",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.3.11",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
     "sass": "^1.38.2",
+    "stylelint": "^14.0.0",
+    "stylelint-config-standard-scss": "^2.0.0",
     "typescript": "4.3.5",
     "web-vitals": "^1.0.1",
     "workbox-background-sync": "^5.1.4",
@@ -90,10 +95,5 @@
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4",
     "workbox-streams": "^5.1.4"
-  },
-  "devDependencies": {
-    "@types/react-router-dom": "^5.1.8",
-    "stylelint": "^14.0.0",
-    "stylelint-config-standard-scss": "^2.0.0"
   }
 }

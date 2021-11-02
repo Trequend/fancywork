@@ -2,39 +2,42 @@
   "name": "root",
   "private": true,
   "description": "Progressive web application for fancywork",
-  "author": "Dmitry Balakin",
   "keywords": [
     "PWA",
     "React",
     "Fancywork"
   ],
+  "bugs": {
+    "url": "https://github.com/Trequend/fancywork/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Trequend/fancywork.git"
   },
-  "bugs": {
-    "url": "https://github.com/Trequend/fancywork/issues"
-  },
+  "author": "Dmitry Balakin",
   "workspaces": [
     "packages/*",
     "website"
   ],
   "scripts": {
-    "prepare": "husky install && run-s build:packages",
-    "start-all": "concurrently -k \"yarn:start:*\"",
-    "start-all:core": "concurrently -k \"yarn:start:website\" \"yarn:start:core*\"",
-    "start-all:storage": "concurrently -k \"yarn:start:website\" \"yarn:start:storage*\"",
-    "start:website": "yarn workspace website run start",
-    "start:core": "yarn workspace @fancywork/core run start",
-    "start:core-react": "yarn workspace @fancywork/core-react run start",
-    "start:storage": "yarn workspace @fancywork/storage run start",
-    "start:storage-react": "yarn workspace @fancywork/storage-react run start",
-    "build": "lerna run build --stream",
-    "build:packages": "lerna run --scope=@fancywork/* build --stream",
+    "build": "yarn workspaces foreach -piv --topological-dev run build",
+    "build-packages": "yarn workspaces foreach -piv --topological-dev --include '@fancywork/*' run build",
     "commitlint": "commitlint",
     "fmt": "prettier --write .",
-    "test": "prettier --check . && lerna run test --stream",
-    "pre-commit": "prettier --check . && lerna run pre-commit --stream"
+    "postinstall": "husky install && yarn run build-packages",
+    "pre-commit": "prettier --check . && yarn workspaces foreach -piv --topological-dev run pre-commit",
+    "start": "yarn run build-packages && concurrently -k \"yarn:start-*\"",
+    "start-core": "yarn workspace @fancywork/core run start",
+    "start-core-react": "yarn workspace @fancywork/core-react run start",
+    "start-storage": "yarn workspace @fancywork/storage run start",
+    "start-storage-react": "yarn workspace @fancywork/storage-react run start",
+    "start-website": "yarn workspace website run start",
+    "test": "prettier --check . && yarn workspaces foreach -piv --topological-dev run test"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "config": {
     "commitizen": {
@@ -44,21 +47,15 @@
       "config": "./cz.js"
     }
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
   "devDependencies": {
-    "lerna": "^4.0.0",
-    "npm-run-all": "^4.1.5",
     "prettier": "2.3.2"
   },
   "optionalDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
+    "concurrently": "^6.3.0",
     "cz-customizable": "^6.3.0",
-    "husky": "^7.0.2",
-    "concurrently": "^6.3.0"
-  }
+    "husky": "^7.0.2"
+  },
+  "packageManager": "yarn@3.1.0"
 }

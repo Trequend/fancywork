@@ -1,27 +1,33 @@
 {
   "name": "@fancywork/storage",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "start": "rollup -c -w",
     "build": "rollup -c",
-    "test": "run-s test:lint test:build",
-    "test:lint": "eslint lib --ext .ts",
-    "test:build": "run-s build",
+    "test": "run-s test-lint test-build",
+    "test-lint": "eslint lib --ext .ts",
+    "test-build": "run-s build",
     "pre-commit": "run-s test"
   },
-  "peerDependencies": {
-    "@fancywork/core": "*"
-  },
   "devDependencies": {
+    "@fancywork/core": "workspace:*",
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@rollup/plugin-typescript": "^8.3.0",
-    "@fancywork/core": "*",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
     "antd": "^4.16.13",
     "dexie": "^3.0.3",
     "dexie-observable": "^3.0.0-beta.11",
-    "rollup": "^2.59.0"
+    "eslint": "^8.1.0",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.59.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.4"
+  },
+  "peerDependencies": {
+    "@fancywork/core": "workspace:*"
   }
 }
