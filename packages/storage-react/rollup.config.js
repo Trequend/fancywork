@@ -19,9 +19,7 @@ const config = {
     {
       name: 'watch-external',
       buildStart() {
-        const core = require.resolve('@fancywork/core');
         const storage = require.resolve('@fancywork/storage');
-        this.addWatchFile(core);
         this.addWatchFile(storage);
       },
     },
