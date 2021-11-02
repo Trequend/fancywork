@@ -1,2 +1,2 @@
 export { Database } from './database';
-export type { SchemaImage, WorkImage, IterableCollection } from './types';
+export type { IterableCollection, SchemaImage, WorkImage } from './types';

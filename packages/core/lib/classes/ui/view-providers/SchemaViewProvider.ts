@@ -1,5 +1,5 @@
-import { getContrastColor } from 'lib/functions';
-import { Schema } from 'lib/types';
+import { getContrastColor } from '../../../functions';
+import { Schema } from '../../../types';
 
 const ALPHABET = [
   '0',

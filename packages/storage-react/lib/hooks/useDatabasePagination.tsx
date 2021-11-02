@@ -1,6 +1,6 @@
-import { useDatabase } from 'lib/components';
 import { Database, IterableCollection } from '@fancywork/storage';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDatabase } from '../components/hooks';
 import { useSearchParam } from './useSearchParam';
 
 export type DatabasePagination<T> = {

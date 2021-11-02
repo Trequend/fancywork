@@ -1,5 +1,5 @@
 import { MAX_TEXTURE_HEIGHT, MAX_TEXTURE_WIDTH } from './constants';
-import { WebGL } from 'lib/types';
+import { WebGL } from './WebGL';
 
 export class Texture {
   private id: WebGLTexture | null;

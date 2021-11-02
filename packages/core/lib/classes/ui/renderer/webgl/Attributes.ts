@@ -1,6 +1,6 @@
-import { WebGL } from 'lib/types';
 import { Attribute } from './Attribute';
 import { AttributeType } from './AttributeType';
+import { WebGL } from './WebGL';
 
 export class Attributes {
   public readonly storage: Readonly<Array<Attribute>>;

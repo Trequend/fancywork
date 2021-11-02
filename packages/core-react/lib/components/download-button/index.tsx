@@ -1,5 +1,5 @@
-import { Button, ButtonProps, Popover } from 'antd';
 import { downloadSchema, Schema } from '@fancywork/core';
+import { Button, ButtonProps, Popover } from 'antd';
 import { FC, useState } from 'react';
 
 export type DownloadButtonProps = {

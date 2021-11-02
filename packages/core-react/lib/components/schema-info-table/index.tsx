@@ -1,6 +1,6 @@
+import { convertSize, SchemaMetadata } from '@fancywork/core';
 import { Table, TableProps, Typography } from 'antd';
 import { ColumnType } from 'antd/lib/table';
-import { SchemaMetadata, convertSize } from '@fancywork/core';
 import { FC } from 'react';
 
 type Props = {

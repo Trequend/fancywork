@@ -1,7 +1,7 @@
 import { Input } from 'antd';
 import { SearchProps as AntdSearchProps } from 'antd/lib/input';
-import { useSearchParam } from 'lib/hooks';
 import { FC } from 'react';
+import { useSearchParam } from '../../hooks';
 import styles from './index.module.scss';
 
 export type SearchProps = {

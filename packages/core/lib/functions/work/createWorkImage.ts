@@ -1,5 +1,5 @@
-import { RGBColor } from 'lib/classes';
-import { Work } from 'lib/types';
+import { RGBColor } from '../../classes/common';
+import { Work } from '../../types';
 import { executeInCanvasContext, processImageInCanvas } from '../utils';
 
 export async function createWorkImage(work: Work): Promise<string> {

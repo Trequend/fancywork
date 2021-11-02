@@ -1,8 +1,10 @@
-import { WebGL } from 'lib/types';
 import { IndexBuffer } from '../webgl';
 
 export class WebGL1IndexBuffer extends IndexBuffer {
-  public constructor(gl: WebGL, indices: Uint8Array | Uint16Array) {
+  public constructor(
+    gl: WebGLRenderingContext,
+    indices: Uint8Array | Uint16Array
+  ) {
     let type: number;
     if (indices instanceof Uint8Array) {
       type = gl.UNSIGNED_BYTE;

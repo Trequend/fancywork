@@ -1,4 +1,4 @@
-import { PaletteColor } from 'lib/types';
+import { PaletteColor } from '../../types';
 import { RGBColor } from '../common';
 
 export class Vertex {

@@ -1,12 +1,12 @@
 import { RGBAColor, RGBColor, Vector2 } from '../../../common';
-import { RendererData } from './RendererData';
 import { Renderer } from '../base';
-import { WebGL } from 'lib/types';
-import { Shader } from './Shader';
-import { ATLAS_TEX_INDEX, WHITE_TEX_INDEX } from './constants';
 import { Atlas } from './Atlas';
-import { Texture } from './Texture';
+import { ATLAS_TEX_INDEX, WHITE_TEX_INDEX } from './constants';
+import { RendererData } from './RendererData';
 import { SchemaInfo } from './SchemaInfo';
+import { Shader } from './Shader';
+import { Texture } from './Texture';
+import { WebGL } from './WebGL';
 
 export abstract class WebGLRenderer extends Renderer {
   private readonly atlas: Atlas;

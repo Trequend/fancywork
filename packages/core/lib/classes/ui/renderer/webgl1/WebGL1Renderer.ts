@@ -1,7 +1,7 @@
-import { Shader, WEBGL1_MAX_QUADS, WebGLRenderer, SchemaInfo } from '../webgl';
-import { WebGL1RendererData } from './WebGL1RendererData';
-import vertexShaderSource from './shaders/texture.vert.glsl';
+import { SchemaInfo, Shader, WEBGL1_MAX_QUADS, WebGLRenderer } from '../webgl';
 import fragmentShaderSource from './shaders/texture.frag.glsl';
+import vertexShaderSource from './shaders/texture.vert.glsl';
+import { WebGL1RendererData } from './WebGL1RendererData';
 
 export class WebGL1Renderer extends WebGLRenderer {
   public constructor(gl: WebGLRenderingContext, schemaInfo: SchemaInfo) {

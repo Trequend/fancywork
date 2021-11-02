@@ -1,9 +1,9 @@
+import { EventEmitter } from '@fancywork/core';
 import Dexie from 'dexie';
 import 'dexie-observable';
-import { EventEmitter } from '@fancywork/core';
-import { SchemaStorage, WorkStorage } from 'lib/storage';
-import { config } from './config';
 import { IDatabaseChange } from 'dexie-observable/api';
+import { SchemaStorage, WorkStorage } from '../storage';
+import { config } from './config';
 
 const DB_NAME = 'fancywork';
 

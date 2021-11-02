@@ -1,7 +1,7 @@
 import { Attributes } from './Attributes';
-import { WebGL } from 'lib/types';
 import { AttributeType } from './AttributeType';
 import { FLOAT_BYTE_SIZE } from './constants';
+import { WebGL } from './WebGL';
 
 export abstract class VertexBuffer {
   protected id: WebGLBuffer | null;

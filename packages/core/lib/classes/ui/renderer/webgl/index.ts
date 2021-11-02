@@ -18,4 +18,5 @@ export type { SchemaInfo } from './SchemaInfo';
 export { Shader } from './Shader';
 export { Texture } from './Texture';
 export { VertexBuffer } from './VertexBuffer';
+export type { WebGL } from './WebGL';
 export { WebGLRenderer } from './WebGLRenderer';

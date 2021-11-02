@@ -1,4 +1,3 @@
-import { WebGL } from 'lib/types';
 import { RGBAColor, Vector2, Vector4 } from '../../../common';
 import { Attributes } from './Attributes';
 import {
@@ -8,6 +7,7 @@ import {
 } from './constants';
 import { IndexBuffer } from './IndexBuffer';
 import { VertexBuffer } from './VertexBuffer';
+import { WebGL } from './WebGL';
 
 export abstract class RendererData<
   W extends WebGL,

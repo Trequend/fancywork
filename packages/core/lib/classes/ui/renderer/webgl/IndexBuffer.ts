@@ -1,4 +1,4 @@
-import { WebGL } from 'lib/types';
+import { WebGL } from './WebGL';
 
 export class IndexBuffer {
   protected id: WebGLBuffer | null;

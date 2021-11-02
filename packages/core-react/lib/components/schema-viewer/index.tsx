@@ -1,4 +1,4 @@
-import { SchemaCanvas, SchemaViewProvider, Schema } from '@fancywork/core';
+import { Schema, SchemaCanvas, SchemaViewProvider } from '@fancywork/core';
 import { FC, useEffect, useRef } from 'react';
 import { Layout } from '../layout';
 import styles from './index.module.scss';

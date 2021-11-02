@@ -1,5 +1,5 @@
-import { Schema, Work } from 'lib/types';
 import { v4 as uuidv4 } from 'uuid';
+import { Schema, Work } from '../../types';
 
 export function createWork(name: string, schema: Schema): Work {
   const length = schema.grid.length;

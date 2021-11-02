@@ -1,4 +1,4 @@
-import { Palette } from 'lib/types';
+import { Palette } from '../../types';
 import { RGBColor } from '../common';
 import { PaletteReducer } from './PaletteReducer';
 import { Vertex } from './Vertex';

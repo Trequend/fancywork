@@ -1,5 +1,5 @@
 import Dexie, { Collection, Table } from 'dexie';
-import { IterableCollection } from 'lib/types';
+import { IterableCollection } from '../../types';
 
 export abstract class BaseStorage<Map> {
   protected constructor(protected readonly dexie: Dexie) {}

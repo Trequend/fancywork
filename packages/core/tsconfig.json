@@ -14,12 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "declaration": true,
-    "declarationDir": "./dist/types",
-    "declarationMap": true,
-    "baseUrl": "./lib",
-    "paths": {
-      "lib/*": ["./*"]
-    }
+    "declarationDir": "./types",
+    "declarationMap": true
   },
   "include": ["lib"],
   "exclude": ["node_modules", "dist"]

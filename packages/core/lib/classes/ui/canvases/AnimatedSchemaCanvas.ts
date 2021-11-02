@@ -1,4 +1,4 @@
-import { AnimationContext, Animation } from '../animations';
+import { Animation, AnimationContext } from '../animations';
 import { Chunk } from '../Chunk';
 import { SchemaViewProvider } from '../view-providers';
 import { SchemaCanvas, SchemaCanvasEventMap } from './SchemaCanvas';

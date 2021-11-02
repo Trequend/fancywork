@@ -1,5 +1,5 @@
-import { WebGL } from 'lib/types';
 import { AttributeType } from './AttributeType';
+import { WebGL } from './WebGL';
 
 export class Attribute {
   public readonly webglType: number;

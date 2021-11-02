@@ -1,6 +1,6 @@
 import { EllipsisOutlined } from '@ant-design/icons';
+import { createWorkImage, Work, WorkViewProvider } from '@fancywork/core';
 import { Button, Dropdown, Image, Menu, message, Modal, Spin } from 'antd';
-import { WorkViewProvider, createWorkImage, Work } from '@fancywork/core';
 import { FC, useState } from 'react';
 import { ColorsTable } from '../../colors-table';
 import { WorkInfoTable } from '../../work-info-table';

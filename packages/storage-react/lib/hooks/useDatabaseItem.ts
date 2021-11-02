@@ -1,6 +1,6 @@
-import { useDatabase } from 'lib/components';
 import { Database } from '@fancywork/storage';
 import { useEffect, useRef, useState } from 'react';
+import { useDatabase } from '../components/hooks';
 
 export function useDatabaseItem<T>(query: (database: Database) => Promise<T>) {
   const database = useDatabase();

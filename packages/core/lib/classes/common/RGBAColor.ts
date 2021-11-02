@@ -1,4 +1,4 @@
-import { HexColor } from 'lib/types';
+import { HexColor } from '../../types';
 
 export class RGBAColor {
   public readonly red: number;

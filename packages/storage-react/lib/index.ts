@@ -2,9 +2,9 @@ export {
   DatabasePaginationLayout,
   DatabaseProvider,
   Search,
-  useDatabase,
 } from './components';
 export type { DatabasePaginationLayoutProps, SearchProps } from './components';
+export { useDatabase } from './components/hooks';
 export {
   useDatabaseItem,
   useDatabasePagination,

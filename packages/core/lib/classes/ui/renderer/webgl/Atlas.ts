@@ -1,8 +1,8 @@
 import { Vector2 } from '../../../common';
-import { WebGL } from 'lib/types';
-import { SchemaInfo } from './SchemaInfo';
 import { MAX_TEXTURE_WIDTH } from './constants';
+import { SchemaInfo } from './SchemaInfo';
 import { Texture } from './Texture';
+import { WebGL } from './WebGL';
 
 export class Atlas {
   private readonly texture: Texture;

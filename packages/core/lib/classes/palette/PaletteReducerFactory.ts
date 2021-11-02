@@ -1,4 +1,4 @@
-import { PaletteReduceAlgorithm } from 'lib/types';
+import { PaletteReduceAlgorithm } from '../../types';
 import { AverageDistanceReducer } from './algorithms/AverageDistanceReducer';
 import { ContrastReducer } from './algorithms/ContrastReducer';
 import { NearestReducer } from './algorithms/NearestReducer';

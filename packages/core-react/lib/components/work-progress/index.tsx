@@ -1,5 +1,5 @@
-import { Progress, ProgressProps } from 'antd';
 import { WorkMetadata } from '@fancywork/core';
+import { Progress, ProgressProps } from 'antd';
 import { FC } from 'react';
 
 export type WorkProgressProps = {

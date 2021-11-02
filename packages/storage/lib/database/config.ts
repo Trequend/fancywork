@@ -6,7 +6,7 @@ import {
   SCHEMAS_TABLE,
   SCHEMA_IMAGES_TABLE,
   SCHEMA_METADATA_TABLE,
-} from 'lib/storage/schema-storage';
+} from '../storage/schema-storage';
 import {
   WorkImageIndex,
   WorkIndex,
@@ -14,7 +14,7 @@ import {
   WORKS_TABLE,
   WORK_IMAGES_TABLE,
   WORK_METADATA_TABLE,
-} from 'lib/storage/work-stroage';
+} from '../storage/work-stroage';
 
 export function config(dexie: Dexie) {
   dexie.version(1).stores({

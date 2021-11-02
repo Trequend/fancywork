@@ -1,4 +1,4 @@
-import { Schema } from 'lib/types';
+import { Schema } from '../../types';
 
 export function downloadSchema(schema: Schema, minimized?: boolean) {
   const json = JSON.stringify(

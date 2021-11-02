@@ -1,4 +1,4 @@
-import { BorderCell, Cell, SchemaCell } from 'lib/types';
+import { BorderCell, Cell, SchemaCell } from '../../types';
 import { Vector2, Vector2Int } from '../common';
 
 export class Chunk {

@@ -1,6 +1,6 @@
 import { Work, WorkMetadata } from '@fancywork/core';
 import Dexie from 'dexie';
-import { IterableCollection, WorkImage } from 'lib/types';
+import { IterableCollection, WorkImage } from '../../types';
 import { BaseStorage } from '../base-storage';
 
 export const WORKS_TABLE = 'works';

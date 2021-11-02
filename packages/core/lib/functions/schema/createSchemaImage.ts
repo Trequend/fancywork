@@ -1,5 +1,5 @@
-import { RGBColor } from 'lib/classes';
-import { Schema } from 'lib/types';
+import { RGBColor } from '../../classes/common';
+import { Schema } from '../../types';
 import { executeInCanvasContext, processImageInCanvas } from '../utils';
 
 export async function createSchemaImage(schema: Schema): Promise<string> {

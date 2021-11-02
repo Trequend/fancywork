@@ -1,7 +1,7 @@
-import { Shader, WEBGL2_MAX_QUADS, WebGLRenderer, SchemaInfo } from '../webgl';
-import { WebGL2RendererData } from './WebGL2RendererData';
-import vertexShaderSource from './shaders/texture.vert.glsl';
+import { SchemaInfo, Shader, WEBGL2_MAX_QUADS, WebGLRenderer } from '../webgl';
 import fragmentShaderSource from './shaders/texture.frag.glsl';
+import vertexShaderSource from './shaders/texture.vert.glsl';
+import { WebGL2RendererData } from './WebGL2RendererData';
 
 export class WebGL2Renderer extends WebGLRenderer {
   public constructor(gl: WebGL2RenderingContext, schemaInfo: SchemaInfo) {

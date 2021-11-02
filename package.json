@@ -20,7 +20,15 @@
     "website"
   ],
   "scripts": {
-    "prepare": "husky install && yarn run build:packages",
+    "prepare": "husky install && run-s build:packages",
+    "start-all": "concurrently -k \"yarn:start:*\"",
+    "start-all:core": "concurrently -k \"yarn:start:website\" \"yarn:start:core*\"",
+    "start-all:storage": "concurrently -k \"yarn:start:website\" \"yarn:start:storage*\"",
+    "start:website": "yarn workspace website run start",
+    "start:core": "yarn workspace @fancywork/core run start",
+    "start:core-react": "yarn workspace @fancywork/core-react run start",
+    "start:storage": "yarn workspace @fancywork/storage run start",
+    "start:storage-react": "yarn workspace @fancywork/storage-react run start",
     "build": "lerna run build --stream",
     "build:packages": "lerna run --scope=@fancywork/* build --stream",
     "commitlint": "commitlint",
@@ -50,6 +58,7 @@
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
     "cz-customizable": "^6.3.0",
-    "husky": "^7.0.2"
+    "husky": "^7.0.2",
+    "concurrently": "^6.3.0"
   }
 }

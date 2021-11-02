@@ -1,5 +1,6 @@
-import { KMeansPalette, PaletteReducerFactory, RGBColor } from 'lib/classes';
-import { Palette, PaletteReduceAlgorithm } from 'lib/types';
+import { RGBColor } from '../../classes/common';
+import { KMeansPalette, PaletteReducerFactory } from '../../classes/palette';
+import { Palette, PaletteReduceAlgorithm } from '../../types';
 import { forEachPixel } from '../utils';
 
 type Options = {

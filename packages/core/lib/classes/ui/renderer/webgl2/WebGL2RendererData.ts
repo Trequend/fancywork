@@ -1,4 +1,4 @@
-import { Vector4, Vector2 } from '../../../common';
+import { Vector2, Vector4 } from '../../../common';
 import {
   Attributes,
   AttributeType,

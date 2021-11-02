@@ -1,4 +1,4 @@
-import { BorderCell, SchemaCell } from 'lib/types';
+import { BorderCell, SchemaCell } from '../../types';
 
 export function cellsEquals(
   cell: BorderCell | SchemaCell,

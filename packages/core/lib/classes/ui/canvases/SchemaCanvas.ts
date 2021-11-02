@@ -1,7 +1,7 @@
-import { CELL_SIZE } from 'lib/constants';
-import { cellsEquals } from 'lib/functions';
-import { BorderCell, SchemaCell } from 'lib/types';
-import { EventEmitter, Vector2, Vector2Int, RGBAColor } from '../../common';
+import { CELL_SIZE } from '../../../constants';
+import { cellsEquals } from '../../../functions';
+import { BorderCell, SchemaCell } from '../../../types';
+import { EventEmitter, RGBAColor, Vector2, Vector2Int } from '../../common';
 import { Chunk } from '../Chunk';
 import {
   Renderer,

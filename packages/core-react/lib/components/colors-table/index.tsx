@@ -1,6 +1,6 @@
+import { HexColor, Palette, palettes } from '@fancywork/core';
 import { Table, TableProps, Typography } from 'antd';
 import { ColumnGroupType, ColumnType } from 'antd/lib/table';
-import { palettes, HexColor, Palette } from '@fancywork/core';
 import { FC, useMemo } from 'react';
 
 type Props = {

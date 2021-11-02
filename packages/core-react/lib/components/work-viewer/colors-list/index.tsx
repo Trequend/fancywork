@@ -1,5 +1,5 @@
 import { CheckOutlined } from '@ant-design/icons';
-import { WorkViewProvider, getContrastColor, Palette } from '@fancywork/core';
+import { getContrastColor, Palette, WorkViewProvider } from '@fancywork/core';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './index.module.scss';
 

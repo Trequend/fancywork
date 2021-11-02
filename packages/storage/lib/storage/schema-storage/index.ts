@@ -1,6 +1,6 @@
 import { Schema, SchemaMetadata } from '@fancywork/core';
 import Dexie from 'dexie';
-import { IterableCollection, SchemaImage } from 'lib/types';
+import { IterableCollection, SchemaImage } from '../../types';
 import { BaseStorage } from '../base-storage';
 
 export const SCHEMAS_TABLE = 'schemas';

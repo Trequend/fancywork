@@ -1,6 +1,6 @@
 import { Empty, PageHeader, PageHeaderProps, Pagination, Spin } from 'antd';
-import { useDatabasePagination } from 'lib/hooks';
 import { FC, ReactNode, useEffect } from 'react';
+import { useDatabasePagination } from '../../hooks';
 import styles from './index.module.scss';
 
 export type DatabasePaginationLayoutProps = {

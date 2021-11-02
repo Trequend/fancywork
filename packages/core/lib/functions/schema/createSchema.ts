@@ -1,4 +1,5 @@
-import { MAX_HEIGHT, MAX_WIDTH } from 'lib/constants';
+import { v4 as uuidv4 } from 'uuid';
+import { MAX_HEIGHT, MAX_WIDTH } from '../../constants';
 import {
   Palette,
   PaletteReduceAlgorithm,
@@ -6,8 +7,7 @@ import {
   SchemaGrid,
   SchemaMetadata,
   SizeType,
-} from 'lib/types';
-import { v4 as uuidv4 } from 'uuid';
+} from '../../types';
 import { processImageInCanvas } from '../utils';
 import { convertSize } from '../utils/convertSize';
 import { createImagePalette } from './createImagePalette';

@@ -1,7 +1,6 @@
-import { CellPredicate } from '.';
 import { Chunk } from '../../Chunk';
 import { SchemaViewProvider } from '../../view-providers';
-import { AnimationContext, Animation } from './Animation';
+import { Animation, AnimationContext, CellPredicate } from './Animation';
 
 export type DrawFunction = (
   x: number,

@@ -1,4 +1,4 @@
-import { PaletteColor, SchemaCell } from 'lib/types';
+import { PaletteColor, SchemaCell } from '../../../types';
 import { RGBAColor } from '../../common';
 import {
   CellTransition,

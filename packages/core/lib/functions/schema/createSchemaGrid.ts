@@ -1,5 +1,6 @@
-import { KMeansPalette, QuantizationError, RGBColor } from 'lib/classes';
-import { Palette, PaletteColor, SchemaGrid } from 'lib/types';
+import { RGBColor } from '../../classes/common';
+import { KMeansPalette, QuantizationError } from '../../classes/palette';
+import { Palette, PaletteColor, SchemaGrid } from '../../types';
 import { getImageDataPixel } from '../utils';
 
 export function createSchemaGrid(

@@ -1,4 +1,4 @@
-import { Work } from 'lib/types';
+import { Work } from '../../../types';
 import { SchemaViewProvider } from './SchemaViewProvider';
 
 export class WorkViewProvider extends SchemaViewProvider {

@@ -1,4 +1,4 @@
-import { SizeType } from 'lib/types';
+import { SizeType } from '../../types';
 
 const CENTIMETERS_IN_INCH = 2.54;
 
