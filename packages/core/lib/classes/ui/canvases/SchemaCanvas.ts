@@ -60,16 +60,7 @@ export class SchemaCanvas<
     this.canvas = this.createCanvas();
     this.renderer = this.createRenderer();
     this.scrollArea = this.createScrollArea();
-
-    this.timeDisplay = document.createElement('div');
-    this.timeDisplay.style.position = 'absolute';
-    this.timeDisplay.style.top = '0';
-    this.timeDisplay.style.left = '0';
-    this.timeDisplay.style.width = '30px';
-    this.timeDisplay.style.height = '30px';
-    this.timeDisplay.style.display = 'flex';
-    this.timeDisplay.style.justifyContent = 'center';
-    this.timeDisplay.style.alignItems = 'center';
+    this.timeDisplay = this.createTimeDisplay();
 
     root.innerHTML = '';
     root.appendChild(this.canvas);
@@ -109,6 +100,19 @@ export class SchemaCanvas<
     throw new Error('webgl not supported');
   }
 
+  private createTimeDisplay() {
+    const timeDisplay = document.createElement('div');
+    timeDisplay.style.position = 'absolute';
+    timeDisplay.style.top = '0';
+    timeDisplay.style.left = '0';
+    timeDisplay.style.width = '30px';
+    timeDisplay.style.height = '30px';
+    timeDisplay.style.display = 'none';
+    timeDisplay.style.justifyContent = 'center';
+    timeDisplay.style.alignItems = 'center';
+    return timeDisplay;
+  }
+
   private createScrollArea() {
     const scrollArea = document.createElement('div');
     scrollArea.style.position = 'absolute';
@@ -129,11 +133,14 @@ export class SchemaCanvas<
   private attach() {
     // Global
     window.addEventListener('resize', this.onResize);
+    window.addEventListener('keydown', this.onKeyDown);
     window.requestAnimationFrame(() => {
       this.drawLoop();
     });
 
     // Local
+    this.scrollArea.addEventListener('scroll', this.onScroll);
+
     this.scrollArea.addEventListener('pointerdown', this.onPointerDown);
     this.scrollArea.addEventListener('pointermove', this.onPointerMove);
     this.scrollArea.addEventListener('pointerup', this.onPointerUp);
@@ -142,18 +149,13 @@ export class SchemaCanvas<
     this.scrollArea.addEventListener('touchstart', this.onTouchStart);
     this.scrollArea.addEventListener('touchmove', this.onTouchMove);
     this.scrollArea.addEventListener('touchend', this.onTouchEnd);
-
-    this.scrollArea.addEventListener('scroll', this.onScroll);
   }
 
   private detach() {
     // Global only
     window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('keydown', this.onKeyDown);
   }
-
-  private onScroll = () => {
-    this.drawRequired = true;
-  };
 
   private onResize = () => {
     this.resize();
@@ -170,6 +172,16 @@ export class SchemaCanvas<
     canvas.height = height;
     this.drawRequired = true;
   }
+
+  private onKeyDown = (keyboardEvent: KeyboardEvent) => {
+    if (keyboardEvent.code === 'Period' && !keyboardEvent.repeat) {
+      this.toggleTimeDisplay();
+    }
+  };
+
+  private onScroll = () => {
+    this.drawRequired = true;
+  };
 
   private pointerDownPosition: Vector2 | null = null;
 
@@ -407,6 +419,14 @@ export class SchemaCanvas<
   private clientPositionToCanvas(x: number, y: number) {
     const rect = this.scrollArea.getBoundingClientRect();
     return new Vector2(x - rect.x, y - rect.y);
+  }
+
+  private toggleTimeDisplay() {
+    if (this.timeDisplay.style.display === 'none') {
+      this.timeDisplay.style.display = 'flex';
+    } else {
+      this.timeDisplay.style.display = 'none';
+    }
   }
 
   public scrollToCell(
