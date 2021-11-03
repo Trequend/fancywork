@@ -97,7 +97,6 @@ export const PaletteSettings: FC<Props> = ({
                 onChange={(value) => {
                   setUnlimitedColors(value.target.checked);
                 }}
-                className={styles.checkbox}
                 checked={unlimitedColors}
               >
                 Unlimited colors
@@ -108,7 +107,6 @@ export const PaletteSettings: FC<Props> = ({
                 onChange={(value) => {
                   setWithDithering(value.target.checked);
                 }}
-                className={styles.checkbox}
                 checked={withDithering}
               >
                 Dithering
