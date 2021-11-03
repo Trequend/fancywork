@@ -16,11 +16,7 @@
     "jsx": "react-jsx",
     "declaration": true,
     "declarationDir": "./types",
-    "declarationMap": true,
-    "baseUrl": "./lib",
-    "paths": {
-      "lib/*": ["./*"]
-    }
+    "declarationMap": true
   },
   "include": ["lib"],
   "exclude": ["node_modules", "dist"]
