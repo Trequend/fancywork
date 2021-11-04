@@ -13,37 +13,48 @@ export const HomePage: AppPage = () => {
 
   return (
     <div className={styles.root}>
-      <header className={styles.header}>
-        <img src={logo} className={styles.logo} alt="Logo" />
-        Fancywork
-      </header>
       <main className={styles.main}>
-        <div className={styles.buttons}>
-          <Button
-            type="primary"
-            className={styles.button}
-            onClick={() => {
-              history.push(CREATE_SCHEMA_PATHNAME);
-            }}
+        <div className={styles.menu}>
+          <div className={styles.header}>
+            <img src={logo} className={styles.logo} alt="Logo" />
+            Fancywork
+          </div>
+          <div className={styles.buttons}>
+            <Button type="ghost" disabled>
+              Continue
+            </Button>
+            <Button
+              type="ghost"
+              onClick={() => {
+                history.push(CREATE_SCHEMA_PATHNAME);
+              }}
+            >
+              Create schema
+            </Button>
+            <Button
+              type="ghost"
+              onClick={() => {
+                history.push(SCHEMAS_PATHNAME);
+              }}
+            >
+              My schemas
+            </Button>
+            <Button
+              type="ghost"
+              onClick={() => {
+                history.push(WORKS_PATHNAME);
+              }}
+            >
+              My works
+            </Button>
+          </div>
+          <a
+            href="https://github.com/Trequend/fancywork"
+            rel="noreferrer"
+            target="_blank"
           >
-            Create schema
-          </Button>
-          <Button
-            className={styles.button}
-            onClick={() => {
-              history.push(SCHEMAS_PATHNAME);
-            }}
-          >
-            My schemas
-          </Button>
-          <Button
-            className={styles.button}
-            onClick={() => {
-              history.push(WORKS_PATHNAME);
-            }}
-          >
-            My works
-          </Button>
+            View source code
+          </a>
         </div>
       </main>
       <footer className={styles.footer}>
