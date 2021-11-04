@@ -37,34 +37,17 @@
 
 .buttons {
   width: 100%;
-  max-width: 400px;
+  max-width: 350px;
   display: flex;
   align-items: center;
   flex-direction: column;
 
   & > * {
-    margin-bottom: 30px;
+    width: 100%;
+    margin-bottom: 25px;
 
     &:last-child {
       margin-bottom: 0;
-    }
-  }
-}
-
-.button {
-  color: $primary-color;
-  text-align: center;
-  font-size: 1.1em;
-
-  &:hover {
-    color: color.adjust($color: $primary-color, $lightness: 10%);
-  }
-
-  &:visited {
-    color: $primary-color;
-
-    &:hover {
-      color: color.adjust($color: $primary-color, $lightness: 10%);
     }
   }
 }

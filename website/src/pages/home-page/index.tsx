@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Button } from 'antd';
+import { useHistory } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 import { AppPage } from '../../types';
 import { CREATE_SCHEMA_PATHNAME } from '../create-schema-page/constants';
@@ -8,6 +9,8 @@ import { HOME_PATHNAME } from './constants';
 import styles from './index.module.scss';
 
 export const HomePage: AppPage = () => {
+  const history = useHistory();
+
   return (
     <div className={styles.root}>
       <header className={styles.header}>
@@ -16,23 +19,31 @@ export const HomePage: AppPage = () => {
       </header>
       <main className={styles.main}>
         <div className={styles.buttons}>
-          <Link
-            to={CREATE_SCHEMA_PATHNAME}
-            title="Create schema"
+          <Button
+            type="primary"
             className={styles.button}
+            onClick={() => {
+              history.push(CREATE_SCHEMA_PATHNAME);
+            }}
           >
             Create schema
-          </Link>
-          <Link
-            to={SCHEMAS_PATHNAME}
-            title="My schemas"
+          </Button>
+          <Button
             className={styles.button}
+            onClick={() => {
+              history.push(SCHEMAS_PATHNAME);
+            }}
           >
             My schemas
-          </Link>
-          <Link to={WORKS_PATHNAME} title="My works" className={styles.button}>
+          </Button>
+          <Button
+            className={styles.button}
+            onClick={() => {
+              history.push(WORKS_PATHNAME);
+            }}
+          >
             My works
-          </Link>
+          </Button>
         </div>
       </main>
       <footer className={styles.footer}>
