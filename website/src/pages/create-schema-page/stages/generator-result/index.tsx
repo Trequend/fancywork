@@ -78,7 +78,11 @@ export const GeneratorResult: FC<Props> = ({
           </Row>
         </div>
         <div className={styles.secondBlock}>
-          <ColorsTable palette={schema.palette} scroll={{ x: true }} />
+          <ColorsTable
+            palette={schema.palette}
+            scroll={{ x: true }}
+            pagination={{ simple: true }}
+          />
         </div>
       </div>
     </Layout>
