@@ -212,6 +212,13 @@ export class WorkStorage extends BaseStorage<Map> {
     return await this.table(WORK_IMAGES_TABLE).get(id);
   }
 
+  public async getLastWorkMetadata(): Promise<WorkMetadata | undefined> {
+    return await this.table(WORK_METADATA_TABLE)
+      .orderBy(WorkMetadataIndex.LastActivity)
+      .reverse()
+      .first();
+  }
+
   public collection(searchName?: string | null): IterableCollection<{
     metadata: WorkMetadata;
     image: WorkImage;

@@ -6,6 +6,7 @@ import { CREATE_SCHEMA_PATHNAME } from '../create-schema-page/constants';
 import { SCHEMAS_PATHNAME } from '../schemas-page/constants';
 import { WORKS_PATHNAME } from '../works-page/constants';
 import { HOME_PATHNAME } from './constants';
+import { ContinueButton } from './continue-button';
 import styles from './index.module.scss';
 
 export const HomePage: AppPage = () => {
@@ -20,9 +21,7 @@ export const HomePage: AppPage = () => {
             Fancywork
           </div>
           <div className={styles.buttons}>
-            <Button type="ghost" disabled>
-              Continue
-            </Button>
+            <ContinueButton />
             <Button
               type="ghost"
               onClick={() => {
