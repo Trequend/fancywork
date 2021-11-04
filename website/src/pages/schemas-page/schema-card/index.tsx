@@ -1,9 +1,13 @@
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import { SchemaMetadata } from '@fancywork/core';
 import { DownloadButton, SchemaInfoTable } from '@fancywork/core-react';
 import { SchemaImage } from '@fancywork/storage';
 import { useDatabase } from '@fancywork/storage-react';
-import { Button, Card, Image, Popconfirm } from 'antd';
+import { Button, Card, Image, Popconfirm, Spin } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SCHEMA_PATHNAME } from '../../schema-page/constants';
@@ -21,6 +25,7 @@ export const SchemaCard: FC<Props> = ({ metadata, image }) => {
   const history = useHistory();
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [deletePending, setDeletePending] = useState(false);
 
   return (
     <>
@@ -46,11 +51,16 @@ export const SchemaCard: FC<Props> = ({ metadata, image }) => {
             title="Delete schema"
             key="delete"
             okType="danger"
+            disabled={deletePending}
             onConfirm={async () => {
+              setDeletePending(true);
               await database.schemas.delete(metadata.id);
+              setDeletePending(false);
             }}
           >
-            <DeleteOutlined />
+            <Spin spinning={deletePending} indicator={<LoadingOutlined />}>
+              <DeleteOutlined />
+            </Spin>
           </Popconfirm>,
         ]}
       >

@@ -1,4 +1,8 @@
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import { WorkMetadata } from '@fancywork/core';
 import {
   DownloadButton,
@@ -7,8 +11,8 @@ import {
 } from '@fancywork/core-react';
 import { WorkImage } from '@fancywork/storage';
 import { useDatabase } from '@fancywork/storage-react';
-import { Button, Card, Image, Popconfirm } from 'antd';
-import { FC } from 'react';
+import { Button, Card, Image, Popconfirm, Spin } from 'antd';
+import { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { WORK_PATHNAME } from '../../work-page/constants';
 import styles from './index.module.scss';
@@ -22,6 +26,8 @@ type Props = {
 export const WorkCard: FC<Props> = ({ metadata, image }) => {
   const database = useDatabase();
   const history = useHistory();
+
+  const [deletePending, setDeletePending] = useState(false);
 
   return (
     <Card
@@ -38,11 +44,16 @@ export const WorkCard: FC<Props> = ({ metadata, image }) => {
           title="Delete work"
           key="delete"
           okType="danger"
+          disabled={deletePending}
           onConfirm={async () => {
+            setDeletePending(true);
             await database.works.delete(metadata.id);
+            setDeletePending(false);
           }}
         >
-          <DeleteOutlined />
+          <Spin spinning={deletePending} indicator={<LoadingOutlined />}>
+            <DeleteOutlined />
+          </Spin>
         </Popconfirm>,
       ]}
     >
