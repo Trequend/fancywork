@@ -43,7 +43,7 @@ export const SchemasPage: AppPage = () => {
     >
       <Row gutter={[24, 24]}>
         {pagination.data.map(({ metadata, image }) => (
-          <Col span={24} md={12} key={metadata.id}>
+          <Col span={24} lg={12} key={metadata.id}>
             <SchemaCard metadata={metadata} image={image} />
           </Col>
         ))}
