@@ -1,3 +1,4 @@
+import { Cell } from '@fancywork/core';
 import { WorkViewer } from '@fancywork/core-react';
 import { useDatabase, useDatabaseItem } from '@fancywork/storage-react';
 import { Result } from 'antd';
@@ -12,19 +13,23 @@ export const WorkPage: AppPage = () => {
   const database = useDatabase();
   const history = useHistory();
   const id = useQueryParam('id');
-  const { item, loading, error } = useDatabaseItem((database) => {
+  const {
+    item: work,
+    loading,
+    error,
+  } = useDatabaseItem((database) => {
     return database.works.get(id);
   });
 
   useEffect(() => {
-    if (item) {
+    if (work) {
       const saved = document.title;
-      document.title = `${item.metadata.name} - Fancywork`;
+      document.title = `${work.metadata.name} - Fancywork`;
       return () => {
         document.title = saved;
       };
     }
-  }, [item]);
+  }, [work]);
 
   if (loading) {
     return <FullscreenSpin />;
@@ -32,17 +37,17 @@ export const WorkPage: AppPage = () => {
     return <Result title="Error" subTitle={error} />;
   }
 
-  if (item) {
+  if (work) {
     return (
       <WorkViewer
-        work={item}
+        work={work}
         autoSaveTimeout={AUTO_SAVE_TIMEOUT}
         onBack={() => {
           history.goBack();
         }}
-        onSave={async () => {
-          if (item) {
-            await database.works.put(item);
+        onSave={async (changedCells: Set<Cell>) => {
+          if (work) {
+            await database.works.saveChanges(work, changedCells);
           }
         }}
       />

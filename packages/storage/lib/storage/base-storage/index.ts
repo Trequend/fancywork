@@ -2,7 +2,7 @@ import Dexie, { Collection, Table } from 'dexie';
 import { IterableCollection } from '../../types';
 
 export abstract class BaseStorage<Map> {
-  protected constructor(protected readonly dexie: Dexie) {}
+  protected constructor(private readonly dexie: Dexie) {}
 
   protected table<K extends keyof Map>(tableName: K): Table<Map[K], any> {
     return this.dexie.table(tableName.toString());

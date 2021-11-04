@@ -1,4 +1,4 @@
 export type SchemaImage = {
-  id: string;
+  schemaId: string;
   dataURL: string;
 };

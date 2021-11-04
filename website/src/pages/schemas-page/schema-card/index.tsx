@@ -39,13 +39,7 @@ export const SchemaCard: FC<Props> = ({ metadata, image }) => {
             key="settings"
             metadata={metadata}
             onChangeName={async (name: string) => {
-              const schema = await database.schemas.get(metadata.id);
-              if (schema) {
-                schema.metadata.name = name;
-                await database.schemas.put(schema);
-              } else {
-                throw new Error('No schema');
-              }
+              await database.schemas.changeName(metadata.id, name);
             }}
           />,
           <Popconfirm

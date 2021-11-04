@@ -31,13 +31,7 @@ export const WorkCard: FC<Props> = ({ metadata, image }) => {
           key="settings"
           metadata={metadata}
           onChangeName={async (name: string) => {
-            const work = await database.works.get(metadata.id);
-            if (work) {
-              work.metadata.name = name;
-              await database.works.put(work);
-            } else {
-              throw new Error('No work');
-            }
+            await database.works.changeName(metadata.id, name);
           }}
         />,
         <Popconfirm

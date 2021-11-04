@@ -11,19 +11,23 @@ import { SCHEMA_PATHNAME } from './constants';
 export const SchemaPage: AppPage = () => {
   const history = useHistory();
   const id = useQueryParam('id');
-  const { item, loading, error } = useDatabaseItem((database) => {
+  const {
+    item: schema,
+    loading,
+    error,
+  } = useDatabaseItem((database) => {
     return database.schemas.get(id);
   });
 
   useEffect(() => {
-    if (item) {
+    if (schema) {
       const saved = document.title;
-      document.title = `${item.metadata.name} - Fancywork`;
+      document.title = `${schema.metadata.name} - Fancywork`;
       return () => {
         document.title = saved;
       };
     }
-  }, [item]);
+  }, [schema]);
 
   if (loading) {
     return <FullscreenSpin />;
@@ -31,10 +35,10 @@ export const SchemaPage: AppPage = () => {
     return <Result title="Error" subTitle={error} />;
   }
 
-  if (item) {
+  if (schema) {
     return (
       <SchemaViewer
-        schema={item}
+        schema={schema}
         onBack={() => {
           history.goBack();
         }}

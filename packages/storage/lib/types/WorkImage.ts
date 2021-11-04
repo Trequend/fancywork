@@ -1,4 +1,4 @@
 export type WorkImage = {
-  id: string;
+  workId: string;
   dataURL: string;
 };

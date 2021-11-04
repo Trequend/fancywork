@@ -1,5 +1,5 @@
 import { ClearOutlined, SaveOutlined } from '@ant-design/icons';
-import { Work, WorkCanvas, WorkViewProvider } from '@fancywork/core';
+import { Cell, Work, WorkCanvas, WorkViewProvider } from '@fancywork/core';
 import { Button, message, Tag } from 'antd';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -13,7 +13,7 @@ type Props = {
   work: Work;
   autoSaveTimeout?: number;
   onBack?: () => void;
-  onSave?: () => Promise<void> | void;
+  onSave?: (changedCells: Set<Cell>) => Promise<void> | void;
 };
 
 export const WorkViewer: FC<Props> = ({
@@ -37,6 +37,8 @@ export const WorkViewer: FC<Props> = ({
   const [saveResult, setSaveResult] = useState(true);
   const [changed, setChanged] = useState(false);
 
+  const changedCells = useRef(new Set<Cell>());
+
   useEffect(() => {
     if (rootRef.current === null) {
       throw new Error('No root');
@@ -45,9 +47,10 @@ export const WorkViewer: FC<Props> = ({
     const workCanvas = new WorkCanvas(viewProvider, rootRef.current);
     setCanvas(workCanvas);
 
-    const update = () => {
+    const update = ({ data: cell }: { data: Cell }) => {
       forceUpdate({});
       setChanged(true);
+      changedCells.current.add(cell);
     };
 
     workCanvas.addEventListener('cellEmbroidered', update);
@@ -74,7 +77,9 @@ export const WorkViewer: FC<Props> = ({
     setSaving(true);
     setChanged(false);
     try {
-      await onSave();
+      const changes = changedCells.current;
+      changedCells.current = new Set<Cell>();
+      await onSave(changes);
       setSaveResult(true);
     } catch (error) {
       setSaveResult(false);

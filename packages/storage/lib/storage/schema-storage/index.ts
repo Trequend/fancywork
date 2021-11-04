@@ -7,22 +7,36 @@ export const SCHEMAS_TABLE = 'schemas';
 export const SCHEMA_METADATA_TABLE = 'schema_metadata';
 export const SCHEMA_IMAGES_TABLE = 'schema_images';
 
+type SchemaModel = { id: string } & Omit<Schema, 'metadata'>;
+
 type Map = {
-  [SCHEMAS_TABLE]: Schema;
+  [SCHEMAS_TABLE]: SchemaModel;
   [SCHEMA_METADATA_TABLE]: SchemaMetadata;
   [SCHEMA_IMAGES_TABLE]: SchemaImage;
 };
 
 export enum SchemaIndex {
-  Id = 'metadata.id',
-}
-
-export enum SchemaImageIndex {
   Id = 'id',
 }
 
 export enum SchemaMetadataIndex {
   Id = 'id',
+}
+
+export enum SchemaImageIndex {
+  SchemaId = 'schemaId',
+}
+
+function filterSchema(schema: Schema): Omit<Schema, 'metadata'> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { metadata, ...rest } = schema;
+  return rest;
+}
+
+function removeModelId(schemaModel: SchemaModel): Omit<SchemaModel, 'id'> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, ...rest } = schemaModel;
+  return rest;
 }
 
 export class SchemaStorage extends BaseStorage<Map> {
@@ -31,43 +45,59 @@ export class SchemaStorage extends BaseStorage<Map> {
   }
 
   public async add(schema: Schema, schemaImageDataURL: string) {
-    return await this.dexie.transaction(
+    return await this.transaction(
       'rw',
       [SCHEMAS_TABLE, SCHEMA_METADATA_TABLE, SCHEMA_IMAGES_TABLE],
       () => {
-        this.table(SCHEMAS_TABLE).add(schema);
-        this.table(SCHEMA_METADATA_TABLE).add(schema.metadata);
+        const { metadata } = schema;
+        this.table(SCHEMAS_TABLE).add({
+          id: metadata.id,
+          ...filterSchema(schema),
+        });
+        this.table(SCHEMA_METADATA_TABLE).add(metadata);
         this.table(SCHEMA_IMAGES_TABLE).add({
-          id: schema.metadata.id,
+          schemaId: metadata.id,
           dataURL: schemaImageDataURL,
         });
       }
     );
   }
 
-  public async get(id: string) {
-    return await this.table(SCHEMAS_TABLE).get({ [SchemaIndex.Id]: id });
+  public async get(id: string): Promise<Schema> {
+    return await this.transaction(
+      'r',
+      [SCHEMAS_TABLE, SCHEMA_METADATA_TABLE],
+      async () => {
+        const schema = await this.table(SCHEMAS_TABLE).get(id);
+        if (!schema) {
+          throw new Error('No schema');
+        }
+
+        const metadata = await this.table(SCHEMA_METADATA_TABLE).get({
+          [SchemaMetadataIndex.Id]: id,
+        });
+        if (!metadata) {
+          throw new Error('No metadata');
+        }
+
+        return {
+          ...removeModelId(schema),
+          metadata,
+        };
+      }
+    );
   }
 
   public async getImage(id: string) {
-    return await this.table(SCHEMA_IMAGES_TABLE).get({
-      [SchemaImageIndex.Id]: id,
-    });
+    return await this.table(SCHEMA_IMAGES_TABLE).get(id);
   }
 
-  public async put(schema: Schema) {
-    await this.dexie.transaction(
-      'rw',
-      [SCHEMAS_TABLE, SCHEMA_METADATA_TABLE],
-      () => {
-        this.table(SCHEMAS_TABLE)
-          .where({ [SchemaIndex.Id]: schema.metadata.id })
-          .modify(schema);
-        this.table(SCHEMA_METADATA_TABLE)
-          .where({ [SchemaMetadataIndex.Id]: schema.metadata.id })
-          .modify(schema.metadata);
-      }
-    );
+  public async changeName(id: string, name: string) {
+    await this.table(SCHEMA_METADATA_TABLE)
+      .where({ [SchemaMetadataIndex.Id]: id })
+      .modify((metadata) => {
+        metadata.name = name;
+      });
   }
 
   public collection(searchName?: string | null): IterableCollection<{
@@ -117,9 +147,7 @@ export class SchemaStorage extends BaseStorage<Map> {
         this.table(SCHEMA_METADATA_TABLE)
           .where({ [SchemaMetadataIndex.Id]: id })
           .delete();
-        this.table(SCHEMA_IMAGES_TABLE)
-          .where({ [SchemaImageIndex.Id]: id })
-          .delete();
+        this.table(SCHEMA_IMAGES_TABLE).delete(id);
       }
     );
   }

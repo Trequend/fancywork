@@ -1,4 +1,4 @@
-import { PaletteColor, SchemaCell } from '../../../types';
+import { PaletteColor, SchemaCell, Cell } from '../../../types';
 import { RGBAColor } from '../../common';
 import {
   CellTransition,
@@ -14,8 +14,8 @@ import { SchemaCanvasEventMap } from './SchemaCanvas';
 const MOUSE_LEFT_BUTTON = 1;
 
 type EventMap = {
-  cellEmbroidered: { i: number; j: number };
-  cellErased: { i: number; j: number };
+  cellEmbroidered: Cell;
+  cellErased: Cell;
 } & SchemaCanvasEventMap;
 
 export class WorkCanvas extends AnimatedSchemaCanvas<
