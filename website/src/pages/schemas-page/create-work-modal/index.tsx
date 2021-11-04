@@ -3,6 +3,7 @@ import { useDatabase } from '@fancywork/storage-react';
 import { Button, Form, Input, message, Modal, Tag } from 'antd';
 import { FC, useState } from 'react';
 import { useHistory } from 'react-router';
+import { WORK_PATHNAME } from '../../work-page/constants';
 import { WORKS_PATHNAME } from '../../works-page/constants';
 import styles from './index.module.scss';
 
@@ -27,6 +28,7 @@ export const CreateWorkModal: FC<Props> = ({ metadata, onCancel }) => {
             const work = createWork(values.name, schema);
             await database.works.add(work, image);
             history.push(WORKS_PATHNAME);
+            history.push(`${WORK_PATHNAME}?id=${work.metadata.id}`);
           } else {
             throw new Error('No schema');
           }
