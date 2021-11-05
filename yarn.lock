@@ -2100,7 +2100,6 @@ __metadata:
     "@rollup/plugin-typescript": ^8.3.0
     "@typescript-eslint/eslint-plugin": ^5.3.0
     "@typescript-eslint/parser": ^5.3.0
-    antd: ^4.16.13
     dexie: ^3.0.3
     dexie-observable: ^3.0.0-beta.11
     eslint: ^8.1.0
@@ -3047,11 +3046,11 @@ __metadata:
   linkType: hard
 
 "@types/react-dom@npm:^17.0.0, @types/react-dom@npm:^17.0.10":
-  version: 17.0.10
-  resolution: "@types/react-dom@npm:17.0.10"
+  version: 17.0.11
+  resolution: "@types/react-dom@npm:17.0.11"
   dependencies:
     "@types/react": "*"
-  checksum: cc7d8d5b77ee2f3b989c107abd8ec0f2460ba1b1ee6e6d637124e1939594b5619fa4166ef0ea7632a69b68358e0b71aa618de446ccc416dcc0017175549da601
+  checksum: 4d5730dffbef86c887cecad7e3cecda424ce6a64d0b5441c63b5b015d48219868660a2bb1aa15e897e565ad8867fa6b885d4358b04e1c4e589ba4c07c3fda55c
   languageName: node
   linkType: hard
 
@@ -3077,13 +3076,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*, @types/react@npm:^17.0.0, @types/react@npm:^17.0.32":
-  version: 17.0.33
-  resolution: "@types/react@npm:17.0.33"
+  version: 17.0.34
+  resolution: "@types/react@npm:17.0.34"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 5f53f3dae034229ff1eccb5de1c16d046696e883f8eae81b86e95c532798e655015e4edff8a6c9ec8f1c0ef12bb60dec43622d06256ba33ba6069e67a74b8d4e
+  checksum: 16729ad7d50922ccbf8eb93874d7781dc2f1c64edc78134b5edc7154839d41e9fe320eb1c11ad2d1c9bf28b99cb1febda344509c1fda025955a5c2b43c688c8f
   languageName: node
   linkType: hard
 
@@ -5116,9 +5115,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001125, caniuse-lite@npm:^1.0.30001274":
-  version: 1.0.30001274
-  resolution: "caniuse-lite@npm:1.0.30001274"
-  checksum: 75790d021edbc68dbb36c0bc63255fad1e7aa3986039e685d10340e7e9a37147b0ddedaba22cf6c52b3657cca794ed41af88045ad5cce79084e9361e95f1c5d4
+  version: 1.0.30001277
+  resolution: "caniuse-lite@npm:1.0.30001277"
+  checksum: 252db4aa2fa035112766c9a6aeadc913157bf55ba2febd849da8c60771b301cc2e287ed2b2643b06d93f6abc81dcd01bd6f0622ed57603ed5292aa39fb6b3a0d
   languageName: node
   linkType: hard
 
@@ -6912,9 +6911,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.564, electron-to-chromium@npm:^1.3.886":
-  version: 1.3.887
-  resolution: "electron-to-chromium@npm:1.3.887"
-  checksum: ddb3f0c9f610d886eb67429cb16e2361aaced6bac7da5352ec6b4ffcee624897918889f007dd484afa3556c3c7603aa449434c0b232e6a8eae4fef98698973af
+  version: 1.3.889
+  resolution: "electron-to-chromium@npm:1.3.889"
+  checksum: c0c034ef51153ea0ab72780d8c142d75acbc82b7f0538212bff5621c63f853582b919f0870311b9a9b36abf1d00dfe10664c98ca6fc286210bfaf694f1ab1680
   languageName: node
   linkType: hard
 
@@ -9237,9 +9236,9 @@ __metadata:
   linkType: hard
 
 "ignore@npm:^5.1.4, ignore@npm:^5.1.8":
-  version: 5.1.8
-  resolution: "ignore@npm:5.1.8"
-  checksum: 967abadb61e2cb0e5c5e8c4e1686ab926f91bc1a4680d994b91947d3c65d04c3ae126dcdf67f08e0feeb8ff8407d453e641aeeddcc47a3a3cca359f283cf6121
+  version: 5.1.9
+  resolution: "ignore@npm:5.1.9"
+  checksum: 6f6b2235f4e63648116c5814f76b2d3d63fae9c21b8a466862e865732f59e787c9938a9042f9457091db6f0d811508ea3c8c6a60f35bafc4ceea08bbe8f96fd5
   languageName: node
   linkType: hard
 
@@ -11014,13 +11013,13 @@ __metadata:
   linkType: hard
 
 "loader-utils@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "loader-utils@npm:2.0.1"
+  version: 2.0.2
+  resolution: "loader-utils@npm:2.0.2"
   dependencies:
     big.js: ^5.2.2
     emojis-list: ^3.0.0
     json5: ^2.1.2
-  checksum: 8f204319618e9624e25b311237d51b98109bb6093f904ffe1017097eed29654db3883c741f15d7916e17709d9cc6ebc217e678a234b42bbe37172e8eaa073f67
+  checksum: 9078d1ed47cadc57f4c6ddbdb2add324ee7da544cea41de3b7f1128e8108fcd41cd3443a85b7ee8d7d8ac439148aa221922774efe4cf87506d4fb054d5889303
   languageName: node
   linkType: hard
 
@@ -11073,13 +11072,6 @@ __metadata:
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
   checksum: cb9227612f71b83e42de93eccf1232feeb25e705bdb19ba26c04f91e885bfd3dd5c517c4a97137658190581d3493ea3973072ca010aab7e301046d90740393d1
-  languageName: node
-  linkType: hard
-
-"lodash.clonedeep@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.clonedeep@npm:4.5.0"
-  checksum: 92c46f094b064e876a23c97f57f81fbffd5d760bf2d8a1c61d85db6d1e488c66b0384c943abee4f6af7debf5ad4e4282e74ff83177c9e63d8ff081a4837c3489
   languageName: node
   linkType: hard
 
@@ -15910,17 +15902,6 @@ __metadata:
     cz-customizable: ^6.3.0
     husky: ^7.0.2
     prettier: 2.3.2
-  dependenciesMeta:
-    "@commitlint/cli":
-      optional: true
-    "@commitlint/config-conventional":
-      optional: true
-    concurrently:
-      optional: true
-    cz-customizable:
-      optional: true
-    husky:
-      optional: true
   languageName: unknown
   linkType: soft
 
@@ -17349,16 +17330,15 @@ __metadata:
   linkType: hard
 
 "table@npm:^6.0.9, table@npm:^6.7.2":
-  version: 6.7.2
-  resolution: "table@npm:6.7.2"
+  version: 6.7.3
+  resolution: "table@npm:6.7.3"
   dependencies:
     ajv: ^8.0.1
-    lodash.clonedeep: ^4.5.0
     lodash.truncate: ^4.4.2
     slice-ansi: ^4.0.0
     string-width: ^4.2.3
     strip-ansi: ^6.0.1
-  checksum: d61f91d64b9be56ac66edd2a8c0f10fcc59995313f37198cb87de73a6b441a05ad36f4a567bd8736da35bc4a2f8f4049b0e4ff1d4356c0a7c2b91af48b8bf8b2
+  checksum: 61d732f51108222d158eca2a91bfaae41c14e0cba6eb04c702ec5a1b136219d4925940d5c4d9aff5720bc4e2385dcbe2ed52dcf37bbbd8b2be48c01c1cf2ed1d
   languageName: node
   linkType: hard
 
