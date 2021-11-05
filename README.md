@@ -13,6 +13,7 @@
 ## Table Of Contents
 
 - [Features](#features)
+- [Try It Online](#try-it-online)
 - [Utils](#utils)
 - [Technology Stack](#technology-stack)
   - [Website](#website)
@@ -38,6 +39,10 @@
 - Floyd–Steinberg dithering
 - Virtualized schema viewer
 - Offline mode support
+
+## Try It Online
+
+At Vercel: https://fancywork.vercel.app
 
 ## Utils
 
