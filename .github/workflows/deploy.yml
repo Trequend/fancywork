@@ -1,0 +1,31 @@
+name: Deploy
+
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '**/README.md'
+    branches:
+      - main
+
+jobs:
+  deploy-website:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - name: Install
+        run: yarn install --immutable --inline-builds
+      - name: Test
+        run: yarn run test
+      - name: Build
+        run: yarn run build
+      - name: Deploy
+        env:
+          FANCYWORK_VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx --yes vercel ./website/build --prod --token=$FANCYWORK_VERCEL_TOKEN

@@ -24,7 +24,7 @@
     "build-packages": "yarn workspaces foreach -piv --topological-dev --include '@fancywork/*' run build",
     "commitlint": "commitlint",
     "fmt": "prettier --write .",
-    "postinstall": "husky install && yarn run build-packages",
+    "postinstall": "node ./utils/is-ci.js || husky install && yarn run build-packages",
     "pre-commit": "prettier --check . && yarn workspaces foreach -piv --topological-dev run pre-commit",
     "start": "yarn run build-packages && concurrently -k \"yarn:start-*\"",
     "start-core": "yarn workspace @fancywork/core run start",
