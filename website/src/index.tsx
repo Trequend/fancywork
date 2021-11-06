@@ -1,6 +1,6 @@
 import { DatabaseProvider } from '@fancywork/storage-react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { pages } from './pages';
 import { reportWebVitals } from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -12,14 +12,16 @@ import './styles/global.scss';
 ReactDOM.render(
   <DatabaseProvider>
     <BrowserRouter>
-      {pages.map((page) => (
-        <Route
-          exact
-          key={page.pathname}
-          path={page.pathname}
-          component={page}
-        />
-      ))}
+      <Switch>
+        {pages.map((page) => (
+          <Route
+            exact
+            key={page.pathname}
+            path={page.pathname}
+            component={page}
+          />
+        ))}
+      </Switch>
     </BrowserRouter>
   </DatabaseProvider>,
   document.getElementById('root')
